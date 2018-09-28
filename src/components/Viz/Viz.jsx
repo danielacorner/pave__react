@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import FORCE from './FORCE';
+import FORCE from '../FORCE';
 import Node from './Node';
-import NOCData from '../assets/NOC-data';
 import styled from 'styled-components';
 
 const GraphContainer = styled.div`
-  display: grid;
-  grid-template-columns: 100vw;
-  grid-template-rows: 100vh;
+  width: 100%;
+  height: 100%;
   svg {
     background-color: steelblue;
     width: 100%;
     height: 100%;
+    #nodesG {
+      /* transform: translate(50%, 50%); */
+    }
   }
 `;
 
@@ -21,7 +22,7 @@ export default class Viz extends Component {
     this.state = {
       addLinkArray: [],
       name: '',
-      nodes: NOCData.map(d => {
+      nodes: props.data.map(d => {
         d.name = d.job;
         return d;
       })
@@ -35,6 +36,8 @@ export default class Viz extends Component {
     FORCE.initForce(data.nodes /* , data.links */);
     FORCE.tick(this);
     FORCE.drag();
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -44,6 +47,16 @@ export default class Viz extends Component {
       FORCE.tick(this);
       FORCE.drag();
     }
+  }
+
+  handleResize() {
+    const width = window.innerWidth;
+    const vizHeight = document
+      .getElementById('graphContainer')
+      .getBoundingClientRect().height;
+
+    document.getElementById('nodesG').style.transform = `translate(${width /
+      2}px,${vizHeight / 2}px)`;
   }
 
   handleAddNode(e) {
@@ -66,7 +79,7 @@ export default class Viz extends Component {
       return <Node data={node} name={node.name} key={node.id} />;
     });
     return (
-      <GraphContainer>
+      <GraphContainer id="graphContainer">
         {/* <form className="form-addSystem" onSubmit={this.addNode.bind(this)}>
           <h4 className="form-addSystem__header">New Node</h4>
           <div className="form-addSystem__group">
@@ -87,7 +100,7 @@ export default class Viz extends Component {
           </div>
         </form> */}
         <svg>
-          <g>{nodes}</g>
+          <g id="nodesG">{nodes}</g>
         </svg>
       </GraphContainer>
     );

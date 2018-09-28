@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
-import FORCE from './FORCE';
+import FORCE from '../FORCE';
 
-export default class Node extends React.Component {
+export default class Node extends Component {
   componentDidMount() {
     this.d3Node = d3
       .select(ReactDOM.findDOMNode(this))

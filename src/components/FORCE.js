@@ -20,7 +20,8 @@ const FORCE = function(nsp) {
         .force('y', d3.forceY());
     },
     enterNode = selection => {
-      const circle = selection
+      // circles
+      selection
         .select('circle')
         .attr('r', d => d.equalRadius)
         .style('fill', 'tomato')
@@ -43,10 +44,7 @@ const FORCE = function(nsp) {
     },
     updateNode = selection => {
       selection
-        .attr(
-          'transform',
-          d => 'translate(' + (d.x + width / 2) + ',' + (d.y + height / 2) + ')'
-        )
+        .attr('transform', d => 'translate(' + d.x + ',' + d.y + ')')
         .attr('cx', d => d.x)
         .attr('cy', d => d.y);
     },
