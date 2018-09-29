@@ -37,7 +37,8 @@ export default class Viz extends Component {
 
   componentDidMount() {
     const data = this.state;
-    FORCE.initForce(data.nodes /* , data.links */);
+
+    FORCE.initForce(data.nodes, this.props.radiusScale);
     FORCE.tick(this);
     FORCE.drag();
     window.addEventListener('resize', this.handleResize);
@@ -47,7 +48,7 @@ export default class Viz extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevState.nodes !== this.state.nodes) {
       const data = this.state;
-      FORCE.initForce(data.nodes /* , data.links */);
+      FORCE.initForce(data.nodes, this.props.radiusScale);
       FORCE.tick(this);
       FORCE.drag();
     }
@@ -65,7 +66,6 @@ export default class Viz extends Component {
     nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight / 2}px)`;
 
     // resize the graph container to fit the screen
-
     const getScaleRatio = () => {
       // if constrained, shrink!
       const minLength = Math.min(vizHeight, svgWidth);
@@ -104,7 +104,14 @@ export default class Viz extends Component {
 
   render() {
     const nodes = this.state.nodes.map(node => {
-      return <Node data={node} name={node.name} key={node.id} />;
+      return (
+        <Node
+          radiusScale={this.props.radiusScale}
+          data={node}
+          name={node.name}
+          key={node.id}
+        />
+      );
     });
     return (
       <GraphContainer id="graphContainer">

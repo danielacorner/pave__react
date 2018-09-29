@@ -8,7 +8,7 @@ export default class Node extends Component {
     this.d3Node = d3
       .select(ReactDOM.findDOMNode(this))
       .datum(this.props.data)
-      .call(FORCE.enterNode);
+      .call(d => FORCE.enterNode(d, this.props.radiusScale));
   }
 
   componentDidUpdate() {
