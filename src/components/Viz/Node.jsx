@@ -5,10 +5,12 @@ import FORCE from '../FORCE';
 
 export default class Node extends Component {
   componentDidMount() {
+    const { radiusScale, radiusSelector } = this.props;
+
     this.d3Node = d3
       .select(ReactDOM.findDOMNode(this))
       .datum(this.props.data)
-      .call(d => FORCE.enterNode(d, this.props.radiusScale));
+      .call(d => FORCE.enterNode(d, radiusScale, radiusSelector));
   }
 
   componentDidUpdate() {

@@ -36,8 +36,14 @@ export default class Viz extends Component {
 
   componentDidMount() {
     const data = this.state;
+    const { radiusScale, clusterCenters, radiusSelector } = this.props;
 
-    FORCE.initForce(data.nodes, this.props.radiusScale);
+    FORCE.initForce({
+      nodes: data.nodes,
+      radiusScale: radiusScale,
+      radiusSelector: radiusSelector,
+      clusterCenters: clusterCenters
+    });
     FORCE.tick(this);
     FORCE.drag();
     window.addEventListener('resize', this.handleResize);
@@ -47,7 +53,13 @@ export default class Viz extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevState.nodes !== this.state.nodes) {
       const data = this.state;
-      FORCE.initForce(data.nodes, this.props.radiusScale);
+      const { radiusScale, clusterCenters, radiusSelector } = this.props;
+      FORCE.initForce({
+        nodes: data.nodes,
+        radiusScale: radiusScale,
+        radiusSelector: radiusSelector,
+        clusterCenters: clusterCenters
+      });
       FORCE.tick(this);
       FORCE.drag();
     }
@@ -102,10 +114,12 @@ export default class Viz extends Component {
   }
 
   render() {
+    const { radiusSelector, radiusScale } = this.props;
     const nodes = this.state.nodes.map(node => {
       return (
         <Node
-          radiusScale={this.props.radiusScale}
+          radiusSelector={radiusSelector}
+          radiusScale={radiusScale}
           data={node}
           name={node.name}
           key={node.id}

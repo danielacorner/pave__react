@@ -8,6 +8,7 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
 import NOCData from './assets/NOC-data';
 import * as d3 from 'd3';
+import APP_CONFIG from './app.config';
 
 const theme = createMuiTheme({
   palette: {
@@ -41,20 +42,59 @@ class App extends Component {
     radiusSelector: 'workers',
     radiusScale: () => {
       const radii = NOCData.map(d => d[this.state.radiusSelector]);
-      const radiusRange = [2, 25];
+      const radiusRange = [5, 50];
       return d3
         .scaleSqrt() // square root scale because radius of a circle
         .domain([d3.min(radii), d3.max(radii)])
         .range(radiusRange);
-    }
+    },
+    uniqueClusterValues: NOCData.map(d => d['industry']).filter(
+      (value, index, self) => self.indexOf(value) === index
+    ),
+    clusterCenters: []
   };
+
+  componentWillMount = () => {
+    const {
+      clusterCenters,
+      radiusSelector,
+      clusterSelector,
+      uniqueClusterValues
+    } = this.state;
+    NOCData.map(d => {
+      const cluster = uniqueClusterValues.indexOf(d[clusterSelector]) + 1;
+      // add to clusters array if it doesn't exist or the radius is larger than any other radius in the cluster
+      if (
+        !clusterCenters[cluster] ||
+        d[radiusSelector] > clusterCenters[cluster][radiusSelector]
+      ) {
+        clusterCenters[cluster] = d;
+        // todo: emit new cluster centers
+        this.setState({ clusterCenters: clusterCenters });
+      }
+      // if ([1, 100, 200, 300, 400].includes(d.id)) {
+      // }
+    });
+  };
+
   render() {
+    const {
+      forceCluster,
+      clusterCenters,
+      radiusSelector,
+      clusterSelector
+    } = this.state;
     return (
       <MuiThemeProvider theme={theme}>
         <Container>
           <Navbar />
           <ControlsTop data={NOCData} filterVariables={filterVariables} />
-          <Viz radiusScale={this.state.radiusScale()} data={NOCData} />
+          <Viz
+            radiusScale={this.state.radiusScale()}
+            radiusSelector={radiusSelector}
+            clusterCenters={clusterCenters}
+            data={NOCData}
+          />
         </Container>
       </MuiThemeProvider>
     );

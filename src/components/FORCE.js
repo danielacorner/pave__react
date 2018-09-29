@@ -1,85 +1,63 @@
 import * as d3 from 'd3';
 import ReactDOM from 'react-dom';
-import APP_CONFIG from '../app.config';
 
 const FORCE = function(nsp) {
-  let radiusScale;
-
   const width = window.innerWidth,
     height = window.innerHeight,
     color = d3.scaleOrdinal(d3.schemeCategory10),
-    clusterCenters = nsp.clusterCenters || [],
-    clusterSelector = 'industry',
-    radiusSelector = 'workers',
-    forceCluster = (nodes, clusterCenters) => {
-      // These are implementations of the custom forces.
-      console.log(clusterCenters);
-      alpha => {
-        nodes.forEach(d => {
-          if (d.id === 1) {
-            console.log(d);
-          }
-          const clusterCenter = clusterCenters[d.cluster];
-          if (clusterCenter === d) {
-            return;
-          }
-          let x = d.x - clusterCenter.x,
-            y = d.y - clusterCenter.y,
-            l = APP_CONFIG.FORCES.CLUSTER * Math.sqrt(x * x + y * y);
-          const r = d[radiusSelector] + clusterCenter[radiusSelector];
+    cluster = (nodes, clusterCenters) => {
+      let strength = 0.2;
+
+      function force(alpha) {
+        // scale + curve alpha value
+        alpha *= strength * alpha;
+
+        nodes.forEach(function(d) {
+          var cluster = clusterCenters[d.cluster];
+          if (cluster === d) return;
+
+          let x = d.x - cluster.x,
+            y = d.y - cluster.y,
+            l = Math.sqrt(x * x + y * y),
+            r = d.radius + cluster.radius;
+
           if (l !== r) {
             l = ((l - r) / l) * alpha;
             d.x -= x *= l;
             d.y -= y *= l;
-            clusterCenter.x += x;
-            clusterCenter.y += y;
+            cluster.x += x;
+            cluster.y += y;
           }
         });
+      }
+
+      force.initialize = function(_) {
+        nodes = _;
       };
+
+      force.strength = _ => {
+        strength = _ == null ? strength : _;
+        return force;
+      };
+
+      return force;
     },
-    initForce = (nodes, radiusScale) => {
-      const uniqueClusterValues = nodes
-        .map(d => d[clusterSelector])
-        .filter((value, index, self) => self.indexOf(value) === index);
-
-      nodes = nodes.map(d => {
-        // scale radius to fit on the screen
-        // SELECT THE CLUSTER VARIABLE 2/2
-        const cluster = uniqueClusterValues.indexOf(d[clusterSelector]) + 1;
-        // add to clusters array if it doesn't exist or the radius is larger than any other radius in the cluster
-        if (
-          !clusterCenters[cluster] ||
-          d[radiusSelector] > clusterCenters[cluster][radiusSelector]
-        ) {
-          clusterCenters[cluster] = d;
-          // todo: emit new cluster centers
-          // this._statusService.changeClusterCenters(clusterCenters);
-        }
-        if ([1, 100, 200, 300, 400].includes(d.id)) {
-        }
-        return d;
-      });
-
+    initForce = ({ nodes, radiusScale, radiusSelector, clusterCenters }) => {
+      console.log({ clusterCenters });
       nsp.force = d3
         .forceSimulation(nodes)
         .force(
           'charge',
           d3.forceManyBody().strength(d => {
+            console.log(d[radiusSelector]);
             return -Math.pow(radiusScale(d[radiusSelector]), 1.6); // todo: calculate this magic number
           })
         )
-        // .force(
-        //   'center',
-        //   d3
-        //     .forceCenter()
-        //     .x(0)
-        //     .y(0)
-        // )
-        .force('x', d3.forceX())
-        .force('y', d3.forceY())
-        .force('cluster', forceCluster(nodes, clusterCenters));
+        .force('x', d3.forceX().strength(0.1))
+        .force('y', d3.forceY().strength(0.1));
+      // .force('cluster', cluster(nodes, clusterCenters).strength(0.2));
     },
-    enterNode = (selection, radiusScale) => {
+    enterNode = (selection, radiusScale, radiusSelector) => {
       // circles
       selection
         .select('circle')
@@ -154,8 +132,6 @@ const FORCE = function(nsp) {
   nsp.dragEnded = dragEnded;
   nsp.drag = drag;
   nsp.tick = tick;
-
-  nsp.clusterCenters = clusterCenters;
 
   return nsp;
 };
