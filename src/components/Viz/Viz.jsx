@@ -4,8 +4,11 @@ import Node from './Node';
 import styled from 'styled-components';
 
 const GraphContainer = styled.div`
-  width: 100%;
+  width: 95%;
+  margin: auto;
   height: 100%;
+  display: grid;
+  place-items: center center;
   svg {
     background-color: steelblue;
     width: 100%;
@@ -25,7 +28,8 @@ export default class Viz extends Component {
       nodes: props.data.map(d => {
         d.name = d.job;
         return d;
-      })
+      }),
+      hasResizedOnce: false
     };
     this.handleAddNode = this.handleAddNode.bind(this);
     this.addNode = this.addNode.bind(this);
@@ -49,15 +53,39 @@ export default class Viz extends Component {
     }
   }
 
-  handleResize() {
-    const width = window.innerWidth;
-    const vizHeight = document
-      .getElementById('graphContainer')
-      .getBoundingClientRect().height;
+  handleResize = () => {
+    const graphContainer = document.getElementById('graphContainer');
+    const svg = document.getElementById('svg');
+    const svgWidth = svg.getBoundingClientRect().width;
+    const nodesG = document.getElementById('nodesG');
+    const graphBB = graphContainer.getBoundingClientRect();
+    const vizHeight = graphBB.height;
 
-    document.getElementById('nodesG').style.transform = `translate(${width /
-      2}px,${vizHeight / 2}px)`;
-  }
+    // translate the nodes group into the middle
+    nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight / 2}px)`;
+
+    // resize the graph container to fit the screen
+
+    const getScaleRatio = () => {
+      // if constrained, shrink!
+      const minLength = Math.min(vizHeight, svgWidth);
+      const nodesWidth = nodesG.getBBox().width;
+      return minLength < nodesWidth ? minLength / nodesWidth : 1;
+    };
+
+    // if it's the first resize, let the nodes stabilize first
+    if (!this.state.hasResizedOnce) {
+      setTimeout(() => {
+        nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight /
+          2}px) scale(${getScaleRatio()})`;
+      }, 1000);
+    } else {
+      nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight /
+        2}px) scale(${getScaleRatio()})`;
+    }
+
+    !this.state.hasResizedOnce && this.setState({ hasResizedOnce: true });
+  };
 
   handleAddNode(e) {
     this.setState({ [e.target.name]: e.target.value });
@@ -80,26 +108,7 @@ export default class Viz extends Component {
     });
     return (
       <GraphContainer id="graphContainer">
-        {/* <form className="form-addSystem" onSubmit={this.addNode.bind(this)}>
-          <h4 className="form-addSystem__header">New Node</h4>
-          <div className="form-addSystem__group">
-            <input
-              value={this.state.name}
-              onChange={this.handleAddNode.bind(this)}
-              name="name"
-              className="form-addSystem__input"
-              id="name"
-              placeholder="Name"
-            />
-            <label className="form-addSystem__label" htmlFor="title">
-              Name
-            </label>
-          </div>
-          <div className="form-addSystem__group">
-            <input className="btnn" type="submit" value="add node" />
-          </div>
-        </form> */}
-        <svg>
+        <svg id="svg">
           <g id="nodesG">{nodes}</g>
         </svg>
       </GraphContainer>
