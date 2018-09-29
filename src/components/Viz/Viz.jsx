@@ -5,10 +5,9 @@ import styled from 'styled-components';
 
 const GraphContainer = styled.div`
   width: 95%;
-  margin: auto;
   height: 100%;
   display: grid;
-  place-items: center center;
+  place-self: center center;
   svg {
     background-color: steelblue;
     width: 100%;

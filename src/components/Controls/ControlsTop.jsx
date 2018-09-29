@@ -11,7 +11,7 @@ const Container = styled.div`
   .slidersDiv {
     display: grid;
     grid-gap: 30px;
-    grid-template-columns: repeat(4, auto);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     align-items: center;
   }
   .buttonsDiv {
