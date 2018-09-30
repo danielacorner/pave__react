@@ -43,13 +43,13 @@ const FORCE = function(nsp) {
       return force;
     },
     initForce = ({ nodes, radiusScale, radiusSelector, clusterCenters }) => {
-      console.log({ clusterCenters });
+      // console.log({ clusterCenters });
       nsp.force = d3
         .forceSimulation(nodes)
         .force(
           'charge',
           d3.forceManyBody().strength(d => {
-            console.log(d[radiusSelector]);
+            // console.log(d[radiusSelector]);
             return -Math.pow(radiusScale(d[radiusSelector]), 1.6); // todo: calculate this magic number
           })
         )

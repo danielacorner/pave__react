@@ -9,6 +9,7 @@ export default class FilterSlider extends Component {
 
   handleChange = (event, value) => {
     this.setState({ value });
+    this.props.onChange(value);
   };
 
   render() {

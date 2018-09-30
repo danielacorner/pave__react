@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import FORCE from '../FORCE';
 import Node from './Node';
 import styled from 'styled-components';
+import { ControlsContext } from '../Controls/ContextProvider';
 
 const GraphContainer = styled.div`
   width: 95%;
@@ -113,6 +114,16 @@ export default class Viz extends Component {
     }));
   }
 
+  filterNodes = (node, filtersState) => {
+    let returned = true;
+    Object.keys(filtersState).forEach(filterVar => {
+      if (node.props.data[filterVar] < filtersState[filterVar]) {
+        returned = false;
+      }
+    });
+    return returned;
+  };
+
   render() {
     const { radiusSelector, radiusScale } = this.props;
     const nodes = this.state.nodes.map(node => {
@@ -127,11 +138,19 @@ export default class Viz extends Component {
       );
     });
     return (
-      <GraphContainer id="graphContainer">
-        <svg id="svg">
-          <g id="nodesG">{nodes}</g>
-        </svg>
-      </GraphContainer>
+      <ControlsContext.Consumer>
+        {context => (
+          <GraphContainer id="graphContainer">
+            <svg id="svg">
+              <g id="nodesG">
+                {nodes.filter(node =>
+                  this.filterNodes(node, context.state.filters)
+                )}
+              </g>
+            </svg>
+          </GraphContainer>
+        )}
+      </ControlsContext.Consumer>
     );
   }
 }

@@ -9,6 +9,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import NOCData from './assets/NOC-data';
 import * as d3 from 'd3';
 import APP_CONFIG from './app.config';
+import ContextProvider from './components/Controls/ContextProvider';
 
 const theme = createMuiTheme({
   palette: {
@@ -85,18 +86,20 @@ class App extends Component {
       clusterSelector
     } = this.state;
     return (
-      <MuiThemeProvider theme={theme}>
-        <Container>
-          <Navbar />
-          <ControlsTop data={NOCData} filterVariables={filterVariables} />
-          <Viz
-            radiusScale={this.state.radiusScale()}
-            radiusSelector={radiusSelector}
-            clusterCenters={clusterCenters}
-            data={NOCData}
-          />
-        </Container>
-      </MuiThemeProvider>
+      <ContextProvider>
+        <MuiThemeProvider theme={theme}>
+          <Container>
+            <Navbar />
+            <ControlsTop data={NOCData} filterVariables={filterVariables} />
+            <Viz
+              radiusScale={this.state.radiusScale()}
+              radiusSelector={radiusSelector}
+              clusterCenters={clusterCenters}
+              data={NOCData}
+            />
+          </Container>
+        </MuiThemeProvider>
+      </ContextProvider>
     );
   }
 }
