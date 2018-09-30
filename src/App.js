@@ -8,7 +8,6 @@ import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
 import NOCData from './assets/NOC-data';
 import * as d3 from 'd3';
-import APP_CONFIG from './app.config';
 import ContextProvider, {
   ControlsContext
 } from './components/Controls/ContextProvider';
@@ -58,6 +57,8 @@ class App extends Component {
   };
 
   componentWillMount = () => {
+    console.log('app mounting!');
+
     const {
       clusterCenters,
       radiusSelector,
@@ -66,7 +67,7 @@ class App extends Component {
     } = this.state;
 
     // initialize the clusters
-    NOCData.map(d => {
+    NOCData.forEach(d => {
       const cluster = uniqueClusterValues.indexOf(d[clusterSelector]) + 1;
       // add to clusters array if it doesn't exist or the radius is larger than any other radius in the cluster
       if (
@@ -83,11 +84,13 @@ class App extends Component {
   };
 
   render() {
+    console.log('app rendering!');
+
     const {
-      forceCluster,
+      // forceCluster,
       clusterCenters,
-      radiusSelector,
-      clusterSelector
+      radiusSelector
+      // clusterSelector
     } = this.state;
     return (
       <ContextProvider>
@@ -96,10 +99,7 @@ class App extends Component {
             {context => (
               <Container>
                 <Navbar />
-                <ControlsTop
-                  data={context.state.nodes}
-                  filterVariables={filterVariables}
-                />
+                <ControlsTop filterVariables={filterVariables} />
                 <Viz
                   radiusScale={this.state.radiusScale()}
                   radiusSelector={radiusSelector}

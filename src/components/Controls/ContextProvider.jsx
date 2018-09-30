@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import NOCData from '../../assets/NOC-data';
-import _ from 'lodash';
 
 export const ControlsContext = React.createContext();
 
@@ -47,6 +46,8 @@ class ContextProvider extends Component {
   };
 
   render() {
+    console.log('context rendering!');
+
     return (
       <ControlsContext.Provider
         value={{

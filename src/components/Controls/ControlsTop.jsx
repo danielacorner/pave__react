@@ -24,6 +24,8 @@ const Container = styled.div`
 
 export default class ControlsTop extends Component {
   render() {
+    console.log('controls rendering!');
+
     const { filterVariables } = this.props;
     return (
       <ControlsContext.Consumer>

@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import FORCE from '../FORCE';
 import Node from './Node';
 import styled from 'styled-components';
-import { ControlsContext } from '../Controls/ContextProvider';
-import _ from 'lodash';
 
 const GraphContainer = styled.div`
   width: 95%;
@@ -31,6 +29,8 @@ export default class Viz extends Component {
   }
 
   componentDidMount() {
+    console.log('viz mounted!');
+
     // const data = this.state;
     const { radiusScale, clusterCenters, radiusSelector } = this.props;
 
@@ -47,6 +47,8 @@ export default class Viz extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log('viz updated!');
+
     if (prevProps.nodes !== this.props.nodes) {
       // const data = this.state;
       const { radiusScale, clusterCenters, radiusSelector } = this.props;
@@ -110,6 +112,8 @@ export default class Viz extends Component {
   }
 
   render() {
+    console.log('viz rendered!');
+
     const { radiusSelector, radiusScale } = this.props;
     const nodes = this.props.nodes.map(node => {
       return (
@@ -123,15 +127,11 @@ export default class Viz extends Component {
       );
     });
     return (
-      <ControlsContext.Consumer>
-        {context => (
-          <GraphContainer id="graphContainer">
-            <svg id="svg">
-              <g id="nodesG">{nodes}</g>
-            </svg>
-          </GraphContainer>
-        )}
-      </ControlsContext.Consumer>
+      <GraphContainer id="graphContainer">
+        <svg id="svg">
+          <g id="nodesG">{nodes}</g>
+        </svg>
+      </GraphContainer>
     );
   }
 }
