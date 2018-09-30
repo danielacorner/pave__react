@@ -14,7 +14,7 @@ export default class FilterSlider extends Component {
 
   render() {
     const { value } = this.state;
-    const { filterRange, filterVar } = this.props;
+    const { filterVar } = this.props;
     const filterTitle = () => {
       switch (filterVar) {
         case 'skillsLang':
@@ -29,6 +29,20 @@ export default class FilterSlider extends Component {
           return;
       }
     };
+    const filterRange = () => {
+      switch (filterVar) {
+        case 'skillsLang':
+          return [0, 75];
+        case 'skillsLogi':
+          return [0, 75];
+        case 'skillsMath':
+          return [0, 75];
+        case 'skillsComp':
+          return [0, 75];
+        default:
+          return;
+      }
+    };
 
     return (
       <div>
@@ -36,8 +50,8 @@ export default class FilterSlider extends Component {
         <Slider
           style={{ width: 'auto' }}
           value={value}
-          min={filterRange[0]}
-          max={filterRange[1]}
+          min={filterRange()[0]}
+          max={filterRange()[1]}
           step={1}
           onChange={this.handleChange}
         />

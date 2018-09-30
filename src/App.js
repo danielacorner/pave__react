@@ -9,7 +9,9 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import NOCData from './assets/NOC-data';
 import * as d3 from 'd3';
 import APP_CONFIG from './app.config';
-import ContextProvider from './components/Controls/ContextProvider';
+import ContextProvider, {
+  ControlsContext
+} from './components/Controls/ContextProvider';
 
 const theme = createMuiTheme({
   palette: {
@@ -62,6 +64,8 @@ class App extends Component {
       clusterSelector,
       uniqueClusterValues
     } = this.state;
+
+    // initialize the clusters
     NOCData.map(d => {
       const cluster = uniqueClusterValues.indexOf(d[clusterSelector]) + 1;
       // add to clusters array if it doesn't exist or the radius is larger than any other radius in the cluster
@@ -88,16 +92,23 @@ class App extends Component {
     return (
       <ContextProvider>
         <MuiThemeProvider theme={theme}>
-          <Container>
-            <Navbar />
-            <ControlsTop data={NOCData} filterVariables={filterVariables} />
-            <Viz
-              radiusScale={this.state.radiusScale()}
-              radiusSelector={radiusSelector}
-              clusterCenters={clusterCenters}
-              data={NOCData}
-            />
-          </Container>
+          <ControlsContext.Consumer>
+            {context => (
+              <Container>
+                <Navbar />
+                <ControlsTop
+                  data={context.state.nodes}
+                  filterVariables={filterVariables}
+                />
+                <Viz
+                  radiusScale={this.state.radiusScale()}
+                  radiusSelector={radiusSelector}
+                  clusterCenters={clusterCenters}
+                  nodes={context.state.nodes}
+                />
+              </Container>
+            )}
+          </ControlsContext.Consumer>
         </MuiThemeProvider>
       </ContextProvider>
     );

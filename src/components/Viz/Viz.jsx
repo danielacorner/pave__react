@@ -3,6 +3,7 @@ import FORCE from '../FORCE';
 import Node from './Node';
 import styled from 'styled-components';
 import { ControlsContext } from '../Controls/ContextProvider';
+import _ from 'lodash';
 
 const GraphContainer = styled.div`
   width: 95%;
@@ -23,12 +24,6 @@ export default class Viz extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      addLinkArray: [],
-      name: '',
-      nodes: props.data.map(d => {
-        d.name = d.job;
-        return d;
-      }),
       hasResizedOnce: false
     };
     this.handleAddNode = this.handleAddNode.bind(this);
@@ -36,11 +31,11 @@ export default class Viz extends Component {
   }
 
   componentDidMount() {
-    const data = this.state;
+    // const data = this.state;
     const { radiusScale, clusterCenters, radiusSelector } = this.props;
 
     FORCE.initForce({
-      nodes: data.nodes,
+      nodes: this.props.nodes,
       radiusScale: radiusScale,
       radiusSelector: radiusSelector,
       clusterCenters: clusterCenters
@@ -52,11 +47,11 @@ export default class Viz extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.nodes !== this.state.nodes) {
-      const data = this.state;
+    if (prevProps.nodes !== this.props.nodes) {
+      // const data = this.state;
       const { radiusScale, clusterCenters, radiusSelector } = this.props;
       FORCE.initForce({
-        nodes: data.nodes,
+        nodes: this.props.nodes,
         radiusScale: radiusScale,
         radiusSelector: radiusSelector,
         clusterCenters: clusterCenters
@@ -114,19 +109,9 @@ export default class Viz extends Component {
     }));
   }
 
-  filterNodes = (node, filtersState) => {
-    let returned = true;
-    Object.keys(filtersState).forEach(filterVar => {
-      if (node.props.data[filterVar] < filtersState[filterVar]) {
-        returned = false;
-      }
-    });
-    return returned;
-  };
-
   render() {
     const { radiusSelector, radiusScale } = this.props;
-    const nodes = this.state.nodes.map(node => {
+    const nodes = this.props.nodes.map(node => {
       return (
         <Node
           radiusSelector={radiusSelector}
@@ -142,11 +127,7 @@ export default class Viz extends Component {
         {context => (
           <GraphContainer id="graphContainer">
             <svg id="svg">
-              <g id="nodesG">
-                {nodes.filter(node =>
-                  this.filterNodes(node, context.state.filters)
-                )}
-              </g>
+              <g id="nodesG">{nodes}</g>
             </svg>
           </GraphContainer>
         )}

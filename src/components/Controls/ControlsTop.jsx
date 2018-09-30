@@ -24,24 +24,20 @@ const Container = styled.div`
 
 export default class ControlsTop extends Component {
   render() {
-    const { filterVariables, data } = this.props;
+    const { filterVariables } = this.props;
     return (
       <ControlsContext.Consumer>
         {context => (
           <Container>
             <div className="slidersDiv">
               {filterVariables.map(filterVar => {
-                const dataArray = data.map(d => d[filterVar]);
-                const filterRange = [
-                  Math.min(...dataArray),
-                  Math.max(...dataArray)
-                ];
                 return (
                   <FilterSlider
                     key={filterVar}
-                    filterRange={filterRange}
                     filterVar={filterVar}
-                    onChange={value => context.setFilter(filterVar, value)}
+                    onChange={value => {
+                      context.setFilter(filterVar, value);
+                    }}
                   />
                 );
               })}
