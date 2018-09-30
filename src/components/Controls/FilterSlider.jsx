@@ -54,6 +54,7 @@ export default class FilterSlider extends Component {
           max={filterRange()[1]}
           step={1}
           onChange={this.handleChange}
+          onMouseUp={this.props.onMouseUp}
         />
       </div>
     );

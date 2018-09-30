@@ -85,7 +85,6 @@ class App extends Component {
 
   render() {
     console.log('app rendering!');
-
     const {
       // forceCluster,
       clusterCenters,

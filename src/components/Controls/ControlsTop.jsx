@@ -24,8 +24,6 @@ const Container = styled.div`
 
 export default class ControlsTop extends Component {
   render() {
-    console.log('controls rendering!');
-
     const { filterVariables } = this.props;
     return (
       <ControlsContext.Consumer>
@@ -40,6 +38,7 @@ export default class ControlsTop extends Component {
                     onChange={value => {
                       context.setFilter(filterVar, value);
                     }}
+                    onMouseUp={context.restartSimulation}
                   />
                 );
               })}

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import FORCE from '../FORCE';
+import 'jquery/src/jquery';
+// import $ from 'jqeury/src/jquery';
 
 export default class Node extends Component {
   componentDidMount() {
@@ -17,10 +19,26 @@ export default class Node extends Component {
     this.d3Node.datum(this.props.data).call(FORCE.updateNode);
   }
 
+  componentWillUnmount() {
+    // FORCE.removeDrag();
+    // console.log('node unmounting!');
+    // document
+    //   .querySelector(`#node_${this.props.data.id} circle`)
+    //   .removeEventListener('click');
+    // console.log(`node_${this.props.data.id} unmounting!`);
+    // remove all event listeners
+    // window.$(`#node_${this.props.data.id}`).off();
+    // if that doesn't work, try
+    // window
+    //   .$(`#node_${this.props.data.id}`)
+    //   .replaceWith(window.$(`#node_${this.props.data.id}`).clone());
+  }
+
   render() {
+    // console.log('node rendering!');
     return (
-      <g className="node">
-        <circle onClick={this.props.addLink} />
+      <g className="node" id={`node_${this.props.data.id}`}>
+        <circle /* onClick={this.props.addLink} */ />
         <text>{this.props.data.name}</text>
       </g>
     );

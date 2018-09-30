@@ -29,8 +29,6 @@ export default class Viz extends Component {
   }
 
   componentDidMount() {
-    console.log('viz mounted!');
-
     // const data = this.state;
     const { radiusScale, clusterCenters, radiusSelector } = this.props;
 
@@ -46,24 +44,33 @@ export default class Viz extends Component {
     this.handleResize();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    console.log('viz updated!');
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  }
 
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.nodes !== this.props.nodes) {
       // const data = this.state;
       const { radiusScale, clusterCenters, radiusSelector } = this.props;
-      FORCE.initForce({
-        nodes: this.props.nodes,
-        radiusScale: radiusScale,
-        radiusSelector: radiusSelector,
-        clusterCenters: clusterCenters
-      });
-      FORCE.tick(this);
-      FORCE.drag();
+
+      if (!FORCE.paused) {
+        FORCE.initForce({
+          nodes: this.props.nodes,
+          radiusScale: radiusScale,
+          radiusSelector: radiusSelector,
+          clusterCenters: clusterCenters
+        });
+        FORCE.tick(this);
+        FORCE.drag();
+      }
+
+      this.handleResize();
     }
   }
 
   handleResize = () => {
+    console.log('resizing');
+
     const graphContainer = document.getElementById('graphContainer');
     const svg = document.getElementById('svg');
     const svgWidth = svg.getBoundingClientRect().width;
@@ -112,24 +119,25 @@ export default class Viz extends Component {
   }
 
   render() {
-    console.log('viz rendered!');
-
+    // console.log('this.props.nodes', this.props.nodes);
     const { radiusSelector, radiusScale } = this.props;
-    const nodes = this.props.nodes.map(node => {
-      return (
-        <Node
-          radiusSelector={radiusSelector}
-          radiusScale={radiusScale}
-          data={node}
-          name={node.name}
-          key={node.id}
-        />
-      );
-    });
+    // const nodes = ;
     return (
       <GraphContainer id="graphContainer">
         <svg id="svg">
-          <g id="nodesG">{nodes}</g>
+          <g id="nodesG">
+            {this.props.nodes.map(node => {
+              return (
+                <Node
+                  radiusSelector={radiusSelector}
+                  radiusScale={radiusScale}
+                  data={node}
+                  name={node.name}
+                  key={`vizNode_${node.id}`}
+                />
+              );
+            })}
+          </g>
         </svg>
       </GraphContainer>
     );

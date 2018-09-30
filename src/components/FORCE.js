@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import ReactDOM from 'react-dom';
 
 const FORCE = function(nsp) {
+  let paused;
   const width = window.innerWidth,
     height = window.innerHeight,
     color = d3.scaleOrdinal(d3.schemeCategory10),
@@ -56,6 +57,15 @@ const FORCE = function(nsp) {
         .force('x', d3.forceX().strength(0.1))
         .force('y', d3.forceY().strength(0.1));
       // .force('cluster', cluster(nodes, clusterCenters).strength(0.2));
+    },
+    stopSimulation = () => {
+      nsp.force.stop();
+      paused = true;
+      nsp.paused = true;
+    },
+    restartSimulation = () => {
+      paused = false;
+      nsp.paused = false;
     },
     enterNode = (selection, radiusScale, radiusSelector) => {
       // circles
@@ -112,6 +122,14 @@ const FORCE = function(nsp) {
           .on('drag', dragging)
           .on('end', dragEnded)
       ),
+    removeDrag = () =>
+      d3.selectAll('g.node').call(
+        d3
+          .drag()
+          .on('start', null)
+          .on('drag', null)
+          .on('end', null)
+      ),
     tick = that => {
       that.d3Graph = d3.select(ReactDOM.findDOMNode(that));
       nsp.force.on('tick', () => {
@@ -123,15 +141,17 @@ const FORCE = function(nsp) {
   nsp.height = window.innerHeight;
   nsp.enterNode = enterNode;
   nsp.updateNode = updateNode;
-  // nsp.enterLink = enterLink;
-  // nsp.updateLink = updateLink;
   nsp.updateGraph = updateGraph;
   nsp.initForce = initForce;
+  nsp.stopSimulation = stopSimulation;
+  nsp.restartSimulation = restartSimulation;
   nsp.dragStarted = dragStarted;
   nsp.dragging = dragging;
   nsp.dragEnded = dragEnded;
   nsp.drag = drag;
+  nsp.removeDrag = removeDrag;
   nsp.tick = tick;
+  nsp.paused = paused;
 
   return nsp;
 };

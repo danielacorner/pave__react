@@ -1,4 +1,2 @@
 radius dropdown
 force cluster
-
-investigate for memory leaks
