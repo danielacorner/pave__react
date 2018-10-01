@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
 import FilterSlider from './FilterSlider';
 import { ControlsContext } from './ContextProvider';
+import SnapshotsButton from './SnapshotsButton';
 
 const Container = styled.div`
   margin: 10px 20px 20px 20px;
@@ -52,6 +53,7 @@ export default class ControlsTop extends Component {
               <Button variant="contained" color="secondary">
                 Secondary
               </Button>
+              <SnapshotsButton onSnapshot={context.handleSnapshot} />
             </div>
           </Container>
         )}

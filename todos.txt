@@ -1,2 +1,4 @@
 radius dropdown
+cluster dropdown
 force cluster
+snapshot feature

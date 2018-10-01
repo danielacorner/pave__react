@@ -21,7 +21,8 @@ class ContextProvider extends Component {
         skillsComp: 0
       },
       radiusSelector: 'workers',
-      clusterSelector: 'industry'
+      clusterSelector: 'industry',
+      snapshots: []
     };
   }
 
@@ -127,6 +128,26 @@ class ContextProvider extends Component {
     }, 0);
   };
 
+  handleSnapshot = () => {
+    const newSnapshot = {
+      id:
+        this.state.snapshots.length > 0
+          ? Math.max(this.state.snapshots.map(d => d.id)) + 1
+          : 0,
+      filters: this.state.filters
+    };
+    this.setState({ snapshots: [...this.state.snapshots, newSnapshot] });
+
+    console.log('snapped!', [...this.state.snapshots, newSnapshot]);
+
+    localStorage.setItem(
+      'snapshots',
+      JSON.stringify([...this.state.snapshots, newSnapshot])
+    );
+
+    console.log('localstorage!', JSON.parse(localStorage.getItem('snapshots')));
+  };
+
   render() {
     return (
       <ControlsContext.Provider
@@ -149,6 +170,8 @@ class ContextProvider extends Component {
           restartSimulation: this.restartSimulation,
 
           handleSliderMouseup: this.handleSliderMouseup,
+
+          handleSnapshot: this.handleSnapshot,
 
           setNodes: nodes =>
             this.setState({
