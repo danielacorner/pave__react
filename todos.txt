@@ -1,3 +1,2 @@
 radius dropdown
 force cluster
-investigate: clicking slider doesn't filter, only drag

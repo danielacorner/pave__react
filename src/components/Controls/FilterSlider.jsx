@@ -3,18 +3,13 @@ import Slider from '@material-ui/lab/Slider';
 import Typography from '@material-ui/core/Typography';
 
 export default class FilterSlider extends Component {
-  state = {
-    value: 0
-  };
-
   handleChange = (event, value) => {
-    this.setState({ value });
+    // this.setState({ value });
     this.props.onChange(value);
   };
 
   render() {
-    const { value } = this.state;
-    const { filterVar } = this.props;
+    const { value, filterVar } = this.props;
     const filterTitle = () => {
       switch (filterVar) {
         case 'skillsLang':

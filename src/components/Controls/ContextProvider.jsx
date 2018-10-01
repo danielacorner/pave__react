@@ -21,33 +21,43 @@ class ContextProvider extends Component {
         skillsComp: 0
       },
       radiusSelector: 'workers',
-      clusterSelector: 'industry',
-      hasResizedOnce: false
+      clusterSelector: 'industry'
     };
   }
+
   componentWillMount = () => {
     this.setState({ nodes: this.state.originalData });
-    console.log('mounting context!');
   };
+
   componentDidMount = () => {
-    console.log('context mounted!');
     window.addEventListener('resize', this.handleResize);
-    this.handleResize();
+    setTimeout(this.handleResize, 1500);
+
+    // tranlate nodes to center
+    const svgWidth = document.getElementById('svg').getBoundingClientRect()
+      .width;
+    const nodesG = document.getElementById('nodesG');
+    const vizHeight = document
+      .getElementById('graphContainer')
+      .getBoundingClientRect().height;
+    nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight / 2}px)`;
   };
+
   componentWillUnmount = () => {
-    console.log('context unmounted!');
     window.removeEventListener('resize', this.handleResize);
   };
 
-  handleResize = () => {
-    console.log('resizing');
+  componentDidUpdate(nextProps, nextState) {}
 
-    const graphContainer = document.getElementById('graphContainer');
-    const svg = document.getElementById('svg');
-    const svgWidth = svg.getBoundingClientRect().width;
+  handleResize = () => {
+    console.log('...resizing...');
+
+    const svgWidth = document.getElementById('svg').getBoundingClientRect()
+      .width;
     const nodesG = document.getElementById('nodesG');
-    const graphBB = graphContainer.getBoundingClientRect();
-    const vizHeight = graphBB.height;
+    const vizHeight = document
+      .getElementById('graphContainer')
+      .getBoundingClientRect().height;
 
     // translate the nodes group into the middle
     nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight / 2}px)`;
@@ -56,73 +66,65 @@ class ContextProvider extends Component {
     const scale = () => {
       const constrainingLength = Math.min(vizHeight, svgWidth);
       const nodesWidth = nodesG.getBBox().width;
-      return constrainingLength / nodesWidth;
+      return (constrainingLength * 0.95) / nodesWidth;
     };
+    setTimeout(
+      () =>
+        (nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight /
+          2}px) scale(${scale()})`),
+      0
+    );
+  };
 
-    // if it's the first resize, let the nodes stabilize first
-    if (!this.state.hasResizedOnce) {
-      setTimeout(() => {
-        nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight /
-          2}px) scale(${scale()})`;
-      }, 2000);
-      this.setState({ hasResizedOnce: true });
-    } else {
-      nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight /
-        2}px) scale(${scale()})`;
-    }
+  filteredNodes = () => {
+    // filter the dataset according to the slider state
+    return this.state.originalData.filter(node => {
+      let keep = true;
+      const { filters } = this.state;
+      // for each filter variable ('skillsLang', 'skillsMath'...)
+      Object.keys(filters).forEach(filterVar => {
+        // filter out the node if less than the slider value
+        if (node[filterVar] < filters[filterVar]) {
+          keep = false;
+        }
+      });
+      return keep;
+    });
   };
 
   filterNodes = () => {
-    // filter the dataset according to the slider state
-    const filteredNodes = this.state.originalData.filter(node => {
-      let keep = true;
-      const { filters } = this.state;
-      // for each filter variable ('skillsLang', 'skillsMath'...)
-      Object.keys(filters).forEach(filterVar => {
-        // filter out the node if less than the slider value
-        if (node[filterVar] < filters[filterVar]) {
-          keep = false;
-        }
-      });
-
-      return keep;
-    });
-
-    // todo: why are the circles visible entering at the center if paused before state change...
-    // // pause the simulation if running
-    // !FORCE.paused && FORCE.stopSimulation();
-
-    this.setState({
-      nodes: filteredNodes
-    });
-
-    // todo: but the simulation keep running if paused after state change?
+    // todo: why are circles sometimes visible entering at the center if paused before state change?
     // pause the simulation if running
     !FORCE.paused && FORCE.stopSimulation();
-  };
-  restartSimulation = () => {
-    FORCE.restartSimulation();
-
-    const filteredNodes = this.state.originalData.filter(node => {
-      let keep = true;
-      const { filters } = this.state;
-      // for each filter variable ('skillsLang', 'skillsMath'...)
-      Object.keys(filters).forEach(filterVar => {
-        // filter out the node if less than the slider value
-        if (node[filterVar] < filters[filterVar]) {
-          keep = false;
-        }
-      });
-
-      return keep;
-    });
 
     this.setState({
-      nodes: filteredNodes
+      nodes: this.filteredNodes()
     });
+  };
 
-    // zoom in / out after mouseup
-    setTimeout(this.handleResize, 2000);
+  restartSimulation = () => {
+    FORCE.restartSimulation();
+    this.setState({
+      nodes: this.filteredNodes()
+    });
+    setTimeout(() => {
+      FORCE.restartSimulation();
+    }, 200);
+    setTimeout(() => {
+      this.handleResize();
+    }, 1500);
+  };
+
+  handleSliderMouseup = () => {
+    setTimeout(this.restartSimulation, 0);
+    let newMinima = {};
+    setTimeout(() => {
+      Object.keys(this.state.filters).forEach(filter => {
+        // console.log(Math.max(...this.state.nodes[filter]));
+        newMinima[filter] = Math.min(...this.state.nodes.map(d => d[filter]));
+      });
+      this.setState({ filters: newMinima });
+    }, 0);
   };
 
   render() {
@@ -141,10 +143,12 @@ class ContextProvider extends Component {
             this.setState({
               filters: { ...this.state.filters, [filter]: value }
             });
-            this.filterNodes();
+            setTimeout(this.filterNodes, 0);
           },
 
           restartSimulation: this.restartSimulation,
+
+          handleSliderMouseup: this.handleSliderMouseup,
 
           setNodes: nodes =>
             this.setState({

@@ -66,6 +66,10 @@ const FORCE = function(nsp) {
     restartSimulation = () => {
       paused = false;
       nsp.paused = false;
+      nsp.force
+        .alpha(0.5)
+        .alphaTarget(0)
+        .restart();
     },
     enterNode = (selection, radiusScale, radiusSelector) => {
       // circles

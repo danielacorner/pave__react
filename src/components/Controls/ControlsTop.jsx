@@ -35,10 +35,11 @@ export default class ControlsTop extends Component {
                   <FilterSlider
                     key={filterVar}
                     filterVar={filterVar}
+                    value={context.state.filters[filterVar]}
                     onChange={value => {
                       context.setFilter(filterVar, value);
                     }}
-                    onMouseUp={context.restartSimulation}
+                    onMouseUp={context.handleSliderMouseup}
                   />
                 );
               })}
