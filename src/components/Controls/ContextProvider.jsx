@@ -21,7 +21,8 @@ class ContextProvider extends Component {
         skillsComp: 0
       },
       radiusSelector: 'workers',
-      clusterSelector: 'industry'
+      clusterSelector: 'industry',
+      hasResizedOnce: false
     };
   }
   componentWillMount = () => {
@@ -30,9 +31,45 @@ class ContextProvider extends Component {
   };
   componentDidMount = () => {
     console.log('context mounted!');
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   };
   componentWillUnmount = () => {
     console.log('context unmounted!');
+    window.removeEventListener('resize', this.handleResize);
+  };
+
+  handleResize = () => {
+    console.log('resizing');
+
+    const graphContainer = document.getElementById('graphContainer');
+    const svg = document.getElementById('svg');
+    const svgWidth = svg.getBoundingClientRect().width;
+    const nodesG = document.getElementById('nodesG');
+    const graphBB = graphContainer.getBoundingClientRect();
+    const vizHeight = graphBB.height;
+
+    // translate the nodes group into the middle
+    nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight / 2}px)`;
+
+    // resize the graph container to fit the screen
+    const scale = () => {
+      const constrainingLength = Math.min(vizHeight, svgWidth);
+      const nodesWidth = nodesG.getBBox().width;
+      return constrainingLength / nodesWidth;
+    };
+
+    // if it's the first resize, let the nodes stabilize first
+    if (!this.state.hasResizedOnce) {
+      setTimeout(() => {
+        nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight /
+          2}px) scale(${scale()})`;
+      }, 2000);
+      this.setState({ hasResizedOnce: true });
+    } else {
+      nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight /
+        2}px) scale(${scale()})`;
+    }
   };
 
   filterNodes = () => {
@@ -83,6 +120,9 @@ class ContextProvider extends Component {
     this.setState({
       nodes: filteredNodes
     });
+
+    // zoom in / out after mouseup
+    setTimeout(this.handleResize, 2000);
   };
 
   render() {
