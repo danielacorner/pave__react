@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import FilterSlider from './FilterSlider';
 import { ControlsContext } from './ContextProvider';
 import SnapshotsButton from './SnapshotsButton';
+import SnapshotsContainer from './SnapshotsContainer';
 
 const Container = styled.div`
   margin: 10px 20px 20px 20px;
@@ -54,6 +55,12 @@ export default class ControlsTop extends Component {
                 Secondary
               </Button>
               <SnapshotsButton onSnapshot={context.handleSnapshot} />
+            </div>
+            <div className="snapshotsDiv">
+              <SnapshotsContainer
+                snapshots={context.state.snapshots}
+                onShapshotClick={id => context.handleApplySnapshot(id)}
+              />
             </div>
           </Container>
         )}

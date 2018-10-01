@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import NOCData from '../../assets/NOC-data';
 import FORCE from '../FORCE';
+import html2canvas from 'html2canvas';
 
 export const ControlsContext = React.createContext();
 
@@ -37,11 +38,13 @@ class ContextProvider extends Component {
     // tranlate nodes to center
     const svgWidth = document.getElementById('svg').getBoundingClientRect()
       .width;
-    const nodesG = document.getElementById('nodesG');
+
     const vizHeight = document
       .getElementById('graphContainer')
       .getBoundingClientRect().height;
-    nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight / 2}px)`;
+
+    document.getElementById('nodesG').style.transform = `translate(${svgWidth /
+      2}px,${vizHeight / 2}px)`;
   };
 
   componentWillUnmount = () => {
@@ -129,23 +132,35 @@ class ContextProvider extends Component {
   };
 
   handleSnapshot = () => {
-    const newSnapshot = {
-      id:
-        this.state.snapshots.length > 0
-          ? Math.max(this.state.snapshots.map(d => d.id)) + 1
-          : 0,
-      filters: this.state.filters
-    };
-    this.setState({ snapshots: [...this.state.snapshots, newSnapshot] });
+    html2canvas(document.querySelector('#graphContainer'), {
+      width: '100%',
+      height: 'auto'
+    }).then(canvas => {
+      let imgData = canvas.toDataURL('image/png', 0.1);
 
-    console.log('snapped!', [...this.state.snapshots, newSnapshot]);
+      const ssID = this.state.snapshots.length;
+      const newSnapshot = {
+        id: ssID,
+        filters: this.state.filters,
+        image: imgData
+      };
+      this.setState({ snapshots: [...this.state.snapshots, newSnapshot] });
 
-    localStorage.setItem(
-      'snapshots',
-      JSON.stringify([...this.state.snapshots, newSnapshot])
+      localStorage.setItem(
+        'snapshots',
+        JSON.stringify([...this.state.snapshots, newSnapshot])
+      );
+    });
+  };
+
+  handleApplySnapshot = id => {
+    console.log(
+      'applying snapshot ',
+      this.state.snapshots.find(ss => ss.id === id)
     );
-
-    console.log('localstorage!', JSON.parse(localStorage.getItem('snapshots')));
+    const snapshot = this.state.snapshots.find(ss => ss.id === id);
+    this.setState({ filters: snapshot.filters });
+    this.handleSliderMouseup();
   };
 
   render() {
@@ -168,10 +183,10 @@ class ContextProvider extends Component {
           },
 
           restartSimulation: this.restartSimulation,
-
           handleSliderMouseup: this.handleSliderMouseup,
 
           handleSnapshot: this.handleSnapshot,
+          handleApplySnapshot: this.handleApplySnapshot,
 
           setNodes: nodes =>
             this.setState({
