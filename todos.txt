@@ -1,4 +1,5 @@
 radius dropdown
 cluster dropdown
 force cluster
-snapshot feature
+snapshot url params
+snapshot copy link
