@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Typography } from '@material-ui/core';
+import { Typography, IconButton } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded';
 import ShareIcon from '@material-ui/icons/Share';
 import { Link } from '@reach/router';
+import CopyIcon from '@material-ui/icons/FileCopy';
 
 const Container = styled.div`
   display: grid;
@@ -68,7 +69,11 @@ export default class SnapshotsContainer extends Component {
                   }}
                 >
                   <Link
-                    style={{ display: 'grid', gridTemplateColumns: '1fr auto' }}
+                    style={{
+                      width: '100%',
+                      display: 'grid',
+                      gridTemplateColumns: '1fr auto'
+                    }}
                     // to={`/`}
                     to={`/${JSON.stringify(
                       ss.filters
@@ -77,7 +82,7 @@ export default class SnapshotsContainer extends Component {
                       // )}`}
                     )}`}
                   >
-                    Apply Snapshot{' '}
+                    View Snapshot{' '}
                     <PlayArrowIcon
                       style={{
                         marginLeft: 10,
@@ -88,17 +93,39 @@ export default class SnapshotsContainer extends Component {
                   </Link>{' '}
                 </MenuItem>
                 <MenuItem
-                  style={{ display: 'grid', gridTemplateColumns: '1fr auto' }}
-                  onClick={this.handleClose}
+                  style={{
+                    height: 'auto',
+                    display: 'grid',
+                    gridGap: 4,
+                    gridTemplateColumns: '1fr auto'
+                  }}
+                  disableRipple={true}
                 >
-                  Copy Link to Snapshot{' '}
-                  <ShareIcon
+                  Copy Link to Snapshot <span />
+                  <input
+                    type="text"
+                    name="snapshotLink"
+                    readonly
+                    value={`${window.location.origin}/${JSON.stringify(
+                      ss.filters
+                    )
+                      .replace('{', '%7B')
+                      .replace('}', '%7D')}`}
+                  />
+                  <IconButton
                     style={{
                       marginLeft: 10,
                       justifySelf: 'right',
                       color: 'steelblue'
                     }}
-                  />
+                    onClick={() => {
+                      document.querySelector('[name="snapshotLink"]').select();
+                      document.execCommand('copy');
+                      this.handleClose();
+                    }}
+                  >
+                    <CopyIcon />
+                  </IconButton>
                 </MenuItem>
               </Menu>
             </React.Fragment>
