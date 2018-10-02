@@ -6,6 +6,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded';
 import ShareIcon from '@material-ui/icons/Share';
+import { Link } from '@reach/router';
 
 const Container = styled.div`
   display: grid;
@@ -17,6 +18,7 @@ const Container = styled.div`
     text-transform: none;
     img {
       width: 100%;
+      height: auto;
       margin-bottom: 4px;
       object-fit: contain;
     }
@@ -52,6 +54,7 @@ export default class SnapshotsContainer extends Component {
                 <img src={ss.image} alt={`snapshot_${ss.id}`} />
                 <Typography variant="caption">Snapshot #{ss.id + 1}</Typography>
               </Button>
+
               <Menu
                 id="simple-menu"
                 anchorEl={anchorEl}
@@ -59,20 +62,30 @@ export default class SnapshotsContainer extends Component {
                 onClose={this.handleClose}
               >
                 <MenuItem
-                  style={{ display: 'grid', gridTemplateColumns: '1fr auto' }}
                   onClick={() => {
                     this.props.onShapshotClick(ss.id);
                     this.handleClose();
                   }}
                 >
-                  Apply Snapshot{' '}
-                  <PlayArrowIcon
-                    style={{
-                      marginLeft: 10,
-                      justifySelf: 'right',
-                      color: 'steelblue'
-                    }}
-                  />
+                  <Link
+                    style={{ display: 'grid', gridTemplateColumns: '1fr auto' }}
+                    // to={`/`}
+                    to={`/${JSON.stringify(
+                      ss.filters
+                      // Object.keys(ss.filters).map(
+                      // filter => `${filter}=${ss.filters[filter]}`
+                      // )}`}
+                    )}`}
+                  >
+                    Apply Snapshot{' '}
+                    <PlayArrowIcon
+                      style={{
+                        marginLeft: 10,
+                        justifySelf: 'right',
+                        color: 'steelblue'
+                      }}
+                    />
+                  </Link>{' '}
                 </MenuItem>
                 <MenuItem
                   style={{ display: 'grid', gridTemplateColumns: '1fr auto' }}

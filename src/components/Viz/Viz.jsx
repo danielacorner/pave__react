@@ -39,6 +39,10 @@ export default class Viz extends Component {
     });
     FORCE.tick(this);
     FORCE.drag();
+
+    // if applying a snapshot, handle in ContextProvider
+    this.props.filterState &&
+      this.props.onLoadFromSnapshot(this.props.filterState);
   }
 
   componentWillUnmount() {}
@@ -81,7 +85,7 @@ export default class Viz extends Component {
     const { radiusSelector, radiusScale } = this.props;
     // const nodes = ;
     return (
-      <GraphContainer id="graphContainer">
+      <GraphContainer id="graphContainer" style={{ overflow: 'visible' }}>
         <svg id="svg">
           <g id="nodesG">
             {this.props.nodes.map(node => {

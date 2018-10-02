@@ -53,29 +53,38 @@ class ContextProvider extends Component {
 
   componentDidUpdate(nextProps, nextState) {}
 
-  handleResize = () => {
-    console.log('...resizing...');
-
+  translate = () => {
     const svgWidth = document.getElementById('svg').getBoundingClientRect()
       .width;
     const nodesG = document.getElementById('nodesG');
     const vizHeight = document
       .getElementById('graphContainer')
       .getBoundingClientRect().height;
+    return `${svgWidth / 2}px,${vizHeight / 2}px`;
+  };
+  scale = () => {
+    const svgWidth = document.getElementById('svg').getBoundingClientRect()
+      .width;
+    const nodesG = document.getElementById('nodesG');
+    const vizHeight = document
+      .getElementById('graphContainer')
+      .getBoundingClientRect().height;
+    // resize the graph container to fit the screen
+    const constrainingLength = Math.min(vizHeight, svgWidth);
+    const nodesWidth = nodesG.getBBox().width;
+    return (constrainingLength * 0.95) / nodesWidth;
+  };
+
+  handleResize = () => {
+    console.log('...resizing...');
+    const nodesG = document.getElementById('nodesG');
 
     // translate the nodes group into the middle
-    nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight / 2}px)`;
+    nodesG.style.transform = `translate(${this.translate()})`;
 
-    // resize the graph container to fit the screen
-    const scale = () => {
-      const constrainingLength = Math.min(vizHeight, svgWidth);
-      const nodesWidth = nodesG.getBBox().width;
-      return (constrainingLength * 0.95) / nodesWidth;
-    };
     setTimeout(
       () =>
-        (nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight /
-          2}px) scale(${scale()})`),
+        (nodesG.style.transform = `translate(${this.translate()}) scale(${this.scale()})`),
       0
     );
   };
@@ -132,11 +141,30 @@ class ContextProvider extends Component {
   };
 
   handleSnapshot = () => {
-    html2canvas(document.querySelector('#graphContainer'), {
-      width: '100%',
-      height: 'auto'
-    }).then(canvas => {
-      let imgData = canvas.toDataURL('image/png', 0.1);
+    const gc = document.querySelector('#graphContainer');
+    html2canvas(
+      gc,
+      // options
+      {
+        // x: document.querySelector('#nodesG').getBoundingClientRect().x,
+        // y: document.querySelector('#nodesG').getBoundingClientRect().y,
+        // width: document.querySelector('#nodesG').getBoundingClientRect().width,
+        // height: document.querySelector('#nodesG').getBoundingClientRect()
+        //   .height,
+        // scrollX: document.querySelector('#nodesG').getBoundingClientRect().left,
+        // scrollY: document.querySelector('#nodesG').getBoundingClientRect().top,
+        onclone: document => {
+          document.querySelector('#nodesG').style.transform =
+            // todo: calculate this
+            `translate(150px,100px) scale(${this.scale() * 0.5})`;
+        }
+      }
+    ).then(canvas => {
+      // document.querySelector(
+      //   '#nodesG'
+      // ).style.transform = `translate(0,0) scale(${this.scale()})`;
+
+      let imgData = canvas.toDataURL();
 
       const ssID = this.state.snapshots.length;
       const newSnapshot = {
@@ -144,6 +172,7 @@ class ContextProvider extends Component {
         filters: this.state.filters,
         image: imgData
       };
+
       this.setState({ snapshots: [...this.state.snapshots, newSnapshot] });
 
       localStorage.setItem(
@@ -161,6 +190,13 @@ class ContextProvider extends Component {
     const snapshot = this.state.snapshots.find(ss => ss.id === id);
     this.setState({ filters: snapshot.filters });
     this.handleSliderMouseup();
+  };
+
+  handleLoadFromSnapshot = ssUrl => {
+    setTimeout(() => {
+      this.setState({ filters: JSON.parse(ssUrl) });
+      this.restartSimulation();
+    }, 2000);
   };
 
   render() {
@@ -187,6 +223,7 @@ class ContextProvider extends Component {
 
           handleSnapshot: this.handleSnapshot,
           handleApplySnapshot: this.handleApplySnapshot,
+          handleLoadFromSnapshot: this.handleLoadFromSnapshot,
 
           setNodes: nodes =>
             this.setState({
