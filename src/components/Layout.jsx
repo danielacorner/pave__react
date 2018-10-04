@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import Viz from './Viz/Viz';
 import styled from 'styled-components';
-import ControlsTop from './Controls/ControlsTop';
+import FiltersPanel from './Controls/Filters/FiltersPanel';
 import NOCData from '../assets/NOC-data';
 import * as d3 from 'd3';
 import ContextProvider, { ControlsContext } from './Controls/ContextProvider';
+import SnapshotsPanel from './Controls/Snapshot/SnapshotsPanel';
 
 const Container = styled.div`
   overflow: hidden;
   width: 100%;
   height: 100vh;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
 `;
 
 const filterVariables = [
@@ -21,7 +22,7 @@ const filterVariables = [
   'skillsComp'
 ];
 
-class Pave extends Component {
+class Layout extends Component {
   state = {
     clusterSelector: 'industry',
     radiusSelector: 'workers',
@@ -78,7 +79,7 @@ class Pave extends Component {
         <ControlsContext.Consumer>
           {context => (
             <Container>
-              <ControlsTop filterVariables={filterVariables} />
+              <FiltersPanel filterVariables={filterVariables} />
               <Viz
                 filterState={filterState}
                 onLoadFromSnapshot={ssUrl =>
@@ -89,6 +90,7 @@ class Pave extends Component {
                 clusterCenters={clusterCenters}
                 nodes={context.state.nodes}
               />
+              <SnapshotsPanel />
             </Container>
           )}
         </ControlsContext.Consumer>
@@ -97,4 +99,4 @@ class Pave extends Component {
   }
 }
 
-export default Pave;
+export default Layout;

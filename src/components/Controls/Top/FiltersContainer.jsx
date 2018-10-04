@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
 import FilterSlider from './FilterSlider';
-import { ControlsContext } from './ContextProvider';
-import SnapshotsButton from './SnapshotsButton';
-import SnapshotsContainer from './SnapshotsContainer';
+import { ControlsContext } from '../ContextProvider';
+import SnapshotsButton from '../Snapshot/SnapshotsButton';
+import SnapshotsPanel from '../Snapshot/SnapshotsPanel';
 
 const Container = styled.div`
   margin: 10px 20px 20px 20px;
@@ -57,7 +57,7 @@ export default class ControlsTop extends Component {
               <SnapshotsButton onSnapshot={context.handleSnapshot} />
             </div>
             <div className="snapshotsDiv">
-              <SnapshotsContainer
+              <SnapshotsPanel
                 snapshots={context.state.snapshots}
                 onShapshotClick={id => context.handleApplySnapshot(id)}
               />

@@ -1,5 +1,6 @@
 radius dropdown
 cluster dropdown
 force cluster
-snapshot url params
-snapshot copy link
+static viz
+
+resize correctly on load

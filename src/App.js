@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 import './App.css';
-import Viz from './components/Viz/Viz';
-import styled from 'styled-components';
 import Navbar from './components/Navbar';
-import ControlsTop from './components/Controls/ControlsTop';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
-import NOCData from './assets/NOC-data';
-import * as d3 from 'd3';
 import ContextProvider, {
   ControlsContext
 } from './components/Controls/ContextProvider';
 import { Router, Link } from '@reach/router';
-import Pave from './components/Pave';
+import Layout from './components/Layout';
 
 const theme = createMuiTheme({
   palette: {
@@ -31,8 +26,8 @@ class App extends Component {
       <MuiThemeProvider theme={theme}>
         <Navbar />
         <Router>
-          <Pave path="/" />
-          <Pave path="/:filterState" />
+          <Layout path="/" />
+          <Layout path="/:filterState" />
         </Router>
       </MuiThemeProvider>
     );
