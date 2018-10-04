@@ -191,12 +191,21 @@ class ContextProvider extends Component {
     this.setState({ filters: snapshot.filters });
     this.handleSliderMouseup();
   };
-
   handleLoadFromSnapshot = ssUrl => {
     setTimeout(() => {
       this.setState({ filters: JSON.parse(ssUrl) });
       this.restartSimulation();
     }, 2000);
+  };
+  handleDeleteSnapshot = id => {
+    const deleteIndex = this.state.snapshots.findIndex(ss => ss.id === id);
+    console.log('deleting', deleteIndex);
+    this.setState({
+      snapshots: [
+        ...this.state.snapshots.slice(0, deleteIndex),
+        ...this.state.snapshots.slice(deleteIndex + 1)
+      ]
+    });
   };
 
   render() {
@@ -224,6 +233,7 @@ class ContextProvider extends Component {
           handleSnapshot: this.handleSnapshot,
           handleApplySnapshot: this.handleApplySnapshot,
           handleLoadFromSnapshot: this.handleLoadFromSnapshot,
+          handleDeleteSnapshot: this.handleDeleteSnapshot,
 
           setNodes: nodes =>
             this.setState({

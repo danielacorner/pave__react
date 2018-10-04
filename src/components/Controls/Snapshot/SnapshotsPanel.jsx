@@ -8,6 +8,7 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded';
 import ShareIcon from '@material-ui/icons/Share';
 import { Link } from '@reach/router';
 import CopyIcon from '@material-ui/icons/FileCopy';
+import DeleteIcon from '@material-ui/icons/DeleteForever';
 import SnapshotsButton from './SnapshotsButton';
 import { ControlsContext } from '../ContextProvider';
 
@@ -48,7 +49,8 @@ const Container = styled.div`
 
 export default class SnapshotsPanel extends Component {
   state = {
-    anchorEl: null
+    anchorEl: null,
+    visibleDeleteButton: null
   };
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -124,17 +126,22 @@ export default class SnapshotsPanel extends Component {
                       <MenuItem
                         style={{
                           height: 'auto',
+                          cursor: 'default',
                           display: 'grid',
-                          gridGap: 4,
-                          gridTemplateColumns: '1fr auto'
+                          gridTemplateAreas: `
+                          "title button"
+                          "link button"`
                         }}
                         disableRipple={true}
                       >
-                        Copy Link to Snapshot <span />
+                        <span style={{ gridArea: 'title' }}>
+                          Copy Link to Snapshot{' '}
+                        </span>
                         <input
                           type="text"
                           name="snapshotLink"
                           readonly
+                          style={{ gridArea: 'link' }}
                           value={`${window.location.origin}/${JSON.stringify(
                             ss.filters
                           )
@@ -143,9 +150,11 @@ export default class SnapshotsPanel extends Component {
                         />
                         <IconButton
                           style={{
+                            gridArea: 'button',
                             marginLeft: 10,
+                            marginRight: -12,
                             justifySelf: 'right',
-                            color: 'steelblue'
+                            color: '#4caf50'
                           }}
                           onClick={() => {
                             document
@@ -157,6 +166,21 @@ export default class SnapshotsPanel extends Component {
                         >
                           <CopyIcon />
                         </IconButton>
+                      </MenuItem>
+                      <MenuItem
+                        style={{
+                          height: 'auto',
+                          display: 'grid',
+                          gridGap: 4,
+                          gridTemplateColumns: '1fr auto'
+                        }}
+                              onClick={() => {
+                          context.handleDeleteSnapshot(ss.id);
+                          this.handleClose();
+                        }}
+                      >
+                        <span>Delete Snapshot </span>
+                        <DeleteIcon style={{ color: 'tomato' }} />
                       </MenuItem>
                     </Menu>
                   </React.Fragment>
