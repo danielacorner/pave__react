@@ -16,11 +16,14 @@ const Container = styled.div`
   padding: 10px;
   display: grid;
   grid-gap: 10px;
-  grid-template-columns: 95px, 1fr;
+  @media (min-width: 440px) {
+    padding: 20px;
+  }
   .snapshotsScrollContainer {
     overflow-y: scroll;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
     height: 0px;
     transition: height 0.5s ease-in-out;
     &.open {
@@ -31,21 +34,15 @@ const Container = styled.div`
     display: grid;
     grid-auto-flow: row;
     text-transform: none;
-    height: 75px;
+    height: auto;
     img {
-      width: 85px;
+      width: 75px;
       height: 50px;
       margin-bottom: 4px;
       object-fit: fill;
     }
   }
 `;
-// <div className="snapshotsDiv">
-//   <SnapshotsPanel
-//     snapshots={context.state.snapshots}
-//     onShapshotClick={id => context.handleApplySnapshot(id)}
-//   />
-// </div>
 
 export default class SnapshotsPanel extends Component {
   state = {
@@ -174,7 +171,7 @@ export default class SnapshotsPanel extends Component {
                           gridGap: 4,
                           gridTemplateColumns: '1fr auto'
                         }}
-                              onClick={() => {
+                        onClick={() => {
                           context.handleDeleteSnapshot(ss.id);
                           this.handleClose();
                         }}
