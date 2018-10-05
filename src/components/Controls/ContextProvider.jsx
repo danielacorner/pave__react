@@ -188,6 +188,8 @@ class ContextProvider extends Component {
         'snapshots',
         JSON.stringify([...this.state.snapshots, newSnapshot])
       );
+
+      setTimeout(this.handleResize, 1500);
     });
   };
 
@@ -234,6 +236,15 @@ class ContextProvider extends Component {
               filters: { ...this.state.filters, [filter]: value }
             });
             setTimeout(this.filterNodes, 0);
+          },
+          resetFilters: () => {
+            const filtersReset = this.state.filters;
+            Object.keys(this.state.filters).map(key => (filtersReset[key] = 0));
+            this.setState({
+              filters: filtersReset
+            });
+            setTimeout(this.filterNodes, 0);
+            setTimeout(this.restartSimulation, 0);
           },
 
           restartSimulation: this.restartSimulation,

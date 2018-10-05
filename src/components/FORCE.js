@@ -83,12 +83,12 @@ const FORCE = function(nsp) {
         // .forceSimulation(nodesInitialPositions)
         .forceSimulation(nodes)
         // collision force prevents node overlap
-        // .force(
-        //   'collide',
-        //   d3
-        //     .forceCollide(d => radiusScale(d[radiusSelector]))
-        //     .strength(collideStrength)
-        // )
+        .force(
+          'collide',
+          d3
+            .forceCollide(d => radiusScale(d[radiusSelector]))
+            .strength(collideStrength)
+        )
         // charge/repellent force helps nodes equilibrate into clusters by reducing friction
         .force(
           'charge',

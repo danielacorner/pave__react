@@ -6,14 +6,7 @@ import NOCData from '../assets/NOC-data';
 import * as d3 from 'd3';
 import ContextProvider, { ControlsContext } from './Controls/ContextProvider';
 import SnapshotsPanel from './Controls/Snapshot/SnapshotsPanel';
-
-const Container = styled.div`
-  overflow: hidden;
-  width: 100%;
-  height: 100vh;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-`;
+import SortPanel from './Controls/Sort/SortPanel';
 
 const filterVariables = [
   'skillsLang',
@@ -21,6 +14,17 @@ const filterVariables = [
   'skillsMath',
   'skillsComp'
 ];
+
+const Container = styled.div`
+  overflow: hidden;
+  width: 100%;
+  height: 95vh;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  grid-gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+`;
 
 class Layout extends Component {
   state = {
@@ -80,6 +84,7 @@ class Layout extends Component {
           {context => (
             <Container>
               <FiltersPanel filterVariables={filterVariables} />
+              <SortPanel />
               <Viz
                 filterState={filterState}
                 onLoadFromSnapshot={ssUrl =>

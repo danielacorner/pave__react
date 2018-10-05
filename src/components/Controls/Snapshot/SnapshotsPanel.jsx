@@ -13,11 +13,11 @@ import SnapshotsButton from './SnapshotsButton';
 import { ControlsContext } from '../ContextProvider';
 
 const Container = styled.div`
-  padding: 10px;
+  /* padding: 10px; */
   display: grid;
   grid-gap: 10px;
   @media (min-width: 440px) {
-    padding: 20px;
+    /* padding: 10px; */
   }
   .snapshotsScrollContainer {
     overflow-y: scroll;
@@ -90,36 +90,28 @@ export default class SnapshotsPanel extends Component {
                       open={Boolean(anchorEl)}
                       onClose={this.handleClose}
                     >
+                      {/* View Snapshot */}
                       <MenuItem
                         onClick={() => {
-                          this.props.onShapshotClick(ss.id);
+                          context.handleApplySnapshot(ss.id);
                           this.handleClose();
                         }}
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr auto'
+                        }}
                       >
-                        <Link
+                        <span>View Snapshot </span>
+                        <PlayArrowIcon
                           style={{
-                            width: '100%',
-                            display: 'grid',
-                            gridTemplateColumns: '1fr auto'
+                            marginLeft: 10,
+                            justifySelf: 'right',
+                            color: 'steelblue'
                           }}
-                          // to={`/`}
-                          to={`/${JSON.stringify(
-                            ss.filters
-                            // Object.keys(ss.filters).map(
-                            // filter => `${filter}=${ss.filters[filter]}`
-                            // )}`}
-                          )}`}
-                        >
-                          View Snapshot{' '}
-                          <PlayArrowIcon
-                            style={{
-                              marginLeft: 10,
-                              justifySelf: 'right',
-                              color: 'steelblue'
-                            }}
-                          />
-                        </Link>{' '}
+                        />
                       </MenuItem>
+
+                      {/* Copy Link to Snapshot */}
                       <MenuItem
                         style={{
                           height: 'auto',
@@ -164,6 +156,8 @@ export default class SnapshotsPanel extends Component {
                           <CopyIcon />
                         </IconButton>
                       </MenuItem>
+
+                      {/* Delete Snapshot */}
                       <MenuItem
                         style={{
                           height: 'auto',
