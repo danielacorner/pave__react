@@ -1,3 +1,6 @@
 radius dropdown
 cluster dropdown
 static viz
+sort sizes button
+sort clusters button
+transition circles on enter (attrtween?)

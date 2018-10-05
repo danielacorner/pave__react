@@ -219,6 +219,13 @@ class ContextProvider extends Component {
     });
   };
 
+  sortSize = () => {
+    console.log('sorting size!');
+  };
+  sortColour = () => {
+    console.log('sorting colour!');
+  };
+
   render() {
     return (
       <ControlsContext.Provider
@@ -258,7 +265,10 @@ class ContextProvider extends Component {
           setNodes: nodes =>
             this.setState({
               nodes: nodes
-            })
+            }),
+
+          sortSize: this.sortSize,
+          sortColour: this.sortColour
         }}
       >
         {this.props.children}

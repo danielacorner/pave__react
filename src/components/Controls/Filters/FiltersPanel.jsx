@@ -47,7 +47,9 @@ export default class FiltersPanel extends Component {
               (tot, curr) => tot + curr,
               0
             ) > 0 && (
-              <Button onClick={context.resetFilters}>Reset Filters</Button>
+              <Button onClick={context.resetFilters} variant="contained">
+                Reset Filters
+              </Button>
             )}
           </Container>
         )}
