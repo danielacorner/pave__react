@@ -5,9 +5,28 @@ const FORCE = function(nsp) {
   let paused;
   const width = window.innerWidth,
     height = window.innerHeight,
+    // optional: constrain nodes within a bounding box
+    nodeTransform = d => {
+      // const minLength = Math.min(width, height) * 0.75;
+      // const constrainedX = Math.min(Math.max(d.x, -minLength), minLength);
+      // const constrainedY = Math.min(Math.max(d.y, -minLength), minLength);
+      // return 'translate(' + constrainedX + ',' + constrainedY + ')';
+      return 'translate(' + d.x + ',' + d.y + ')';
+    },
+    // force parameters
+    clusterPadding = 30,
+    centerGravity = 0.75,
+    collideStrength = 0.5,
+    friction = 0.7,
+    startSpeed = 0.6,
+    restartSpeed = 0.3,
+    speedDecay = 0.01,
+    endSpeed = 0,
+    // color scale
     color = d3.scaleOrdinal(d3.schemeCategory10),
-    // cluster = null,
+    // cluster force implementation
     cluster = (nodes, radiusScale, radiusSelector, clusterCenters) => {
+      // default strength if unspecified
       let strength = 0.1;
 
       function forceCluster(alpha) {
@@ -47,35 +66,30 @@ const FORCE = function(nsp) {
       return forceCluster;
     },
     initForce = ({ nodes, radiusScale, radiusSelector, clusterCenters }) => {
-      const clusterPadding = 30,
-        centerGravity = 0.75,
-        collideStrength = 0.5,
-        friction = 0.7,
-        startSpeed = 0.9,
-        speedDecay = 0.01,
-        endSpeed = 0;
-
       console.log({ clusterCenters });
 
-      // initialize node positions in a circle to separate clusters
-      let nodesInitialPositions = nodes.map(d => {
-        d.x =
-          Math.cos((d.cluster / clusterCenters.length) * 2 * Math.PI) * 200 +
-          Math.random();
-        d.y =
-          Math.cos((d.cluster / clusterCenters.length) * 2 * Math.PI) * 200 +
-          Math.random();
-        return d;
-      });
+      // initialize node positions in a circle sorted by cluster to separate clusters
+      // let nodesInitialPositions = nodes.map(d => {
+      //   d.x =
+      //     Math.cos((d.cluster / clusterCenters.length) * 2 * Math.PI) * 200 +
+      //     Math.random();
+      //   d.y =
+      //     Math.cos((d.cluster / clusterCenters.length) * 2 * Math.PI) * 200 +
+      //     Math.random();
+      //   return d;
+      // });
 
       nsp.force = d3
-        .forceSimulation(nodesInitialPositions)
-        .force(
-          'collide',
-          d3
-            .forceCollide(d => radiusScale(d[radiusSelector]))
-            .strength(collideStrength)
-        )
+        // .forceSimulation(nodesInitialPositions)
+        .forceSimulation(nodes)
+        // collision force prevents node overlap
+        // .force(
+        //   'collide',
+        //   d3
+        //     .forceCollide(d => radiusScale(d[radiusSelector]))
+        //     .strength(collideStrength)
+        // )
+        // charge/repellent force helps nodes equilibrate into clusters by reducing friction
         .force(
           'charge',
           d3.forceManyBody().strength(d => {
@@ -84,9 +98,12 @@ const FORCE = function(nsp) {
             ); // todo: calculate this magic number
           })
         )
+        // optional center force re-centers the viewport around the nodes
         // .force('center', d3.forceCenter([width / 2, height / 2]))
+        // forces that push nodes to the center
         .force('x', d3.forceX().strength(centerGravity))
         .force('y', d3.forceY().strength(centerGravity))
+        // cluster force attracts nodes to their cluster center nodes
         .force(
           'cluster',
           cluster(nodes, radiusScale, radiusSelector, clusterCenters).strength(
@@ -107,8 +124,10 @@ const FORCE = function(nsp) {
       paused = false;
       nsp.paused = false;
       nsp.force
-        .alpha(0.5)
-        .alphaTarget(0)
+        .velocityDecay(friction)
+        .alpha(restartSpeed)
+        .alphaDecay(speedDecay)
+        .alphaTarget(endSpeed)
         .restart();
     },
     enterNode = (selection, radiusScale, radiusSelector) => {
@@ -120,10 +139,7 @@ const FORCE = function(nsp) {
         .style('fill', d => color(d.cluster))
         .style('stroke', '#272727')
         .style('stroke-width', 0)
-        .attr(
-          'transform',
-          d => `translate(${d.x + width / 2},${d.y + height / 2})`
-        );
+        .attr('transform', d => nodeTransform(d));
 
       // text labels
       selection
@@ -140,13 +156,8 @@ const FORCE = function(nsp) {
     },
     updateNode = selection => {
       selection
-        .attr('transform', d => {
-          const minLength = Math.min(width, height) * 0.75;
-          const constrainedX = Math.min(Math.max(d.x, -minLength), minLength);
-          const constrainedY = Math.min(Math.max(d.y, -minLength), minLength);
-          return 'translate(' + constrainedX + ',' + constrainedY + ')';
-          // return 'translate(' + d.x + ',' + d.y + ')';
-        })
+        .attr('transform', d => nodeTransform(d))
+        // is this necessary?
         .attr('cx', d => d.x)
         .attr('cy', d => d.y);
     },
@@ -192,6 +203,7 @@ const FORCE = function(nsp) {
 
   nsp.width = window.innerWidth;
   nsp.height = window.innerHeight;
+  nsp.nodeTransform = nodeTransform;
   nsp.enterNode = enterNode;
   nsp.updateNode = updateNode;
   nsp.updateGraph = updateGraph;

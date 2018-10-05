@@ -1,6 +1,6 @@
 radius dropdown
 cluster dropdown
 static viz
-resize correctly on load
 
 force cluster - investigate post-filtering forces
+resize correctly on load

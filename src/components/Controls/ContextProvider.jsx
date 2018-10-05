@@ -72,6 +72,15 @@ class ContextProvider extends Component {
     // resize the graph container to fit the screen
     const constrainingLength = Math.min(vizHeight, svgWidth);
     const nodesWidth = nodesG.getBBox().width;
+
+    // bugfix: zooming in because initial nodesWidth = 100, and doesn't fill resize when loading from another tab
+    if (
+      nodesWidth === 100 &&
+      this.state.nodes.length === this.state.originalData.length
+    ) {
+      return 0.95;
+    }
+
     return (constrainingLength * 0.95) / nodesWidth;
   };
 
