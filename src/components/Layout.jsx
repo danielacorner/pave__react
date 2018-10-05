@@ -57,7 +57,7 @@ class Layout extends Component {
         d[radiusSelector] > clusterCenters[cluster][radiusSelector]
       ) {
         clusterCenters[cluster] = d;
-        // todo: emit new cluster centers
+        // todo: emit new cluster centers to/from context
         this.setState({ clusterCenters: clusterCenters });
       }
       // if ([1, 100, 200, 300, 400].includes(d.id)) {
