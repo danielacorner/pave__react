@@ -3,4 +3,8 @@ cluster dropdown
 static viz
 sort sizes button
 sort clusters button
-transition circles on enter (attrtween?)
+
+Current Goal: Fancy Up the Visuals
+- transition circles on enter (attrtween?) with delay
+- transition reset filters button
+- smooth out the bouncy reset force after filtering
