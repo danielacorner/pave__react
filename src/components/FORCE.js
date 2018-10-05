@@ -138,8 +138,7 @@ const FORCE = function(nsp) {
         // .attr('r', d => 10)
         .style('fill', d => color(d.cluster))
         .style('stroke', '#272727')
-        .style('stroke-width', 0)
-        .attr('transform', d => nodeTransform(d));
+        .style('stroke-width', 0);
 
       // text labels
       selection
@@ -152,6 +151,7 @@ const FORCE = function(nsp) {
         .style('alignment-baseline', 'middle')
         .style('font-size', '10px')
         .style('font-family', 'cursive')
+        // todo: display text labels when appropriate
         .style('display', 'none');
     },
     updateNode = selection => {

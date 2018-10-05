@@ -9,7 +9,7 @@ const GraphContainer = styled.div`
   display: grid;
   place-self: center center;
   svg {
-    background-color: steelblue;
+    background-color: #4682b445;
     width: 100%;
     height: 100%;
     #nodesG {
