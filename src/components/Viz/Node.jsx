@@ -3,7 +3,27 @@ import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import FORCE from '../FORCE';
 import 'jquery/src/jquery';
+import styled from 'styled-components';
 // import $ from 'jqeury/src/jquery';
+
+const NodeGroup = styled.g`
+  circle {
+    &:hover {
+      cursor: pointer;
+      stroke: rgba(0, 0, 0, 0.9);
+      stroke-width: 2;
+    }
+  }
+  .text-label {
+    fill: honeydew;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-anchor: middle;
+    alignment-baseline: middle;
+    font-size: 10px;
+    font-family: cursive;
+  }
+`;
 
 export default class Node extends Component {
   componentDidMount() {
@@ -37,10 +57,10 @@ export default class Node extends Component {
   render() {
     // console.log('node rendering!');
     return (
-      <g className="node" id={`node_${this.props.data.id}`}>
+      <NodeGroup className="node" id={`node_${this.props.data.id}`}>
         <circle /* onClick={this.props.addLink} */ />
         <text>{this.props.data.name}</text>
-      </g>
+      </NodeGroup>
     );
   }
 }

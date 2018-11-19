@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 
 const FORCE = function(nsp) {
   let paused;
-  const width = window.innerWidth,
-    height = window.innerHeight,
+  const // width = window.innerWidth,
+    //   height = window.innerHeight,
     // optional: constrain nodes within a bounding box
     nodeTransform = d => {
       // const minLength = Math.min(width, height) * 0.75;
@@ -14,14 +14,14 @@ const FORCE = function(nsp) {
       return 'translate(' + d.x + ',' + d.y + ')';
     },
     // force parameters
-    clusterPadding = 30,
-    centerGravity = 0.75,
-    collideStrength = 0.5,
-    friction = 0.7,
-    startSpeed = 0.6,
-    restartSpeed = 0.3,
-    speedDecay = 0.01,
-    endSpeed = 0,
+    CLUSTER_PADDING = 30,
+    CENTER_GRAVITY = 0.75,
+    COLLIDE_STRENGTH = 0.5,
+    FRICTION = 0.7,
+    START_SPEED = 0.6,
+    RESTART_SPEED = 0.3,
+    SPEED_DECAY = 0.01,
+    END_SPEED = 0,
     // color scale
     color = d3.scaleOrdinal(d3.schemeCategory10),
     // cluster force implementation
@@ -87,33 +87,33 @@ const FORCE = function(nsp) {
           'collide',
           d3
             .forceCollide(d => radiusScale(d[radiusSelector]))
-            .strength(collideStrength)
+            .strength(COLLIDE_STRENGTH),
         )
-        // charge/repellent force helps nodes equilibrate into clusters by reducing friction
+        // charge/repellent force helps nodes equilibrate into clusters by reducing FRICTION
         .force(
           'charge',
           d3.forceManyBody().strength(d => {
             return (
-              -Math.pow(radiusScale(d[radiusSelector]), 2) - clusterPadding
+              -Math.pow(radiusScale(d[radiusSelector]), 2) - CLUSTER_PADDING
             ); // todo: calculate this magic number
-          })
+          }),
         )
         // optional center force re-centers the viewport around the nodes
         // .force('center', d3.forceCenter([width / 2, height / 2]))
         // forces that push nodes to the center
-        .force('x', d3.forceX().strength(centerGravity))
-        .force('y', d3.forceY().strength(centerGravity))
+        .force('x', d3.forceX().strength(CENTER_GRAVITY))
+        .force('y', d3.forceY().strength(CENTER_GRAVITY))
         // cluster force attracts nodes to their cluster center nodes
         .force(
           'cluster',
           cluster(nodes, radiusScale, radiusSelector, clusterCenters).strength(
-            1
-          )
+            1,
+          ),
         )
-        .velocityDecay(friction)
-        .alpha(startSpeed)
-        .alphaDecay(speedDecay)
-        .alphaTarget(endSpeed);
+        .velocityDecay(FRICTION)
+        .alpha(START_SPEED)
+        .alphaDecay(SPEED_DECAY)
+        .alphaTarget(END_SPEED);
     },
     stopSimulation = () => {
       nsp.force.stop();
@@ -124,10 +124,10 @@ const FORCE = function(nsp) {
       paused = false;
       nsp.paused = false;
       nsp.force
-        .velocityDecay(friction)
-        .alpha(restartSpeed)
-        .alphaDecay(speedDecay)
-        .alphaTarget(endSpeed)
+        .velocityDecay(FRICTION)
+        .alpha(RESTART_SPEED)
+        .alphaDecay(SPEED_DECAY)
+        .alphaTarget(END_SPEED)
         .restart();
     },
     enterNode = (selection, radiusScale, radiusSelector) => {
@@ -136,21 +136,13 @@ const FORCE = function(nsp) {
         .select('circle')
         .attr('r', d => radiusScale(d[radiusSelector]))
         // .attr('r', d => 10)
-        .style('fill', d => color(d.cluster))
-        .style('stroke', '#272727')
-        .style('stroke-width', 0);
+        .style('fill', d => color(d.cluster));
 
       // text labels
       selection
         .select('text')
         .attr('id', d => `text_${d.id}`)
-        .style('fill', 'honeydew')
-        .style('font-weight', '600')
-        .style('text-transform', 'uppercase')
-        .style('text-anchor', 'middle')
-        .style('alignment-baseline', 'middle')
-        .style('font-size', '10px')
-        .style('font-family', 'cursive')
+        .attr('class', 'text-label')
         // todo: display text labels when appropriate
         .style('display', 'none');
     },
@@ -184,7 +176,7 @@ const FORCE = function(nsp) {
           .drag()
           .on('start', dragStarted)
           .on('drag', dragging)
-          .on('end', dragEnded)
+          .on('end', dragEnded),
       ),
     removeDrag = () =>
       d3.selectAll('g.node').call(
@@ -192,7 +184,7 @@ const FORCE = function(nsp) {
           .drag()
           .on('start', null)
           .on('drag', null)
-          .on('end', null)
+          .on('end', null),
       ),
     tick = that => {
       that.d3Graph = d3.select(ReactDOM.findDOMNode(that));
@@ -201,8 +193,8 @@ const FORCE = function(nsp) {
       });
     };
 
-  nsp.width = window.innerWidth;
-  nsp.height = window.innerHeight;
+  // nsp.width = window.innerWidth;
+  // nsp.height = window.innerHeight;
   nsp.nodeTransform = nodeTransform;
   nsp.enterNode = enterNode;
   nsp.updateNode = updateNode;

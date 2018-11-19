@@ -7,7 +7,8 @@ const GraphContainer = styled.div`
   width: 95%;
   height: 100%;
   display: grid;
-  place-self: center center;
+  justify-self: center;
+  align-self: center;
   svg {
     background-color: #4682b445;
     width: 100%;
@@ -19,13 +20,14 @@ const GraphContainer = styled.div`
   }
 `;
 
-export default class Viz extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.handleAddNode = this.handleAddNode.bind(this);
-    this.addNode = this.addNode.bind(this);
-  }
+class Viz extends Component {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {};
+  //   this.handleAddNode = this.handleAddNode.bind(this);
+  //   this.addNode = this.addNode.bind(this);
+  // }
+  state = {};
 
   componentDidMount() {
     // const data = this.state;
@@ -49,7 +51,7 @@ export default class Viz extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     // only update if nodes change
-    return;
+    return true;
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -70,11 +72,11 @@ export default class Viz extends Component {
     }
   }
 
-  handleAddNode(e) {
+  handleAddNode = e => {
     this.setState({ [e.target.name]: e.target.value });
-  }
+  };
 
-  addNode(e) {
+  addNode = e => {
     e.preventDefault();
     this.setState(prevState => ({
       nodes: [
@@ -83,7 +85,7 @@ export default class Viz extends Component {
       ],
       name: '',
     }));
-  }
+  };
 
   render() {
     // console.log('this.props.nodes', this.props.nodes);
@@ -110,3 +112,5 @@ export default class Viz extends Component {
     );
   }
 }
+
+export default Viz;
