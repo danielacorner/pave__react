@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Viz from './Viz/Viz';
 import styled from 'styled-components';
 import FiltersPanel from './Controls/Filters/FiltersPanel';
@@ -12,7 +12,7 @@ const filterVariables = [
   'skillsLang',
   'skillsLogi',
   'skillsMath',
-  'skillsComp'
+  'skillsComp',
 ];
 
 const Container = styled.div`
@@ -26,7 +26,7 @@ const Container = styled.div`
   box-sizing: border-box;
 `;
 
-class Layout extends Component {
+class Layout extends PureComponent {
   state = {
     clusterSelector: 'industry',
     radiusSelector: 'workers',
@@ -39,9 +39,9 @@ class Layout extends Component {
         .range(radiusRange);
     },
     uniqueClusterValues: NOCData.map(d => d['industry']).filter(
-      (value, index, self) => self.indexOf(value) === index
+      (value, index, self) => self.indexOf(value) === index,
     ),
-    clusterCenters: []
+    clusterCenters: [],
   };
 
   componentWillMount = () => {
@@ -49,7 +49,7 @@ class Layout extends Component {
       clusterCenters,
       radiusSelector,
       clusterSelector,
-      uniqueClusterValues
+      uniqueClusterValues,
     } = this.state;
 
     // initialize the clusters
@@ -73,7 +73,7 @@ class Layout extends Component {
     const {
       // forceCluster,
       clusterCenters,
-      radiusSelector
+      radiusSelector,
       // clusterSelector
     } = this.state;
     const { filterState } = this.props;

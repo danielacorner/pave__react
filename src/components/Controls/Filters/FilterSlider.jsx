@@ -4,7 +4,6 @@ import Typography from '@material-ui/core/Typography';
 
 export default class FilterSlider extends PureComponent {
   handleChange = (event, value) => {
-    // this.setState({ value });
     this.props.onChange(value);
   };
 

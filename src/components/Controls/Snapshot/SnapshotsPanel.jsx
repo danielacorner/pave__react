@@ -5,8 +5,8 @@ import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded';
-import ShareIcon from '@material-ui/icons/Share';
-import { Link } from '@reach/router';
+// import ShareIcon from '@material-ui/icons/Share';
+// import { Link } from '@reach/router';
 import CopyIcon from '@material-ui/icons/FileCopy';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import SnapshotsButton from './SnapshotsButton';
@@ -47,7 +47,7 @@ const Container = styled.div`
 export default class SnapshotsPanel extends Component {
   state = {
     anchorEl: null,
-    visibleDeleteButton: null
+    visibleDeleteButton: null,
   };
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -98,7 +98,7 @@ export default class SnapshotsPanel extends Component {
                         }}
                         style={{
                           display: 'grid',
-                          gridTemplateColumns: '1fr auto'
+                          gridTemplateColumns: '1fr auto',
                         }}
                       >
                         <span>View Snapshot </span>
@@ -106,7 +106,7 @@ export default class SnapshotsPanel extends Component {
                           style={{
                             marginLeft: 10,
                             justifySelf: 'right',
-                            color: 'steelblue'
+                            color: 'steelblue',
                           }}
                         />
                       </MenuItem>
@@ -119,7 +119,7 @@ export default class SnapshotsPanel extends Component {
                           display: 'grid',
                           gridTemplateAreas: `
                           "title button"
-                          "link button"`
+                          "link button"`,
                         }}
                         disableRipple={true}
                       >
@@ -132,7 +132,7 @@ export default class SnapshotsPanel extends Component {
                           readonly
                           style={{ gridArea: 'link' }}
                           value={`${window.location.origin}/${JSON.stringify(
-                            ss.filters
+                            ss.filters,
                           )
                             .replace('{', '%7B')
                             .replace('}', '%7D')}`}
@@ -143,7 +143,7 @@ export default class SnapshotsPanel extends Component {
                             marginLeft: 10,
                             marginRight: -12,
                             justifySelf: 'right',
-                            color: '#4caf50'
+                            color: '#4caf50',
                           }}
                           onClick={() => {
                             document
@@ -163,7 +163,7 @@ export default class SnapshotsPanel extends Component {
                           height: 'auto',
                           display: 'grid',
                           gridGap: 4,
-                          gridTemplateColumns: '1fr auto'
+                          gridTemplateColumns: '1fr auto',
                         }}
                         onClick={() => {
                           context.handleDeleteSnapshot(ss.id);

@@ -21,16 +21,9 @@ const GraphContainer = styled.div`
 `;
 
 class Viz extends PureComponent {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {};
-  //   this.handleAddNode = this.handleAddNode.bind(this);
-  //   this.addNode = this.addNode.bind(this);
-  // }
   state = {};
 
   componentDidMount() {
-    // const data = this.state;
     const { radiusScale, clusterCenters, radiusSelector } = this.props;
 
     FORCE.initForce({
@@ -46,8 +39,6 @@ class Viz extends PureComponent {
     this.props.filterState &&
       this.props.onLoadFromSnapshot(this.props.filterState);
   }
-
-  componentWillUnmount() {}
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.nodes !== this.props.nodes) {

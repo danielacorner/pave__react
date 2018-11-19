@@ -40,6 +40,7 @@ export default class Node extends PureComponent {
   }
 
   componentWillUnmount() {
+    // TODO: check for event listeners to garbage-collect
     // FORCE.removeDrag();
     // console.log('node unmounting!');
     // document

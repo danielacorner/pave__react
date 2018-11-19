@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import MobileScreenShareIcon from '@material-ui/icons/MobileScreenShare';
 import ScreenShareIcon from '@material-ui/icons/ScreenShare';

@@ -61,7 +61,6 @@ class ContextProvider extends Component {
   translate = () => {
     const svgWidth = document.getElementById('svg').getBoundingClientRect()
       .width;
-    const nodesG = document.getElementById('nodesG');
     const vizHeight = document
       .getElementById('graphContainer')
       .getBoundingClientRect().height;
@@ -90,7 +89,7 @@ class ContextProvider extends Component {
   };
 
   handleResize = debounce(() => {
-    console.log('...resizing...');
+    console.count('...resizing...');
     const nodesG = document.getElementById('nodesG');
 
     // translate the nodes group into the middle
@@ -110,11 +109,11 @@ class ContextProvider extends Component {
     const numFilters = filterKeys.length;
     const numNodes = originalData.length;
     const filteredData = [];
-    for (let i = 0; i < numNodes - 1; i++) {
+    for (let i = 0; i < numNodes; i++) {
       const node = originalData[i];
-      // for each filter variable ('skillsLang', 'skillsMath'...)
       let keep = true;
-      for (let i = 0; i < numFilters - 1; i++) {
+      // for each filter variable
+      for (let i = 0; i < numFilters; i++) {
         const filterVar = filterKeys[i]; // 'skillsLang', 'skillsMath'...
         // filter out the node if less than the slider value
         if (node[filterVar] < filters[filterVar]) {
@@ -123,7 +122,6 @@ class ContextProvider extends Component {
       }
       keep && filteredData.push(node);
     }
-    // return originalData;
     return filteredData;
   };
 

@@ -66,7 +66,7 @@ const FORCE = function(nsp) {
       return forceCluster;
     },
     initForce = ({ nodes, radiusScale, radiusSelector, clusterCenters }) => {
-      console.log({ clusterCenters });
+      // console.log({ clusterCenters });
 
       // initialize node positions in a circle sorted by cluster to separate clusters
       // let nodesInitialPositions = nodes.map(d => {
