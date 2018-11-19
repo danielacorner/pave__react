@@ -1,77 +1,60 @@
 import React, { PureComponent } from 'react';
 import FORCE from '../FORCE';
 import Node from './Node';
-import styled from 'styled-components';
+import GraphContainer from '../styles/GraphContainer';
 
-const GraphContainer = styled.div`
-  width: 95%;
-  height: 100%;
-  display: grid;
-  justify-self: center;
-  align-self: center;
-  svg {
-    background-color: #4682b445;
-    width: 100%;
-    height: 100%;
-    #nodesG {
-      transition: transform 0.5s ease-in-out;
-      /* transform: translate(50%, 50%); */
-    }
-  }
-`;
+const restartSimulation = (
+  { nodes, radiusScale, clusterCenters, radiusSelector },
+  that,
+) => {
+  FORCE.initForce({
+    nodes,
+    radiusScale,
+    radiusSelector,
+    clusterCenters,
+  });
+  FORCE.tick(that);
+  FORCE.drag();
+};
 
 class Viz extends PureComponent {
   state = {};
 
   componentDidMount() {
-    const { radiusScale, clusterCenters, radiusSelector } = this.props;
-
-    FORCE.initForce({
-      nodes: this.props.nodes,
-      radiusScale: radiusScale,
-      radiusSelector: radiusSelector,
-      clusterCenters: clusterCenters,
-    });
-    FORCE.tick(this);
-    FORCE.drag();
-
+    restartSimulation(this.props, this);
     // if applying a snapshot, handle in ContextProvider
     this.props.filterState &&
       this.props.onLoadFromSnapshot(this.props.filterState);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.nodes !== this.props.nodes) {
-      // const data = this.state;
-      const { radiusScale, clusterCenters, radiusSelector } = this.props;
+    // stop (improves performance), then restart the simulation
+    FORCE.stopSimulation();
+    restartSimulation(this.props, this);
 
+    if (prevProps.nodes !== this.props.nodes) {
+      // if it's not paused, restart the simulation with the new filtered nodes
       if (!FORCE.paused) {
-        FORCE.initForce({
-          nodes: this.props.nodes,
-          radiusScale: radiusScale,
-          radiusSelector: radiusSelector,
-          clusterCenters: clusterCenters,
-        });
-        FORCE.tick(this);
-        FORCE.drag();
+        restartSimulation(this.props, this);
       }
     }
   }
 
-  handleAddNode = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
+  // todo: these functions moved somewhere else?
+  // handleAddNode = e => {
+  //   this.setState({ [e.target.name]: e.target.value });
+  // };
 
-  addNode = e => {
-    e.preventDefault();
-    this.setState(prevState => ({
-      nodes: [
-        ...prevState.nodes,
-        { name: this.state.name, id: prevState.nodes.length + 1 },
-      ],
-      name: '',
-    }));
-  };
+  // addNode = e => {
+  //   e.preventDefault();
+  //   this.setState(prevState => ({
+  //     nodes: [
+  //       ...prevState.nodes,
+  //       { name: this.state.name, id: prevState.nodes.length + 1 },
+  //     ],
+  //     name: '',
+  //   }));
+  // };
 
   render() {
     // console.log('this.props.nodes', this.props.nodes);

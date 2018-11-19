@@ -1,3 +1,14 @@
+split components down into single-purpose components
+
+extract contextprovider functions into their respective component folders
+
+debug filter slider click (filters state actually changes, but should only visually change (change slider position, but don't change filter state))
+
+stop the simulation on slider click, restart simulation on mouseup (improve performance)
+
+
+add circle-pack (grab from pave-angular)
+
 improve speed
 
 radius dropdown
@@ -6,7 +17,7 @@ static viz
 sort sizes button
 sort clusters button
 
-Current Goal: Fancy Up the Visuals
+Fancy Up the Visuals
 - transition circles on enter (attrtween?) with delay
 - transition reset filters button
 - smooth out the bouncy reset force after filtering

@@ -5,6 +5,7 @@ import html2canvas from 'html2canvas';
 import debounce from 'lodash.debounce';
 
 export const ControlsContext = React.createContext();
+let nodesG;
 
 class ContextProvider extends Component {
   constructor(props) {
@@ -44,8 +45,8 @@ class ContextProvider extends Component {
       .getElementById('graphContainer')
       .getBoundingClientRect().height;
 
-    document.getElementById('nodesG').style.transform = `translate(${svgWidth /
-      2}px,${vizHeight / 2}px)`;
+    nodesG = document.getElementById('nodesG');
+    nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight / 2}px)`;
   };
 
   componentWillUnmount = () => {
@@ -69,7 +70,6 @@ class ContextProvider extends Component {
   scale = () => {
     const svgWidth = document.getElementById('svg').getBoundingClientRect()
       .width;
-    const nodesG = document.getElementById('nodesG');
     const vizHeight = document
       .getElementById('graphContainer')
       .getBoundingClientRect().height;
@@ -90,7 +90,6 @@ class ContextProvider extends Component {
 
   handleResize = debounce(() => {
     console.count('...resizing...');
-    const nodesG = document.getElementById('nodesG');
 
     // translate the nodes group into the middle
     nodesG.style.transform = `translate(${this.translate()})`;
@@ -174,7 +173,7 @@ class ContextProvider extends Component {
         // scrollX: document.querySelector('#nodesG').getBoundingClientRect().left,
         // scrollY: document.querySelector('#nodesG').getBoundingClientRect().top,
         onclone: document => {
-          document.querySelector('#nodesG').style.transform =
+          nodesG.style.transform =
             // todo: calculate this
             `translate(150px,100px) scale(${this.scale() * 0.5})`;
         },
