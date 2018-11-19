@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import FORCE from '../FORCE';
@@ -25,7 +25,7 @@ const NodeGroup = styled.g`
   }
 `;
 
-export default class Node extends Component {
+export default class Node extends PureComponent {
   componentDidMount() {
     const { radiusScale, radiusSelector } = this.props;
 

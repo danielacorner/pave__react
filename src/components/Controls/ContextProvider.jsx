@@ -54,6 +54,10 @@ class ContextProvider extends Component {
 
   componentDidUpdate(nextProps, nextState) {}
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.nodes !== nextState.nodes;
+  }
+
   translate = () => {
     const svgWidth = document.getElementById('svg').getBoundingClientRect()
       .width;
@@ -101,18 +105,26 @@ class ContextProvider extends Component {
 
   filteredNodes = () => {
     // filter the dataset according to the slider state
-    return this.state.originalData.filter(node => {
-      let keep = true;
-      const { filters } = this.state;
+    const { filters, originalData } = this.state;
+    const filterKeys = Object.keys(filters);
+    const numFilters = filterKeys.length;
+    const numNodes = originalData.length;
+    const filteredData = [];
+    for (let i = 0; i < numNodes - 1; i++) {
+      const node = originalData[i];
       // for each filter variable ('skillsLang', 'skillsMath'...)
-      Object.keys(filters).forEach(filterVar => {
+      let keep = true;
+      for (let i = 0; i < numFilters - 1; i++) {
+        const filterVar = filterKeys[i]; // 'skillsLang', 'skillsMath'...
         // filter out the node if less than the slider value
         if (node[filterVar] < filters[filterVar]) {
           keep = false;
         }
-      });
-      return keep;
-    });
+      }
+      keep && filteredData.push(node);
+    }
+    // return originalData;
+    return filteredData;
   };
 
   filterNodes = () => {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import FORCE from '../FORCE';
 import Node from './Node';
 import styled from 'styled-components';
@@ -20,7 +20,7 @@ const GraphContainer = styled.div`
   }
 `;
 
-class Viz extends Component {
+class Viz extends PureComponent {
   // constructor(props) {
   //   super(props);
   //   this.state = {};
@@ -48,11 +48,6 @@ class Viz extends Component {
   }
 
   componentWillUnmount() {}
-
-  shouldComponentUpdate(nextProps, nextState) {
-    // only update if nodes change
-    return true;
-  }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.nodes !== this.props.nodes) {
