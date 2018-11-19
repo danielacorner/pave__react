@@ -1,3 +1,5 @@
+improve speed
+
 radius dropdown
 cluster dropdown
 static viz

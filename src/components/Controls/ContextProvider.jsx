@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import NOCData from '../../assets/NOC-data';
 import FORCE from '../FORCE';
 import html2canvas from 'html2canvas';
+import debounce from 'lodash.debounce';
 
 export const ControlsContext = React.createContext();
 
@@ -19,11 +20,11 @@ class ContextProvider extends Component {
         skillsLang: 0,
         skillsLogi: 0,
         skillsMath: 0,
-        skillsComp: 0
+        skillsComp: 0,
       },
       radiusSelector: 'workers',
       clusterSelector: 'industry',
-      snapshots: []
+      snapshots: [],
     };
   }
 
@@ -84,7 +85,7 @@ class ContextProvider extends Component {
     return (constrainingLength * 0.95) / nodesWidth;
   };
 
-  handleResize = () => {
+  handleResize = debounce(() => {
     console.log('...resizing...');
     const nodesG = document.getElementById('nodesG');
 
@@ -94,9 +95,9 @@ class ContextProvider extends Component {
     setTimeout(
       () =>
         (nodesG.style.transform = `translate(${this.translate()}) scale(${this.scale()})`),
-      0
+      0,
     );
-  };
+  }, 150);
 
   filteredNodes = () => {
     // filter the dataset according to the slider state
@@ -120,14 +121,14 @@ class ContextProvider extends Component {
     !FORCE.paused && FORCE.stopSimulation();
 
     this.setState({
-      nodes: this.filteredNodes()
+      nodes: this.filteredNodes(),
     });
   };
 
   restartSimulation = () => {
     FORCE.restartSimulation();
     this.setState({
-      nodes: this.filteredNodes()
+      nodes: this.filteredNodes(),
     });
     setTimeout(() => {
       FORCE.restartSimulation();
@@ -166,8 +167,8 @@ class ContextProvider extends Component {
           document.querySelector('#nodesG').style.transform =
             // todo: calculate this
             `translate(150px,100px) scale(${this.scale() * 0.5})`;
-        }
-      }
+        },
+      },
     ).then(canvas => {
       // document.querySelector(
       //   '#nodesG'
@@ -179,14 +180,14 @@ class ContextProvider extends Component {
       const newSnapshot = {
         id: ssID,
         filters: this.state.filters,
-        image: imgData
+        image: imgData,
       };
 
       this.setState({ snapshots: [...this.state.snapshots, newSnapshot] });
 
       localStorage.setItem(
         'snapshots',
-        JSON.stringify([...this.state.snapshots, newSnapshot])
+        JSON.stringify([...this.state.snapshots, newSnapshot]),
       );
 
       setTimeout(this.handleResize, 1500);
@@ -196,7 +197,7 @@ class ContextProvider extends Component {
   handleApplySnapshot = id => {
     console.log(
       'applying snapshot ',
-      this.state.snapshots.find(ss => ss.id === id)
+      this.state.snapshots.find(ss => ss.id === id),
     );
     const snapshot = this.state.snapshots.find(ss => ss.id === id);
     this.setState({ filters: snapshot.filters });
@@ -214,8 +215,8 @@ class ContextProvider extends Component {
     this.setState({
       snapshots: [
         ...this.state.snapshots.slice(0, deleteIndex),
-        ...this.state.snapshots.slice(deleteIndex + 1)
-      ]
+        ...this.state.snapshots.slice(deleteIndex + 1),
+      ],
     });
   };
 
@@ -240,7 +241,7 @@ class ContextProvider extends Component {
 
           setFilter: (filter, value) => {
             this.setState({
-              filters: { ...this.state.filters, [filter]: value }
+              filters: { ...this.state.filters, [filter]: value },
             });
             setTimeout(this.filterNodes, 0);
           },
@@ -248,7 +249,7 @@ class ContextProvider extends Component {
             const filtersReset = this.state.filters;
             Object.keys(this.state.filters).map(key => (filtersReset[key] = 0));
             this.setState({
-              filters: filtersReset
+              filters: filtersReset,
             });
             setTimeout(this.filterNodes, 0);
             setTimeout(this.restartSimulation, 0);
@@ -264,11 +265,11 @@ class ContextProvider extends Component {
 
           setNodes: nodes =>
             this.setState({
-              nodes: nodes
+              nodes: nodes,
             }),
 
           sortSize: this.sortSize,
-          sortColour: this.sortColour
+          sortColour: this.sortColour,
         }}
       >
         {this.props.children}

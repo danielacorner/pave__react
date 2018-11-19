@@ -35,7 +35,7 @@ export default class Viz extends Component {
       nodes: this.props.nodes,
       radiusScale: radiusScale,
       radiusSelector: radiusSelector,
-      clusterCenters: clusterCenters
+      clusterCenters: clusterCenters,
     });
     FORCE.tick(this);
     FORCE.drag();
@@ -47,6 +47,11 @@ export default class Viz extends Component {
 
   componentWillUnmount() {}
 
+  shouldComponentUpdate(nextProps, nextState) {
+    // only update if nodes change
+    return;
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.nodes !== this.props.nodes) {
       // const data = this.state;
@@ -57,7 +62,7 @@ export default class Viz extends Component {
           nodes: this.props.nodes,
           radiusScale: radiusScale,
           radiusSelector: radiusSelector,
-          clusterCenters: clusterCenters
+          clusterCenters: clusterCenters,
         });
         FORCE.tick(this);
         FORCE.drag();
@@ -74,9 +79,9 @@ export default class Viz extends Component {
     this.setState(prevState => ({
       nodes: [
         ...prevState.nodes,
-        { name: this.state.name, id: prevState.nodes.length + 1 }
+        { name: this.state.name, id: prevState.nodes.length + 1 },
       ],
-      name: ''
+      name: '',
     }));
   }
 
