@@ -301,7 +301,6 @@ class ContextProvider extends Component {
             );
           },
 
-          // startSimulation: this.startSimulation,
           restartSimulation: this.restartSimulation,
           handleSliderMouseup: this.handleSliderMouseup,
 

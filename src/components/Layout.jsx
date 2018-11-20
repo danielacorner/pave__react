@@ -22,7 +22,6 @@ const Layout = props => {
           <FiltersPanel filterVariables={filterVariables} />
           <SortPanel />
           <Viz
-            onStartSimulation={that => context.startSimulation(that)}
             filtersQuery={props.location.search}
             onLoadFromSnapshot={ssUrl => context.handleLoadFromSnapshot(ssUrl)}
             radiusScale={context.state.radiusScale()}

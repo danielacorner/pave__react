@@ -6,6 +6,7 @@ import GraphContainer from '../styles/GraphContainerStyles';
 class Viz extends PureComponent {
   componentDidMount() {
     const { nodes, radiusScale, clusterCenters, radiusSelector } = this.props;
+    // initialize the force simulation
     FORCE.startSimulation(
       { nodes, radiusScale, clusterCenters, radiusSelector },
       this,
@@ -36,34 +37,6 @@ class Viz extends PureComponent {
       </GraphContainer>
     );
   }
-
-  // componentDidUpdate(prevProps, prevState) {
-  // stop (improves performance), then restart the simulation
-  // FORCE.stopSimulation();
-  // restartSimulation(this.props, this);
-  // if (prevProps.nodes !== this.props.nodes) {
-  //   // if it's not paused, restart the simulation with the new filtered nodes
-  //   if (!FORCE.paused) {
-  //     restartSimulation(this.props, this);
-  //   }
-  // }
-  // }
-
-  // todo: these functions moved somewhere else?
-  // handleAddNode = e => {
-  //   this.setState({ [e.target.name]: e.target.value });
-  // };
-
-  // addNode = e => {
-  //   e.preventDefault();
-  //   this.setState(prevState => ({
-  //     nodes: [
-  //       ...prevState.nodes,
-  //       { name: this.state.name, id: prevState.nodes.length + 1 },
-  //     ],
-  //     name: '',
-  //   }));
-  // };
 }
 
 export default Viz;
