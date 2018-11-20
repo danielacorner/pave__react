@@ -172,12 +172,28 @@ class ContextProvider extends Component {
   //   );
   // };
   restartSimulation = () => {
+    const {
+      nodes,
+      radiusScale,
+      radiusSelector,
+      clusterCenters,
+      that,
+    } = this.state;
     // FORCE.restartSimulation();
     this.setState({
       nodes: this.filteredNodes(),
     });
     setTimeout(() => {
       FORCE.restartSimulation();
+      // FORCE.startSimulation(
+      //   {
+      //     nodes,
+      //     radiusScale,
+      //     radiusSelector,
+      //     clusterCenters,
+      //   },
+      //   that,
+      // );
     }, 200);
     setTimeout(() => {
       this.handleResize();
@@ -194,7 +210,7 @@ class ContextProvider extends Component {
         newMinima[filter] = Math.min(...this.state.nodes.map(d => d[filter]));
       });
       // restart the simulation
-      this.setState({ filters: newMinima }, this.restartSimulation);
+      this.setState({ filters: newMinima }, this.restartSimulation());
     }, 0);
   };
 
