@@ -11,7 +11,7 @@ const FORCE = function(nsp) {
       // const constrainedX = Math.min(Math.max(d.x, -minLength), minLength);
       // const constrainedY = Math.min(Math.max(d.y, -minLength), minLength);
       // return 'translate(' + constrainedX + ',' + constrainedY + ')';
-      return 'translate(' + d.x + ',' + d.y + ')';
+      return `translate(${d.x},${d.y})`;
     },
     // force parameters
     CLUSTER_PADDING = 30,

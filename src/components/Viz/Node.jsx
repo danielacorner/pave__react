@@ -40,7 +40,11 @@ export default class Node extends PureComponent {
     // console.log('node rendering!');
     return (
       <NodeGroup className="node" id={`node_${this.props.data.id}`}>
-        <circle /* onClick={this.props.addLink} */ />
+        <circle
+          onClick={this.props.onClick}
+          /* onClick={this.props.addLink} */
+          filter={this.props.isActive ? 'url(#virtual_light)' : null}
+        />
         <text>{this.props.data.name}</text>
       </NodeGroup>
     );

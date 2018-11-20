@@ -2,8 +2,10 @@ import React, { PureComponent } from 'react';
 import FORCE from '../FORCE';
 import Node from './Node';
 import GraphContainer from '../styles/GraphContainerStyles';
+import SVG3dEffect from './SVG3dEffect';
 
 class Viz extends PureComponent {
+  state = { activeNodeId: null };
   componentDidMount() {
     const { nodes, radiusScale, clusterCenters, radiusSelector } = this.props;
     // initialize the force simulation
@@ -15,6 +17,9 @@ class Viz extends PureComponent {
     this.props.filterQuery &&
       this.props.onLoadFromSnapshot(this.props.filterQuery);
   }
+  handleClick = nodeId => {
+    this.setState({ activeNodeId: nodeId });
+  };
   render() {
     const { radiusSelector, radiusScale, nodes } = this.props;
     return (
@@ -24,15 +29,21 @@ class Viz extends PureComponent {
             {nodes.map(node => {
               return (
                 <Node
+                  onClick={() => {
+                    this.handleClick(node.id);
+                  }}
                   radiusSelector={radiusSelector}
                   radiusScale={radiusScale}
                   data={node}
                   name={node.name}
                   key={`vizNode_${node.id}`}
+                  isActive={this.state.activeNodeId === node.id}
                 />
               );
             })}
           </g>
+
+          <SVG3dEffect />
         </svg>
       </GraphContainer>
     );
