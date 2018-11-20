@@ -133,10 +133,11 @@ const FORCE = function(nsp) {
       paused = true;
       nsp.paused = true;
     },
-    restartSimulation = () => {
+    restartSimulation = nodes => {
       paused = false;
       nsp.paused = false;
       nsp.force
+        .nodes(nodes)
         .velocityDecay(FRICTION)
         .alpha(RESTART_SPEED)
         .alphaDecay(SPEED_DECAY)

@@ -4,7 +4,6 @@ import FORCE from '../FORCE';
 import html2canvas from 'html2canvas';
 import debounce from 'lodash.debounce';
 import * as d3 from 'd3';
-
 const NOCDataProcessed = NOCData.map(d => {
   d.name = d.job;
   return d;
@@ -43,7 +42,6 @@ class ContextProvider extends Component {
       ),
       clusterCenters: [],
       snapshots: [],
-      that: null,
     };
   }
 
@@ -164,36 +162,12 @@ class ContextProvider extends Component {
       nodes: this.filteredNodes(),
     });
   };
-  // startSimulation = that => {
-  //   const { nodes, radiusScale, clusterCenters, radiusSelector } = this.state;
-  //   FORCE.startSimulation(
-  //     { nodes, radiusScale, clusterCenters, radiusSelector },
-  //     that,
-  //   );
-  // };
   restartSimulation = () => {
-    const {
-      nodes,
-      radiusScale,
-      radiusSelector,
-      clusterCenters,
-      that,
-    } = this.state;
-    // FORCE.restartSimulation();
     this.setState({
       nodes: this.filteredNodes(),
     });
     setTimeout(() => {
-      FORCE.restartSimulation();
-      // FORCE.startSimulation(
-      //   {
-      //     nodes,
-      //     radiusScale,
-      //     radiusSelector,
-      //     clusterCenters,
-      //   },
-      //   that,
-      // );
+      FORCE.restartSimulation(this.state.nodes);
     }, 200);
     setTimeout(() => {
       this.handleResize();
@@ -339,12 +313,6 @@ class ContextProvider extends Component {
           setNodes: nodes =>
             this.setState({
               nodes: nodes,
-            }),
-
-          // give the Viz context to the sliders
-          setThis: that =>
-            this.setState({
-              that: that,
             }),
 
           sortSize: this.sortSize,
