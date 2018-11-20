@@ -10,7 +10,6 @@ const NOCDataProcessed = NOCData.map(d => {
 });
 
 export const ControlsContext = React.createContext();
-let nodesG;
 
 const $ = element => document.querySelector(element); // jQuerify
 
@@ -77,8 +76,7 @@ class ContextProvider extends Component {
       $('#graphContainer').getBoundingClientRect().height,
     ];
 
-    nodesG = $('#nodesG');
-    nodesG.style.transform = `translate(${width / 2}px,${height / 2}px)`;
+    $('#nodesG').style.transform = `translate(${width / 2}px,${height / 2}px)`;
   };
 
   componentWillUnmount = () => {
@@ -105,7 +103,7 @@ class ContextProvider extends Component {
     ];
     // resize the graph container to fit the screen
     const constrainingLength = Math.min(width, height);
-    const nodesWidth = nodesG.getBBox().width;
+    const nodesWidth = $('#nodesG').getBBox().width;
 
     // bugfix: zooming in because initial nodesWidth = 100, and doesn't resize correctly when browser focus isn't on this tab
     if (
@@ -125,7 +123,9 @@ class ContextProvider extends Component {
     // nodesG.style.transform = `translate(${this.translate()})`;
 
     // setTimeout( () => (
-    nodesG.style.transform = `translate(${this.translate()}) scale(${this.scale()})`;
+    $(
+      '#nodesG',
+    ).style.transform = `translate(${this.translate()}) scale(${this.scale()})`;
     // ), 0, );
   }, 150);
 
@@ -174,8 +174,16 @@ class ContextProvider extends Component {
     }, 1500);
   };
 
-  handleSliderMouseup = () => {
-    console.log('mouseup!');
+  handleFilterChange = (filter, value) => {
+    this.setState(
+      {
+        filters: { ...this.state.filters, [filter]: value },
+      },
+      this.filterNodes,
+    );
+  };
+
+  handleFilterMouseup = () => {
     let newMinima = {};
     // set all filters to new minima on mouseup
     setTimeout(() => {
@@ -187,7 +195,19 @@ class ContextProvider extends Component {
       this.setState({ filters: newMinima }, this.restartSimulation());
     }, 0);
   };
-
+  resetFilters = () => {
+    const filtersReset = this.state.filters;
+    Object.keys(this.state.filters).map(key => (filtersReset[key] = 0));
+    this.setState(
+      {
+        filters: filtersReset,
+      },
+      () => {
+        this.filterNodes();
+        this.restartSimulation();
+      },
+    );
+  };
   handleSnapshot = () => {
     const gc = $('#graphContainer');
     html2canvas(
@@ -202,7 +222,7 @@ class ContextProvider extends Component {
         // scrollX: $('#nodesG').getBoundingClientRect().left,
         // scrollY: $('#nodesG').getBoundingClientRect().top,
         onclone: document => {
-          nodesG.style.transform =
+          $('#nodesG').style.transform =
             // todo: calculate this (output canvas snapshot isn't the right scale)
             `translate(150px,100px) scale(${this.scale() * 0.5})`;
         },
@@ -239,7 +259,7 @@ class ContextProvider extends Component {
     );
     const snapshot = this.state.snapshots.find(ss => ss.id === id);
     this.setState({ filters: snapshot.filters });
-    this.handleSliderMouseup();
+    this.handleFilterMouseup();
   };
   handleLoadFromSnapshot = ssUrl => {
     setTimeout(() => {
@@ -270,50 +290,17 @@ class ContextProvider extends Component {
       <ControlsContext.Provider
         value={{
           state: this.state,
-
-          setRadiusSelector: selector =>
-            this.setState({ radiusSelector: selector }),
-
-          setClusterSelector: selector =>
-            this.setState({ clusterSelector: selector }),
-
-          handleFilterChange: (filter, value) => {
-            // !FORCE.paused && FORCE.stopSimulation();
-
-            this.setState(
-              {
-                filters: { ...this.state.filters, [filter]: value },
-              },
-              this.filterNodes,
-            );
-          },
-          resetFilters: () => {
-            const filtersReset = this.state.filters;
-            Object.keys(this.state.filters).map(key => (filtersReset[key] = 0));
-            this.setState(
-              {
-                filters: filtersReset,
-              },
-              () => {
-                this.filterNodes();
-                this.restartSimulation();
-              },
-            );
-          },
-
+          setRadiusSelector: x => this.setState({ radiusSelector: x }),
+          setClusterSelector: x => this.setState({ clusterSelector: x }),
+          handleFilterChange: this.handleFilterChange,
+          resetFilters: this.resetFilters,
           restartSimulation: this.restartSimulation,
-          handleSliderMouseup: this.handleSliderMouseup,
-
+          handleSliderMouseup: this.handleFilterMouseup,
           handleSnapshot: this.handleSnapshot,
           handleApplySnapshot: this.handleApplySnapshot,
           handleLoadFromSnapshot: this.handleLoadFromSnapshot,
           handleDeleteSnapshot: this.handleDeleteSnapshot,
-
-          setNodes: nodes =>
-            this.setState({
-              nodes: nodes,
-            }),
-
+          setNodes: nodes => this.setState({ nodes: nodes }),
           sortSize: this.sortSize,
           sortColour: this.sortColour,
         }}

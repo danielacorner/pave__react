@@ -12,7 +12,7 @@ const GraphContainer = styled.div`
     height: 100%;
     #nodesG {
       transition: transform 0.5s ease-in-out;
-      /* transform: translate(50%, 50%); */
+      transform: translate(50%, 50%);
     }
   }
 `;
