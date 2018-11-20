@@ -3,8 +3,8 @@ import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
 
-const Container = styled.div`
-  /* margin: 20px; */
+const SortButtonsGrid = styled.div`
+  margin: 0 20px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 20px;
@@ -15,7 +15,7 @@ export default class SortPanel extends Component {
     return (
       <ControlsContext.Consumer>
         {context => (
-          <Container>
+          <SortButtonsGrid>
             <Button
               onClick={context.sortSize}
               variant="contained"
@@ -31,7 +31,7 @@ export default class SortPanel extends Component {
             >
               Sort by Colour
             </Button>
-          </Container>
+          </SortButtonsGrid>
         )}
       </ControlsContext.Consumer>
     );

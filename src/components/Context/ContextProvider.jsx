@@ -3,20 +3,25 @@ import NOCData from '../../assets/NOC-data';
 import FORCE from '../FORCE';
 import html2canvas from 'html2canvas';
 import debounce from 'lodash.debounce';
+import * as d3 from 'd3';
+
+const NOCDataProcessed = NOCData.map(d => {
+  d.name = d.job;
+  return d;
+});
 
 export const ControlsContext = React.createContext();
 let nodesG;
+
+const $ = element => document.querySelector(element); // jQuerify
 
 class ContextProvider extends Component {
   constructor(props) {
     super(props);
     console.log('constructing context!');
     this.state = {
-      originalData: NOCData.map(d => {
-        d.name = d.job;
-        return d;
-      }),
-      nodes: [],
+      originalData: NOCDataProcessed,
+      nodes: NOCDataProcessed,
       filters: {
         skillsLang: 0,
         skillsLogi: 0,
@@ -25,59 +30,86 @@ class ContextProvider extends Component {
       },
       radiusSelector: 'workers',
       clusterSelector: 'industry',
+      radiusScale: () => {
+        const radii = NOCData.map(d => d[this.state.radiusSelector]);
+        const radiusRange = [5, 50];
+        return d3
+          .scaleSqrt() // square root scale because radius of a circle
+          .domain([d3.min(radii), d3.max(radii)])
+          .range(radiusRange);
+      },
+      uniqueClusterValues: NOCData.map(d => d['industry']).filter(
+        (value, index, self) => self.indexOf(value) === index,
+      ),
+      clusterCenters: [],
       snapshots: [],
+      that: null,
     };
   }
 
-  componentWillMount = () => {
-    this.setState({ nodes: this.state.originalData });
-  };
-
   componentDidMount = () => {
+    const {
+      clusterCenters,
+      radiusSelector,
+      clusterSelector,
+      uniqueClusterValues,
+    } = this.state;
+
+    NOCData.forEach(d => {
+      const cluster = uniqueClusterValues.indexOf(d[clusterSelector]) + 1;
+      // add to clusters array if it doesn't exist or the radius is larger than any other radius in the cluster
+      if (
+        !clusterCenters[cluster] ||
+        d[radiusSelector] > clusterCenters[cluster][radiusSelector]
+      ) {
+        clusterCenters[cluster] = d;
+        // todo: emit new cluster centers to/from context
+        this.setState({ clusterCenters: clusterCenters });
+      }
+      // if ([1, 100, 200, 300, 400].includes(d.id)) {
+      // }
+    });
+
     window.addEventListener('resize', this.handleResize);
     setTimeout(this.handleResize, 1500);
 
     // tranlate nodes to center
-    const svgWidth = document.getElementById('svg').getBoundingClientRect()
-      .width;
+    const [width, height] = [
+      $('#svg').getBoundingClientRect().width,
+      $('#graphContainer').getBoundingClientRect().height,
+    ];
 
-    const vizHeight = document
-      .getElementById('graphContainer')
-      .getBoundingClientRect().height;
-
-    nodesG = document.getElementById('nodesG');
-    nodesG.style.transform = `translate(${svgWidth / 2}px,${vizHeight / 2}px)`;
+    nodesG = $('#nodesG');
+    nodesG.style.transform = `translate(${width / 2}px,${height / 2}px)`;
   };
 
   componentWillUnmount = () => {
     window.removeEventListener('resize', this.handleResize);
   };
 
-  componentDidUpdate(nextProps, nextState) {}
+  // componentDidUpdate(nextProps, nextState) {}
 
   shouldComponentUpdate(nextProps, nextState) {
     return this.state.nodes !== nextState.nodes;
   }
 
   translate = () => {
-    const svgWidth = document.getElementById('svg').getBoundingClientRect()
-      .width;
-    const vizHeight = document
-      .getElementById('graphContainer')
-      .getBoundingClientRect().height;
-    return `${svgWidth / 2}px,${vizHeight / 2}px`;
+    const [width, height] = [
+      $('#svg').getBoundingClientRect().width,
+      $('#graphContainer').getBoundingClientRect().height,
+    ];
+    return `${width / 2}px,${height / 2}px`;
   };
   scale = () => {
-    const svgWidth = document.getElementById('svg').getBoundingClientRect()
-      .width;
-    const vizHeight = document
-      .getElementById('graphContainer')
-      .getBoundingClientRect().height;
+    const [width, height] = [
+      $('#svg').getBoundingClientRect().width,
+      $('#graphContainer').getBoundingClientRect().height,
+    ];
     // resize the graph container to fit the screen
-    const constrainingLength = Math.min(vizHeight, svgWidth);
+    const constrainingLength = Math.min(width, height);
     const nodesWidth = nodesG.getBBox().width;
 
-    // bugfix: zooming in because initial nodesWidth = 100, and doesn't fill resize when loading from another tab
+    // bugfix: zooming in because initial nodesWidth = 100, and doesn't resize correctly when browser focus isn't on this tab
     if (
       nodesWidth === 100 &&
       this.state.nodes.length === this.state.originalData.length
@@ -92,13 +124,11 @@ class ContextProvider extends Component {
     console.count('...resizing...');
 
     // translate the nodes group into the middle
-    nodesG.style.transform = `translate(${this.translate()})`;
+    // nodesG.style.transform = `translate(${this.translate()})`;
 
-    setTimeout(
-      () =>
-        (nodesG.style.transform = `translate(${this.translate()}) scale(${this.scale()})`),
-      0,
-    );
+    // setTimeout( () => (
+    nodesG.style.transform = `translate(${this.translate()}) scale(${this.scale()})`;
+    // ), 0, );
   }, 150);
 
   filteredNodes = () => {
@@ -107,7 +137,8 @@ class ContextProvider extends Component {
     const filterKeys = Object.keys(filters);
     const numFilters = filterKeys.length;
     const numNodes = originalData.length;
-    const filteredData = [];
+
+    const filtered = [];
     for (let i = 0; i < numNodes; i++) {
       const node = originalData[i];
       let keep = true;
@@ -119,9 +150,9 @@ class ContextProvider extends Component {
           keep = false;
         }
       }
-      keep && filteredData.push(node);
+      keep && filtered.push(node);
     }
-    return filteredData;
+    return filtered;
   };
 
   filterNodes = () => {
@@ -133,9 +164,15 @@ class ContextProvider extends Component {
       nodes: this.filteredNodes(),
     });
   };
-
+  // startSimulation = that => {
+  //   const { nodes, radiusScale, clusterCenters, radiusSelector } = this.state;
+  //   FORCE.startSimulation(
+  //     { nodes, radiusScale, clusterCenters, radiusSelector },
+  //     that,
+  //   );
+  // };
   restartSimulation = () => {
-    FORCE.restartSimulation();
+    // FORCE.restartSimulation();
     this.setState({
       nodes: this.filteredNodes(),
     });
@@ -148,38 +185,40 @@ class ContextProvider extends Component {
   };
 
   handleSliderMouseup = () => {
-    setTimeout(this.restartSimulation, 0);
+    console.log('mouseup!');
     let newMinima = {};
+    // set all filters to new minima on mouseup
     setTimeout(() => {
       Object.keys(this.state.filters).forEach(filter => {
         // console.log(Math.max(...this.state.nodes[filter]));
         newMinima[filter] = Math.min(...this.state.nodes.map(d => d[filter]));
       });
-      this.setState({ filters: newMinima });
+      // restart the simulation
+      this.setState({ filters: newMinima }, this.restartSimulation);
     }, 0);
   };
 
   handleSnapshot = () => {
-    const gc = document.querySelector('#graphContainer');
+    const gc = $('#graphContainer');
     html2canvas(
       gc,
       // options
       {
-        // x: document.querySelector('#nodesG').getBoundingClientRect().x,
-        // y: document.querySelector('#nodesG').getBoundingClientRect().y,
-        // width: document.querySelector('#nodesG').getBoundingClientRect().width,
-        // height: document.querySelector('#nodesG').getBoundingClientRect()
+        // x: $('#nodesG').getBoundingClientRect().x,
+        // y: $('#nodesG').getBoundingClientRect().y,
+        // width: $('#nodesG').getBoundingClientRect().width,
+        // height: $('#nodesG').getBoundingClientRect()
         //   .height,
-        // scrollX: document.querySelector('#nodesG').getBoundingClientRect().left,
-        // scrollY: document.querySelector('#nodesG').getBoundingClientRect().top,
+        // scrollX: $('#nodesG').getBoundingClientRect().left,
+        // scrollY: $('#nodesG').getBoundingClientRect().top,
         onclone: document => {
           nodesG.style.transform =
-            // todo: calculate this
+            // todo: calculate this (output canvas snapshot isn't the right scale)
             `translate(150px,100px) scale(${this.scale() * 0.5})`;
         },
       },
     ).then(canvas => {
-      // document.querySelector(
+      // $(
       //   '#nodesG'
       // ).style.transform = `translate(0,0) scale(${this.scale()})`;
 
@@ -248,22 +287,31 @@ class ContextProvider extends Component {
           setClusterSelector: selector =>
             this.setState({ clusterSelector: selector }),
 
-          setFilter: (filter, value) => {
-            this.setState({
-              filters: { ...this.state.filters, [filter]: value },
-            });
-            setTimeout(this.filterNodes, 0);
+          handleFilterChange: (filter, value) => {
+            // !FORCE.paused && FORCE.stopSimulation();
+
+            this.setState(
+              {
+                filters: { ...this.state.filters, [filter]: value },
+              },
+              this.filterNodes,
+            );
           },
           resetFilters: () => {
             const filtersReset = this.state.filters;
             Object.keys(this.state.filters).map(key => (filtersReset[key] = 0));
-            this.setState({
-              filters: filtersReset,
-            });
-            setTimeout(this.filterNodes, 0);
-            setTimeout(this.restartSimulation, 0);
+            this.setState(
+              {
+                filters: filtersReset,
+              },
+              () => {
+                this.filterNodes();
+                this.restartSimulation();
+              },
+            );
           },
 
+          // startSimulation: this.startSimulation,
           restartSimulation: this.restartSimulation,
           handleSliderMouseup: this.handleSliderMouseup,
 
@@ -275,6 +323,12 @@ class ContextProvider extends Component {
           setNodes: nodes =>
             this.setState({
               nodes: nodes,
+            }),
+
+          // give the Viz context to the sliders
+          setThis: that =>
+            this.setState({
+              that: that,
             }),
 
           sortSize: this.sortSize,

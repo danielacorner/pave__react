@@ -3,11 +3,9 @@ import './App.css';
 import Navbar from './components/Navbar';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
-// import ContextProvider, {
-//   ControlsContext
-// } from './components/Controls/ContextProvider';
 import { Router /* Link */ } from '@reach/router';
 import Layout from './components/Layout';
+import ContextProvider from './components/Context/ContextProvider';
 
 const theme = createMuiTheme({
   palette: {
@@ -24,11 +22,13 @@ class App extends PureComponent {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <Navbar />
-        <Router>
-          <Layout path="/" />
-          <Layout path="/:filterState" />
-        </Router>
+        <ContextProvider>
+          <Navbar />
+          <Router>
+            <Layout path="/" />
+            <Layout path="/:filtersQuery" />
+          </Router>
+        </ContextProvider>
       </MuiThemeProvider>
     );
   }

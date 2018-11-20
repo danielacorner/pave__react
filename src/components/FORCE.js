@@ -115,6 +115,19 @@ const FORCE = function(nsp) {
         .alphaDecay(SPEED_DECAY)
         .alphaTarget(END_SPEED);
     },
+    startSimulation = (
+      { nodes, radiusScale, clusterCenters, radiusSelector },
+      that,
+    ) => {
+      nsp.initForce({
+        nodes,
+        radiusScale,
+        radiusSelector,
+        clusterCenters,
+      });
+      nsp.tick(that);
+      nsp.drag();
+    },
     stopSimulation = () => {
       nsp.force.stop();
       paused = true;
@@ -201,6 +214,7 @@ const FORCE = function(nsp) {
   nsp.updateGraph = updateGraph;
   nsp.cluster = cluster;
   nsp.initForce = initForce;
+  nsp.startSimulation = startSimulation;
   nsp.stopSimulation = stopSimulation;
   nsp.restartSimulation = restartSimulation;
   nsp.dragStarted = dragStarted;
