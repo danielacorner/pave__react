@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import styled from 'styled-components';
-import { ControlsContext } from '../ContextProvider';
+import { ControlsContext } from '../Context/ContextProvider';
 
 const Container = styled.div`
   /* margin: 20px; */

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import FilterSlider from './FilterSlider';
-import { ControlsContext } from '../ContextProvider';
+import { ControlsContext } from '../Context/ContextProvider';
 import { Button } from '@material-ui/core';
 
 const Container = styled.div`
@@ -45,7 +45,7 @@ export default class FiltersPanel extends Component {
             {/* Hide Reset button if all filters are at 0 */}
             {Object.values(context.state.filters).reduce(
               (tot, curr) => tot + curr,
-              0
+              0,
             ) > 0 && (
               <Button onClick={context.resetFilters} variant="contained">
                 Reset Filters

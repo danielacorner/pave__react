@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 import { Typography, IconButton } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -10,39 +9,8 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded';
 import CopyIcon from '@material-ui/icons/FileCopy';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 import SnapshotsButton from './SnapshotsButton';
-import { ControlsContext } from '../ContextProvider';
-
-const Container = styled.div`
-  /* padding: 10px; */
-  display: grid;
-  grid-gap: 10px;
-  @media (min-width: 440px) {
-    /* padding: 10px; */
-  }
-  .snapshotsScrollContainer {
-    overflow-y: scroll;
-    display: grid;
-    grid-gap: 10px;
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    height: 0px;
-    transition: height 0.5s ease-in-out;
-    &.open {
-      height: 85px;
-    }
-  }
-  .snapshotButton {
-    display: grid;
-    grid-auto-flow: row;
-    text-transform: none;
-    height: auto;
-    img {
-      width: 75px;
-      height: 50px;
-      margin-bottom: 4px;
-      object-fit: fill;
-    }
-  }
-`;
+import { ControlsContext } from '../Context/ContextProvider';
+import SnapshotsWrapper from '../styles/SnapshotsWrapper';
 
 export default class SnapshotsPanel extends Component {
   state = {
@@ -63,7 +31,7 @@ export default class SnapshotsPanel extends Component {
     return (
       <ControlsContext.Consumer>
         {context => (
-          <Container>
+          <SnapshotsWrapper>
             <SnapshotsButton onSnapshot={context.handleSnapshot} />
             <div
               className={`snapshotsScrollContainer ${context.state.snapshots
@@ -178,7 +146,7 @@ export default class SnapshotsPanel extends Component {
                 );
               })}
             </div>
-          </Container>
+          </SnapshotsWrapper>
         )}
       </ControlsContext.Consumer>
     );

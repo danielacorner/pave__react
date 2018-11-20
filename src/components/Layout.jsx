@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
 import Viz from './Viz/Viz';
 import styled from 'styled-components';
-import FiltersPanel from './Controls/Filters/FiltersPanel';
+import FiltersPanel from './Filters/FiltersPanel';
 import NOCData from '../assets/NOC-data';
 import * as d3 from 'd3';
-import ContextProvider, { ControlsContext } from './Controls/ContextProvider';
-import SnapshotsPanel from './Controls/Snapshot/SnapshotsPanel';
-import SortPanel from './Controls/Sort/SortPanel';
+import ContextProvider, { ControlsContext } from './Context/ContextProvider';
+import SnapshotsPanel from './Snapshot/SnapshotsPanel';
+import SortPanel from './Sort/SortPanel';
 
 const filterVariables = [
   'skillsLang',

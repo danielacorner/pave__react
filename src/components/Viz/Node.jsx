@@ -3,27 +3,8 @@ import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import FORCE from '../FORCE';
 import 'jquery/src/jquery';
-import styled from 'styled-components';
 // import $ from 'jqeury/src/jquery';
-
-const NodeGroup = styled.g`
-  circle {
-    &:hover {
-      cursor: pointer;
-      stroke: rgba(0, 0, 0, 0.9);
-      stroke-width: 2;
-    }
-  }
-  .text-label {
-    fill: honeydew;
-    font-weight: 600;
-    text-transform: uppercase;
-    text-anchor: middle;
-    alignment-baseline: middle;
-    font-size: 10px;
-    font-family: cursive;
-  }
-`;
+import NodeGroup from '../styles/NodeStyles';
 
 export default class Node extends PureComponent {
   componentDidMount() {

@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import FORCE from '../FORCE';
 import Node from './Node';
-import GraphContainer from '../styles/GraphContainer';
+import GraphContainer from '../styles/GraphContainerStyles';
 
 const restartSimulation = (
   { nodes, radiusScale, clusterCenters, radiusSelector },
@@ -18,8 +18,6 @@ const restartSimulation = (
 };
 
 class Viz extends PureComponent {
-  state = {};
-
   componentDidMount() {
     restartSimulation(this.props, this);
     // if applying a snapshot, handle in ContextProvider
