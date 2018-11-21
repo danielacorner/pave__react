@@ -1,41 +1,8 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
-import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
-
-const SortButtonsGrid = styled.div`
-  div {
-    margin: 0 20px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    /* grid-gap: 20px; */
-    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.5);
-    button {
-      border-radius: 4px;
-      transition: all 0.2s ease-in-out;
-    }
-    [value='size'] {
-      color: rgba(0, 0, 0, 0.95);
-      background: #eefcce;
-      &:hover,
-      &[class*='selected'] {
-        color: rgba(255, 255, 255, 0.95);
-        background: #98a184;
-      }
-    }
-    [value='colour'] {
-      color: rgba(0, 0, 0, 0.95);
-      background: #92afd7cc;
-      &:hover,
-      &[class*='selected'] {
-        color: rgba(255, 255, 255, 0.95);
-        background: #85a0c4;
-      }
-    }
-  }
-`;
+import SortButtonsGrid from '../styles/SortButtonsGrid';
 
 export default class SortPanel extends Component {
   state = {
