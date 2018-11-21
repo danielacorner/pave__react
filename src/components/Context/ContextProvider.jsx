@@ -99,41 +99,42 @@ class ContextProvider extends Component {
     return `${width / 2}px,${height / 2}px`;
   };
   scale = () => {
+    // resize the graph container to fit the screen
     const [width, height] = [
       $('#svg').getBoundingClientRect().width,
       $('#graphContainer').getBoundingClientRect().height,
     ];
-    // resize the graph container to fit the screen
-    const constrainingLength = this.state.sortedColour
-      ? // if split into clusters, zoom out more
-        Math.min(width, height) * 0.9
-      : // otherwise, zoom in until you hit the edge of the smaller length
+
+    // zoom in until you hit the edge of...
+    const windowConstrainingLength = this.state.sortedColour
+      ? // if split into clusters, constrain by the bigger length
+        Math.max(width, height)
+      : // otherwise, constrain by the smaller length
         Math.min(width, height);
 
-    const nodesWidth = $('#nodesG').getBBox().width;
+    const nodesBB = $('#nodesG').getBBox();
+    // constrain the maximum nodes length
+    const nodesConstrainedLength = Math.max(nodesBB.width, nodesBB.height);
 
-    // bugfix: zooming in because initial nodesWidth = 100, and doesn't resize correctly when browser focus isn't on this tab
+    // bugfix: zooming in because initial nodesConstrainedLength = 100, and doesn't resize correctly when browser focus isn't on this tab
     if (
-      nodesWidth === 100 &&
+      nodesConstrainedLength === 100 &&
       this.state.nodes.length === this.state.originalData.length
     ) {
       return 0.95;
     }
 
-    return (constrainingLength * 0.95) / nodesWidth;
+    const scaleRatio = windowConstrainingLength / nodesConstrainedLength;
+    return scaleRatio * 0.95; // zoom out a little extra
   };
 
   handleResize = debounce(() => {
-    console.count('...resizing...');
+    // console.count('...resizing...');
 
-    // translate the nodes group into the middle
-    // nodesG.style.transform = `translate(${this.translate()})`;
-
-    // setTimeout( () => (
+    // translate the nodes group into the middle and scale to fit
     $(
       '#nodesG',
     ).style.transform = `translate(${this.translate()}) scale(${this.scale()})`;
-    // ), 0, );
   }, 150);
 
   filteredNodes = () => {
@@ -289,21 +290,31 @@ class ContextProvider extends Component {
     console.log('sorting size!');
   };
   sortColour = () => {
+    const { nodes, uniqueClusterValues, clusterSelector } = this.state;
     if (!this.state.sortedColour) {
-      // turn off center gravity force
-      FORCE.sortColour(this.state.uniqueClusterValues.length);
-      // split the view into sections for each cluster
       this.setState({ sortedColour: true });
-      setTimeout(this.handleResize, 1500);
+      // split the view into sections for each cluster
+      FORCE.sortColour(uniqueClusterValues.length);
+      setTimeout(() => {
+        FORCE.toggleClusterTags(
+          true,
+          nodes,
+          uniqueClusterValues,
+          clusterSelector,
+        );
+        this.handleResize();
+      }, 500);
     } else {
-      console.log('restarting');
-      FORCE.restartSimulation(this.state.nodes);
+      FORCE.toggleClusterTags(
+        false,
+        nodes,
+        uniqueClusterValues,
+        clusterSelector,
+      );
+      FORCE.restartSimulation(nodes);
       this.setState({ sortedColour: false });
       setTimeout(this.handleResize, 1500);
     }
-
-    //
-    console.log('sorting colour!');
   };
 
   render() {

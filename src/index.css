@@ -6,7 +6,7 @@ span {
   -webkit-font-smoothing: antialiased;
   text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 1px;
 }
-
+/*
 .form-addSystem {
   display: grid;
   grid-template-columns: min-content min-content;
@@ -114,4 +114,4 @@ span {
   text-decoration: none;
   font-size: 1.2rem;
   color: steelblue;
-}
+} */

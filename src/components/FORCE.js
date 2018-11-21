@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import ReactDOM from 'react-dom';
 import { $ } from './Context/ContextProvider';
 const FORCE = function(nsp) {
-  let paused;
+  let paused, updatePositionsInterval, removeLabelsTimeout;
   const // width = window.innerWidth,
     //   height = window.innerHeight,
     // optional: constrain nodes within a bounding box
@@ -115,6 +115,80 @@ const FORCE = function(nsp) {
         .alphaDecay(SPEED_DECAY)
         .alphaTarget(END_SPEED);
     },
+    toggleClusterAnnotations = (
+      toggleOn,
+      nodes,
+      uniqueClusterValues,
+      clusterSelector,
+    ) => {
+      if (toggleOn) {
+        clearTimeout(removeLabelsTimeout);
+        const getBBox = el => el && $(el).getBoundingClientRect();
+        // 1. calculate the center of each cluster
+        const calcCenter = clusterValue => {
+          // return {x,y} cluster center-of-mass
+          const clusterNodes = nodes.filter(
+            node => node[clusterSelector] === clusterValue,
+          );
+          // sum the x and y positions for each cluster
+          const totals = clusterNodes.reduce(
+            (acc, node) => {
+              const nodeBB = getBBox(`#node_${node.id}`);
+              return {
+                x: acc.x + nodeBB.x,
+                y: acc.y + nodeBB.y,
+              };
+            },
+            { x: 0, y: 0 },
+          );
+          // divide by the number of nodes in that cluster
+          const numNodes = clusterNodes.length;
+          return { x: totals.x / numNodes, y: totals.y / numNodes };
+        };
+
+        const divWidth = 125;
+        // 2. append a text svg for each cluster
+        uniqueClusterValues.forEach((clusterTitle, idx) => {
+          d3.select('#graphContainer')
+            .append('div')
+            .attr('class', 'clusterLabel')
+            .attr('id', `clusterLabel_${idx}`)
+            .style('left', `${calcCenter(clusterTitle).x - 0.5 * divWidth}px`)
+            .style('top', `${calcCenter(clusterTitle).y}px`)
+            .text(`${uniqueClusterValues[idx]}`)
+            // transition in opacity
+            // .style('opacity', 0)
+            .style('opacity', 1);
+        });
+        // 3. set interval to reposition the text
+        const updateTextPositions = () => {
+          // for each cluster, calculate the cluster center and update the text position
+          uniqueClusterValues.forEach((clusterTitle, idx) => {
+            const divBB = getBBox(`#clusterLabel_${idx}`);
+            d3.select(`#clusterLabel_${idx}`)
+              .style(
+                'left',
+                `${calcCenter(clusterTitle).x - 0.5 * divBB.width}px`,
+              )
+              .style(
+                'top',
+                `${calcCenter(clusterTitle).y -
+                  // move the div up by half its own height
+                  0.5 * divBB.height}px`,
+              );
+          });
+        };
+        updatePositionsInterval = setInterval(updateTextPositions, 500);
+      } else {
+        d3.selectAll('.clusterLabel').style('opacity', 0);
+        removeLabelsTimeout = setTimeout(
+          () => d3.selectAll('.clusterLabel').remove(),
+          500,
+        );
+        // remove text groups
+        clearInterval(updatePositionsInterval);
+      }
+    },
     sortColour = numClusters => {
       const [width, height] = [
         $('#svg').getBoundingClientRect().width,
@@ -131,7 +205,8 @@ const FORCE = function(nsp) {
         for (let i = numCols; i >= 0; i--) {
           // if you're in this column, go to position i
           if (d.cluster % numCols === i)
-            return (i / numCols - 0.33) * width * shrinkX;
+            return (i / numCols - 0.4) * width * shrinkX;
+          //! -0.4 works, why is -0.5 too much?
         }
       };
 
@@ -143,11 +218,13 @@ const FORCE = function(nsp) {
         for (let i = numRows; i >= 0; i--) {
           // if you're in this row, go to position i
           if (d.cluster % numRows === i)
-            return (i / numRows - 0.33) * height * shrinkY;
+            return (i / numRows - 0.4) * height * shrinkY;
+          //! -0.4 works, why is -0.5 too much?
         }
       };
 
-      const [SPLIT_SPEED, SPLIT_FRICTION] = [0.87, 0.025];
+      // restart the simulation
+      const [SPLIT_SPEED, SPLIT_FRICTION] = [0.8, 0.025];
       nsp.force
         .force('x', d3.forceX(positionX).strength(CENTER_GRAVITY))
         .force('y', d3.forceY(positionY).strength(CENTER_GRAVITY))
@@ -259,6 +336,7 @@ const FORCE = function(nsp) {
   nsp.initForce = initForce;
   nsp.startSimulation = startSimulation;
   nsp.stopSimulation = stopSimulation;
+  nsp.toggleClusterTags = toggleClusterAnnotations;
   nsp.sortColour = sortColour;
   nsp.restartSimulation = restartSimulation;
   nsp.dragStarted = dragStarted;
