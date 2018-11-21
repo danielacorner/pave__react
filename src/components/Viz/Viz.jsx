@@ -18,6 +18,7 @@ class Viz extends PureComponent {
       this.props.onLoadFromSnapshot(this.props.filterQuery);
   }
   handleClick = nodeId => {
+    // apply 3d effect to clicked node
     this.setState({ activeNodeId: nodeId });
   };
   render() {

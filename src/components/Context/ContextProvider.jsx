@@ -11,7 +11,7 @@ const NOCDataProcessed = NOCData.map(d => {
 
 export const ControlsContext = React.createContext();
 
-const $ = element => document.querySelector(element); // jQuerify
+export const $ = element => document.querySelector(element); // jQuerify
 
 class ContextProvider extends Component {
   constructor(props) {
@@ -41,6 +41,8 @@ class ContextProvider extends Component {
       ),
       clusterCenters: [],
       snapshots: [],
+      sortedColour: false,
+      sortedSize: false,
     };
   }
 
@@ -102,7 +104,12 @@ class ContextProvider extends Component {
       $('#graphContainer').getBoundingClientRect().height,
     ];
     // resize the graph container to fit the screen
-    const constrainingLength = Math.min(width, height);
+    const constrainingLength = this.state.sortedColour
+      ? // if split into clusters, zoom out more
+        Math.min(width, height) * 0.9
+      : // otherwise, zoom in until you hit the edge of the smaller length
+        Math.min(width, height);
+
     const nodesWidth = $('#nodesG').getBBox().width;
 
     // bugfix: zooming in because initial nodesWidth = 100, and doesn't resize correctly when browser focus isn't on this tab
@@ -282,6 +289,20 @@ class ContextProvider extends Component {
     console.log('sorting size!');
   };
   sortColour = () => {
+    if (!this.state.sortedColour) {
+      // turn off center gravity force
+      FORCE.sortColour(this.state.uniqueClusterValues.length);
+      // split the view into sections for each cluster
+      this.setState({ sortedColour: true });
+      setTimeout(this.handleResize, 1500);
+    } else {
+      console.log('restarting');
+      FORCE.restartSimulation(this.state.nodes);
+      this.setState({ sortedColour: false });
+      setTimeout(this.handleResize, 1500);
+    }
+
+    //
     console.log('sorting colour!');
   };
 

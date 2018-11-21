@@ -1,4 +1,4 @@
-split components down into single-purpose components
+implement sort by colour (use responsive grid)
 
 extract contextprovider functions into their respective component folders
 

@@ -33,7 +33,7 @@ const SVG3dEffect = () => (
         surfaceScale="5"
         specularConstant="1"
         specularExponent="20"
-        lighting-color="#FFFFFF"
+        lightingColor="#FFFFFF"
         result="spec_light"
       >
         <fePointLight x="-5000" y="-10000" z="10000" />

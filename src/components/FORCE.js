@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import ReactDOM from 'react-dom';
-
+import { $ } from './Context/ContextProvider';
 const FORCE = function(nsp) {
   let paused;
   const // width = window.innerWidth,
@@ -115,6 +115,46 @@ const FORCE = function(nsp) {
         .alphaDecay(SPEED_DECAY)
         .alphaTarget(END_SPEED);
     },
+    sortColour = numClusters => {
+      const [width, height] = [
+        $('#svg').getBoundingClientRect().width,
+        $('#graphContainer').getBoundingClientRect().height,
+      ];
+      // split the clusters evenly into the allotted space:
+      let positionX, positionY;
+
+      // 5 columns maximum
+      const numCols = Math.min(Math.ceil(width / 225), 5);
+      const shrinkX = numCols === 2 ? 0.8 : 1;
+      positionX = d => {
+        // space horizontally into columns
+        for (let i = numCols; i >= 0; i--) {
+          // if you're in this column, go to position i
+          if (d.cluster % numCols === i)
+            return (i / numCols - 0.33) * width * shrinkX;
+        }
+      };
+
+      // 10 rows maximum:
+      const numRows = Math.min(Math.ceil(numClusters / numCols), 10);
+      const shrinkY = numRows === 2 ? 0.4 : numCols === 2 ? 1.5 : 1;
+      positionY = d => {
+        // space vertically into rows
+        for (let i = numRows; i >= 0; i--) {
+          // if you're in this row, go to position i
+          if (d.cluster % numRows === i)
+            return (i / numRows - 0.33) * height * shrinkY;
+        }
+      };
+
+      const [SPLIT_SPEED, SPLIT_FRICTION] = [0.87, 0.025];
+      nsp.force
+        .force('x', d3.forceX(positionX).strength(CENTER_GRAVITY))
+        .force('y', d3.forceY(positionY).strength(CENTER_GRAVITY))
+        .alpha(SPLIT_SPEED)
+        .alphaDecay(SPLIT_FRICTION)
+        .restart();
+    },
     startSimulation = (
       { nodes, radiusScale, clusterCenters, radiusSelector },
       that,
@@ -138,6 +178,8 @@ const FORCE = function(nsp) {
       nsp.paused = false;
       nsp.force
         .nodes(nodes)
+        .force('x', d3.forceX().strength(CENTER_GRAVITY))
+        .force('y', d3.forceY().strength(CENTER_GRAVITY))
         .velocityDecay(FRICTION)
         .alpha(RESTART_SPEED)
         .alphaDecay(SPEED_DECAY)
@@ -217,6 +259,7 @@ const FORCE = function(nsp) {
   nsp.initForce = initForce;
   nsp.startSimulation = startSimulation;
   nsp.stopSimulation = stopSimulation;
+  nsp.sortColour = sortColour;
   nsp.restartSimulation = restartSimulation;
   nsp.dragStarted = dragStarted;
   nsp.dragging = dragging;
