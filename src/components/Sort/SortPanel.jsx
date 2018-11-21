@@ -18,20 +18,20 @@ const SortButtonsGrid = styled.div`
     }
     [value='size'] {
       color: rgba(0, 0, 0, 0.95);
-      background: #597c6bcc;
+      background: #eefcce;
       &:hover,
       &[class*='selected'] {
         color: rgba(255, 255, 255, 0.95);
-        background: #597c6b;
+        background: #98a184;
       }
     }
     [value='colour'] {
       color: rgba(0, 0, 0, 0.95);
-      background: #59607ccc;
+      background: #92afd7cc;
       &:hover,
       &[class*='selected'] {
         color: rgba(255, 255, 255, 0.95);
-        background: #59607c;
+        background: #85a0c4;
       }
     }
   }
