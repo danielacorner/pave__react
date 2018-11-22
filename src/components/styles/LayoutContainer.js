@@ -6,7 +6,7 @@ const LayoutContainer = styled.div`
   display: grid;
   grid-template-rows: auto auto 1fr auto;
   grid-gap: 20px;
-  padding: 20px;
+  padding: 10px;
   box-sizing: border-box;
 `;
 export default LayoutContainer;

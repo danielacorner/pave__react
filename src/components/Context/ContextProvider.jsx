@@ -43,6 +43,7 @@ class ContextProvider extends Component {
       snapshots: [],
       sortedColour: false,
       sortedSize: false,
+      svgBBox: 0,
     };
   }
 
@@ -130,7 +131,10 @@ class ContextProvider extends Component {
 
   handleResize = debounce(() => {
     // console.count('...resizing...');
-
+    // recalculate the svg height (to resize the statistic bars)
+    this.setState({
+      svgBBox: $('#svg').getBoundingClientRect(),
+    });
     // translate the nodes group into the middle and scale to fit
     $(
       '#nodesG',

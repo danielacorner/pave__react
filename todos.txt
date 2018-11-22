@@ -1,4 +1,6 @@
-implement sort by colour (use responsive grid)
+feature: sort by sizes
+feature: bar graph showing average salary, years of study
+bug: filtering in colour-sorted mode shouldn't restart the simulation x,y forces
 
 extract contextprovider functions into their respective component folders
 

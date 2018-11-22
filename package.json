@@ -7,6 +7,8 @@
     "@material-ui/icons": "^3.0.1",
     "@material-ui/lab": "^3.0.0-alpha.17",
     "@reach/router": "^1.2.1",
+    "@vx/axis": "^0.0.179",
+    "@vx/scale": "^0.0.179",
     "d3": "^5.7.0",
     "gh-pages": "^2.0.0",
     "html2canvas": "^1.0.0-alpha.12",

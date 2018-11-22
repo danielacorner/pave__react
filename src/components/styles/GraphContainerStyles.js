@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const GraphContainer = styled.div`
-  width: 95%;
+  width: 100%;
   height: 100%;
   display: grid;
   justify-self: center;
@@ -13,6 +13,12 @@ const GraphContainer = styled.div`
     #nodesG {
       transition: transform 0.5s ease-in-out;
       transform: translate(50%, 50%);
+    }
+    #summaryBar {
+      transition: all 0.5s;
+    }
+    text {
+      font-family: roboto light;
     }
   }
 `;
