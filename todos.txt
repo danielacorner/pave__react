@@ -1,6 +1,8 @@
 feature: sort by sizes
-feature: bar graph showing average salary, years of study
 bug: filtering in colour-sorted mode shouldn't restart the simulation x,y forces
+
+feature: bar graph showing average salary, years of study
+bug: prevent bar graph showing before filtered, and after reset
 
 extract contextprovider functions into their respective component folders
 
