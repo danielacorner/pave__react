@@ -6,6 +6,11 @@ const SnapshotsWrapper = styled.div`
   @media (min-width: 440px) {
     /* padding: 10px; */
   }
+  .controlsBottom {
+    display: grid;
+    grid-auto-flow: column;
+    justify-items: space-around;
+  }
   .snapshotsScrollContainer {
     overflow-y: scroll;
     display: grid;

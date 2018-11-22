@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
@@ -18,7 +18,7 @@ const theme = createMuiTheme({
   },
 });
 
-class App extends PureComponent {
+class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>

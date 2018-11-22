@@ -1,7 +1,7 @@
 import SummaryBar from './SummaryBar';
 import { ControlsContext } from '../Context/ContextProvider';
 import React from 'react';
-
+import { scaleLog } from '@vx/scale';
 const SummaryStatistics = props => {
   const { summaryStatistics, nodes } = props;
   return (
@@ -31,10 +31,17 @@ const SummaryStatistics = props => {
             summaryStatistics[stat].min,
             summaryStatistics[stat].max,
           );
+        const getHeightLog = (stat, avg) =>
+          normalize(
+            Math.log(avg),
+            Math.log(summaryStatistics[stat].min),
+            Math.log(summaryStatistics[stat].max),
+          );
 
+        // years of study seems to scale with log salary
         const [heightLeft, heightRight] = [
           getHeight('yearsStudy', avgLeft) * height,
-          getHeight('salaryMed', avgRight) * height,
+          getHeightLog('salaryMed', avgRight) * height,
         ];
 
         const barWidth = 20;
@@ -55,6 +62,7 @@ const SummaryStatistics = props => {
               label={labelLeft}
               labelColor={'rgba(255,255,255,0.98)'}
               valueColor={'rgba(0,0,0,0.98)'}
+              decimals={1}
             />
             {/* right */}
             <SummaryBar
@@ -67,6 +75,7 @@ const SummaryStatistics = props => {
               label={labelRight}
               labelColor={'rgba(255,255,255,0.98)'}
               valueColor={'rgba(0,0,0,0.98)'}
+              decimals={0}
             />
           </svg>
         );

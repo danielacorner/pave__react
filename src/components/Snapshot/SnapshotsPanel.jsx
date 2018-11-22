@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Typography, IconButton } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
@@ -12,10 +12,11 @@ import SnapshotsButton from './SnapshotsButton';
 import { ControlsContext } from '../Context/ContextProvider';
 import SnapshotsWrapper from '../styles/SnapshotsWrapper';
 
-export default class SnapshotsPanel extends Component {
+export default class SnapshotsPanel extends PureComponent {
   state = {
     anchorEl: null,
     visibleDeleteButton: null,
+    summaryBarsActive: true,
   };
   handleClick = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -32,7 +33,24 @@ export default class SnapshotsPanel extends Component {
       <ControlsContext.Consumer>
         {context => (
           <SnapshotsWrapper>
-            <SnapshotsButton onSnapshot={context.handleSnapshot} />
+            <div className="controlsBottom">
+              <SnapshotsButton onSnapshot={context.handleSnapshot} />
+              <Button
+                className="toggleSummaryBarsButton"
+                variant="outlined"
+                size="large"
+                onClick={() => {
+                  context.toggleSummaryBars();
+                  this.setState({
+                    summaryBarsActive: !this.state.summaryBarsActive,
+                  });
+                }}
+              >
+                {this.state.summaryBarsActive ? 'Hide' : 'Show'} Summary
+                Statistics
+              </Button>
+            </div>
+
             <div
               className={`snapshotsScrollContainer ${context.state.snapshots
                 .length > 0 && `open`}`}

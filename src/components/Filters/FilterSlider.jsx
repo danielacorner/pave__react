@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import Slider from '@material-ui/lab/Slider';
 import Typography from '@material-ui/core/Typography';
 
-export default class FilterSlider extends PureComponent {
+export default class FilterSlider extends Component {
   handleChange = (event, value) => {
     this.props.onChange(value);
   };

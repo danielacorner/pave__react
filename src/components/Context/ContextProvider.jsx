@@ -16,7 +16,6 @@ export const $ = element => document.querySelector(element); // jQuerify
 class ContextProvider extends Component {
   constructor(props) {
     super(props);
-    console.log('constructing context!');
     this.state = {
       originalData: NOCDataProcessed,
       nodes: NOCDataProcessed,
@@ -44,6 +43,7 @@ class ContextProvider extends Component {
       sortedColour: false,
       sortedSize: false,
       svgBBox: 0,
+      summaryBarsActive: true,
     };
   }
 
@@ -320,7 +320,10 @@ class ContextProvider extends Component {
       setTimeout(this.handleResize, 1500);
     }
   };
-
+  toggleSummaryBars = () => {
+    console.log(this.state.summaryBarsActive);
+    this.setState({ summaryBarsActive: !this.state.summaryBarsActive });
+  };
   render() {
     return (
       <ControlsContext.Provider
@@ -339,6 +342,7 @@ class ContextProvider extends Component {
           setNodes: nodes => this.setState({ nodes: nodes }),
           sortSize: this.sortSize,
           sortColour: this.sortColour,
+          toggleSummaryBars: this.toggleSummaryBars,
         }}
       >
         {this.props.children}

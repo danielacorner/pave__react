@@ -13,7 +13,7 @@ const SummaryBar = props => (
     {/* value on top of var */}
     <text fill={props.valueColor} x={props.x} y={props.y - 5}>
       {/* value rounded to 1 decimal */}
-      {props.value.toFixed(1)}
+      {props.value.toFixed(props.decimals)}
     </text>
     {/* label overlaid on bar */}
     <text

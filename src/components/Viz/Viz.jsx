@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import FORCE from '../FORCE';
 import Node from './Node';
 import GraphContainer from '../styles/GraphContainerStyles';
@@ -7,7 +7,7 @@ import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
 import SchoolIcon from '@material-ui/icons/SchoolRounded';
 import SummaryStatistics from './SummaryStatistics';
 
-class Viz extends PureComponent {
+class Viz extends Component {
   state = {
     activeNodeId: null,
     summaryStatistics: {
@@ -39,6 +39,7 @@ class Viz extends PureComponent {
     console.log(min('salaryMed'));
 
     this.setState({
+      totalNodes: nodes.length,
       summaryStatistics: {
         // ...this.state.summaryStatistics,
         yearsStudy: {
@@ -47,7 +48,8 @@ class Viz extends PureComponent {
         },
         salaryMed: {
           min: min('salaryMed'),
-          max: max('salaryMed'),
+          //! "trimming" salary outliers
+          max: max('salaryMed') - 50,
         },
       },
     });
@@ -61,8 +63,13 @@ class Viz extends PureComponent {
     this.setState({ activeNodeId: nodeId });
   };
   render() {
-    const { radiusSelector, radiusScale, nodes } = this.props;
-    const { summaryStatistics } = this.state;
+    const {
+      radiusSelector,
+      radiusScale,
+      nodes,
+      summaryBarsActive,
+    } = this.props;
+    const { summaryStatistics, totalNodes } = this.state;
     return (
       <GraphContainer id="graphContainer" style={{ overflow: 'visible' }}>
         <svg id="svg">
@@ -84,7 +91,7 @@ class Viz extends PureComponent {
             })}
           </g>
 
-          {summaryStatistics.yearsStudy.max > 0 && (
+          {totalNodes > nodes.length && summaryBarsActive && (
             <SummaryStatistics
               summaryStatistics={summaryStatistics}
               nodes={nodes}

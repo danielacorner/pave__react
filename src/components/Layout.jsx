@@ -17,21 +17,33 @@ const filterVariables = [
 const Layout = props => {
   return (
     <ControlsContext.Consumer>
-      {context => (
-        <LayoutContainer>
-          <FiltersPanel filterVariables={filterVariables} />
-          <SortPanel />
-          <Viz
-            filtersQuery={props.location.search}
-            onLoadFromSnapshot={ssUrl => context.handleLoadFromSnapshot(ssUrl)}
-            radiusScale={context.state.radiusScale()}
-            radiusSelector={context.state.radiusSelector}
-            clusterCenters={context.state.clusterCenters}
-            nodes={context.state.nodes}
-          />
-          <SnapshotsPanel />
-        </LayoutContainer>
-      )}
+      {context => {
+        const {
+          radiusScale,
+          radiusSelector,
+          clusterCenters,
+          nodes,
+          summaryBarsActive,
+        } = context.state;
+        return (
+          <LayoutContainer>
+            <FiltersPanel filterVariables={filterVariables} />
+            <SortPanel />
+            <Viz
+              filtersQuery={props.location.search}
+              onLoadFromSnapshot={ssUrl =>
+                context.handleLoadFromSnapshot(ssUrl)
+              }
+              radiusScale={radiusScale()}
+              radiusSelector={radiusSelector}
+              clusterCenters={clusterCenters}
+              nodes={nodes}
+              summaryBarsActive={summaryBarsActive}
+            />
+            <SnapshotsPanel />
+          </LayoutContainer>
+        );
+      }}
     </ControlsContext.Consumer>
   );
 };
