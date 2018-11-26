@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 const SnapshotsWrapper = styled.div`
+  margin: auto;
   /* padding: 10px; */
   display: grid;
   grid-gap: 10px;

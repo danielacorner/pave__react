@@ -15,7 +15,7 @@ const SortButtonsGrid = styled.div`
     grid-template-columns: repeat(2, 1fr);
     /* grid-gap: 20px; */
     box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.5);
-    max-width: 600px;
+    max-width: 450px;
     button {
       border-radius: 4px;
       transition: all 0.2s ease-in-out;
