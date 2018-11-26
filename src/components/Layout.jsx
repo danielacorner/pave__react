@@ -79,7 +79,6 @@ class Layout extends React.Component {
                   clusterCenters={clusterCenters}
                   nodes={nodes}
                   summaryBarsActive={summaryBarsActive}
-                  tooltipOpen={false}
                 />
                 <SnapshotsPanel />
               </LayoutContainer>
@@ -89,16 +88,38 @@ class Layout extends React.Component {
                   left={tooltipLeft}
                   style={{
                     minWidth: 60,
+                    maxWidth: 200,
                     backgroundColor: 'rgba(0,0,0,0.9)',
                     color: 'white',
+                    fontFamily: 'Verdana',
+                    margin: 0,
                   }}
                 >
-                  <div style={{ color: zScale(tooltipData[clusterSelector]) }}>
-                    <strong>{tooltipData.job}</strong>
+                  <div
+                    style={{
+                      fontFamily: 'Roboto light',
+                      color: zScale(tooltipData[clusterSelector]),
+                    }}
+                  >
+                    <h3>{tooltipData.job}</h3>
                   </div>
-                  <div>{tooltipData.industry}℉</div>
                   <div>
-                    <small>{tooltipData.automationRisk}</small>
+                    <p style={{ textAlign: 'left' }}>
+                      <small>Industry:</small>
+                    </p>
+                    <p style={{ textAlign: 'right' }}>{tooltipData.industry}</p>
+                    <p style={{ textAlign: 'left' }}>
+                      <small>Salary (median):</small>
+                    </p>
+                    <p style={{ textAlign: 'right' }}>
+                      ${tooltipData.salaryMed} per year
+                    </p>
+                    <p style={{ textAlign: 'left' }}>
+                      <small>Risk of machine automation: </small>
+                    </p>
+                    <p style={{ textAlign: 'right' }}>
+                      {tooltipData.automationRisk.toFixed(2) * 100}%
+                    </p>
                   </div>
                 </Tooltip>
               )}
