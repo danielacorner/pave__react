@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import Navbar from './components/Navbar';
+// import Navbar from './components/Navbar';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Router /* Link */ } from '@reach/router';
@@ -23,7 +23,7 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <ContextProvider>
-          <Navbar />
+          {/* <Navbar /> */}
           <Router>
             <Layout path="/" />
             <Layout path="/:filtersQuery" />

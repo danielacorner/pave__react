@@ -1,7 +1,7 @@
 import SummaryBar from './SummaryBar';
 import { ControlsContext } from '../Context/ContextProvider';
 import React from 'react';
-import { scaleLog } from '@vx/scale';
+// import { scaleLog } from '@vx/scale';
 const SummaryStatistics = props => {
   const { summaryStatistics, nodes } = props;
   return (

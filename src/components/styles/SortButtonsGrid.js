@@ -1,4 +1,12 @@
 import styled from 'styled-components';
+const white = 'rgba(255,255,255,0.98)';
+const black = 'rgba(0,0,0,0.98)';
+const active1 = '#0e5aa2cc';
+const hover1 = '#0a85fb';
+const inactive1 = '#4BA7FFcc';
+const active2 = '#52AE3E';
+const hover2 = '#37b91b';
+const inactive2 = '#A4E696';
 const SortButtonsGrid = styled.div`
   div {
     margin: 0 20px;
@@ -12,29 +20,29 @@ const SortButtonsGrid = styled.div`
     }
     [value='size'] {
       color: rgba(0, 0, 0, 0.95);
-      background: #eefcce;
+      background: ${inactive1};
       &[class*='selected'] {
-        color: rgba(255, 255, 255, 0.95);
-        background: #98a184;
+        color: ${white};
+        background: ${active1};
       }
       &:hover {
-        color: rgba(255, 255, 255, 1);
-        background: #98a184cc;
+        color: ${white};
+        background: ${hover1};
       }
       &:after {
         display: none;
       }
     }
     [value='colour'] {
-      color: rgba(0, 0, 0, 0.95);
-      background: #92afd7cc;
+      color: ${black};
+      background: ${inactive2};
       &[class*='selected'] {
-        color: rgba(255, 255, 255, 0.95);
-        background: #85a0c4;
+        color: ${white};
+        background: ${active2};
       }
       &:hover {
-        color: rgba(255, 255, 255, 1);
-        background: #85a0c4cc;
+        color: ${white};
+        background: ${hover2};
       }
       &:after {
         display: none;

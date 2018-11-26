@@ -3,10 +3,9 @@ import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import FORCE from '../FORCE';
 import 'jquery/src/jquery';
-// import $ from 'jqeury/src/jquery';
 import NodeGroup from '../styles/NodeStyles';
 
-export default class Node extends PureComponent {
+class Node extends PureComponent {
   componentDidMount() {
     const { radiusScale, radiusSelector } = this.props;
 
@@ -50,3 +49,4 @@ export default class Node extends PureComponent {
     );
   }
 }
+export default Node;

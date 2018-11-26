@@ -1,3 +1,16 @@
+todo:
+- mobile layout
+- vx withTooltip
+- sort by sizes
+- move summary bars to sides:
+  either expand the body padding to 0% and apply padding to other els
+  or switch the svgs to divs (easier animations)
+  or add new svgs to the outsides
+
+- linux shortcuts
+
+feature: tooltips
+
 feature: sort by sizes
 bug: filtering in colour-sorted mode shouldn't restart the simulation x,y forces
 
