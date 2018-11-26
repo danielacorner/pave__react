@@ -8,8 +8,12 @@ const SnapshotsWrapper = styled.div`
   }
   .controlsBottom {
     display: grid;
+    grid-gap: 10px;
     grid-auto-flow: column;
     justify-items: space-around;
+    button {
+      width: 100%;
+    }
   }
   .snapshotsScrollContainer {
     overflow-y: scroll;

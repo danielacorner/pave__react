@@ -36,6 +36,7 @@ export default class SnapshotsPanel extends PureComponent {
             <div className="controlsBottom">
               <SnapshotsButton onSnapshot={context.handleSnapshot} />
               <Button
+                style={{ textTransform: 'none' }}
                 className="toggleSummaryBarsButton"
                 variant="outlined"
                 size="large"

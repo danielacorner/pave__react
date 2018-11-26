@@ -8,12 +8,14 @@ const active2 = '#52AE3E';
 const hover2 = '#37b91b';
 const inactive2 = '#A4E696';
 const SortButtonsGrid = styled.div`
+  /* width: 100%; */
   div {
-    margin: 0 20px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     /* grid-gap: 20px; */
     box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.5);
+    max-width: 600px;
     button {
       border-radius: 4px;
       transition: all 0.2s ease-in-out;

@@ -6,9 +6,9 @@ import { ControlsContext } from './Context/ContextProvider';
 import SnapshotsPanel from './Snapshot/SnapshotsPanel';
 import SortPanel from './Sort/SortPanel';
 // import queryString from 'query-string'
-import { withTooltip, Tooltip } from '@vx/tooltip';
-import { scaleBand, scaleLinear, scaleOrdinal } from '@vx/scale';
-import { localPoint } from '@vx/event';
+import { withTooltip, TooltipWithBounds } from '@vx/tooltip';
+import { /* scaleBand, scaleLinear, */ scaleOrdinal } from '@vx/scale';
+// import { localPoint } from '@vx/event';
 
 const filterVariables = [
   'skillsLang',
@@ -41,7 +41,7 @@ class Layout extends React.Component {
             tooltipTop,
             tooltipData,
             hideTooltip,
-            showTooltip,
+            // showTooltip,
           } = this.props;
           const {
             radiusScale,
@@ -83,7 +83,7 @@ class Layout extends React.Component {
                 <SnapshotsPanel />
               </LayoutContainer>
               {tooltipOpen && (
-                <Tooltip
+                <TooltipWithBounds
                   top={tooltipTop}
                   left={tooltipLeft}
                   style={{
@@ -121,7 +121,7 @@ class Layout extends React.Component {
                       {tooltipData.automationRisk.toFixed(2) * 100}%
                     </p>
                   </div>
-                </Tooltip>
+                </TooltipWithBounds>
               )}
             </React.Fragment>
           );

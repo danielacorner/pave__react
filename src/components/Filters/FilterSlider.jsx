@@ -12,13 +12,13 @@ export default class FilterSlider extends Component {
     const filterTitle = () => {
       switch (filterVar) {
         case 'skillsLang':
-          return 'Language and Communication';
+          return 'Language & Communication';
         case 'skillsLogi':
-          return 'Logic and Reasoning';
+          return 'Logic & Reasoning';
         case 'skillsMath':
-          return 'Math and Spatial';
+          return 'Math & Spatial';
         case 'skillsComp':
-          return 'Computer and Information';
+          return 'Computer & Information';
         default:
           return;
       }
@@ -49,6 +49,7 @@ export default class FilterSlider extends Component {
           step={1}
           onChange={this.handleChange}
           onMouseUp={this.props.onMouseUp}
+          onTouchEnd={this.props.onMouseUp}
         />
       </div>
     );

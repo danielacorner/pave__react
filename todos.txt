@@ -1,6 +1,7 @@
 todo:
 - mobile layout
-- vx withTooltip
+- optimize tooltip performance
+  try custom tooltip implementation (use native onMouseOver) and compare
 - sort by sizes
 - move summary bars to sides:
   either expand the body padding to 0% and apply padding to other els

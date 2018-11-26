@@ -7,11 +7,21 @@ const FilterSlidersGrid = styled.div`
   .slidersDiv {
     display: grid;
     grid-gap: 10px 30px;
-    @media (max-width: 500px) {
-      grid-gap: 10px;
-    }
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     align-items: center;
+    @media (max-width: 490px) {
+      grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+    }
+    @media (max-width: 450px) {
+      grid-gap: 10px;
+      p {
+        font-size: 0.775rem;
+      }
+    }
+    div {
+      display: grid;
+      align-self: end;
+    }
   }
 `;
 export default FilterSlidersGrid;
