@@ -97,10 +97,10 @@ class Viz extends Component {
               {nodes.map(node => {
                 return (
                   <Node
-                    onMouseMove={data => event => {
-                      console.log('mousemove!');
-                    }}
-                    onMouseLeave={data => event => {}}
+                    onMouseOver={(event, data) =>
+                      this.props.onMouseOver(event, data)
+                    }
+                    onMouseOut={this.props.onMouseOut}
                     onClick={() => {
                       this.handleClick(node.id);
                     }}

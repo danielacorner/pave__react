@@ -40,6 +40,8 @@ class Node extends PureComponent {
     return (
       <NodeGroup className="node" id={`node_${this.props.data.id}`}>
         <circle
+          onMouseEnter={event => this.props.onMouseOver(event, this.props.data)}
+          onMouseOut={this.props.onMouseOut}
           onClick={this.props.onClick}
           /* onClick={this.props.addLink} */
           filter={this.props.isActive ? 'url(#virtual_light)' : null}
