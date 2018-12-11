@@ -24,7 +24,7 @@ class Layout extends React.PureComponent {
       <ControlsContext.Consumer>
         {context => {
           const {
-            radiusScale,
+            getRadiusScale,
             radiusSelector,
             clusterSelector,
             clusterCenters,
@@ -62,7 +62,7 @@ class Layout extends React.PureComponent {
                   onLoadFromSnapshot={ssUrl =>
                     context.handleLoadFromSnapshot(ssUrl)
                   }
-                  radiusScale={radiusScale()}
+                  radiusScale={getRadiusScale()}
                   radiusSelector={radiusSelector}
                   clusterSelector={clusterSelector}
                   clusterCenters={clusterCenters}

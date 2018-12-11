@@ -28,7 +28,7 @@ class ContextProvider extends Component {
       },
       radiusSelector: 'workers',
       clusterSelector: 'industry',
-      radiusScale: () => {
+      getRadiusScale: () => {
         const radii = NOCData.map(d => d[this.state.radiusSelector]);
         const radiusRange = [5, 50];
         return d3
@@ -308,6 +308,18 @@ class ContextProvider extends Component {
 
   sortSize = () => {
     console.log('sorting size!');
+    const { radiusSelector, getRadiusScale } = this.state;
+    if (!this.state.sortedSize) {
+      this.setState({ sortedSize: true });
+      // split the view into sections for each cluster
+      FORCE.sortSize({ sorted: true, radiusSelector, getRadiusScale });
+      // FORCE.restartSimulation(nodes);
+    } else {
+      FORCE.sortSize({ sorted: false });
+      // FORCE.restartSimulation(nodes);
+      this.setState({ sortedSize: false, radiusSelector, getRadiusScale });
+    }
+    setTimeout(this.handleResize, 1500);
   };
   sortColour = () => {
     const { nodes, uniqueClusterValues, clusterSelector } = this.state;

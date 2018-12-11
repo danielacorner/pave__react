@@ -224,13 +224,56 @@ const FORCE = function(nsp) {
       };
 
       // restart the simulation
-      const [SPLIT_SPEED, SPLIT_FRICTION] = [0.8, 0.025];
+      const [SORT_COLOUR_SPEED, SORT_COLOUR_FRICTION] = [0.8, 0.025];
       nsp.force
         .force('x', d3.forceX(positionX).strength(CENTER_GRAVITY))
         .force('y', d3.forceY(positionY).strength(CENTER_GRAVITY))
-        .alpha(SPLIT_SPEED)
-        .alphaDecay(SPLIT_FRICTION)
+        .alpha(SORT_COLOUR_SPEED)
+        .alphaDecay(SORT_COLOUR_FRICTION)
         .restart();
+    },
+    sortSize = ({ sorted, radiusSelector, getRadiusScale }) => {
+      const [SORT_SIZE_SPEED, SORT_SIZE_FRICTION] = [0.92, 0.005];
+
+      // TODO: temporarily reduce cluster force
+
+      if (sorted === true) {
+        const radiusScale = getRadiusScale();
+        const [min, max] = radiusScale.range();
+        const [width, height] = [
+          $('#svg').getBoundingClientRect().width,
+          $('#graphContainer').getBoundingClientRect().height,
+        ];
+        const minLength = Math.min(width, height);
+        console.log(min, max);
+        nsp.force
+          .force('y', null)
+          .force(
+            'sortedy',
+            d3
+              .forceY(d => {
+                const radius = radiusScale(d[radiusSelector]);
+                const normalizedRadius = (radius - min) / (max - min);
+                const yPosition = (0.5 - normalizedRadius) * (minLength * 0.5);
+                return yPosition;
+              })
+              .strength(CENTER_GRAVITY),
+          )
+          // .force(
+          //   'sortedx',
+          //   d3.forceX(d => d[clusterSelector]).strength(CENTER_GRAVITY),
+          // )
+          .alpha(SORT_SIZE_SPEED)
+          .alphaDecay(SORT_SIZE_FRICTION)
+          .restart();
+      } else {
+        nsp.force
+          .force('sortedy', null)
+          .force('y', d3.forceY().strength(CENTER_GRAVITY))
+          .alpha(SORT_SIZE_SPEED)
+          .alphaDecay(SORT_SIZE_FRICTION)
+          .restart();
+      }
     },
     startSimulation = (
       { nodes, radiusScale, clusterCenters, radiusSelector },
@@ -338,6 +381,7 @@ const FORCE = function(nsp) {
   nsp.stopSimulation = stopSimulation;
   nsp.toggleClusterTags = toggleClusterAnnotations;
   nsp.sortColour = sortColour;
+  nsp.sortSize = sortSize;
   nsp.restartSimulation = restartSimulation;
   nsp.dragStarted = dragStarted;
   nsp.dragging = dragging;
