@@ -1,11 +1,11 @@
 import * as d3 from 'd3';
 import 'jquery/src/jquery';
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import FORCE from '../FORCE';
 import NodeGroup from '../styles/NodeStyles';
 
-class Node extends PureComponent {
+class Node extends Component {
   componentDidMount() {
     const { radiusScale, radiusSelector } = this.props;
 
@@ -34,11 +34,11 @@ class Node extends PureComponent {
     //   .$(`#node_${this.props.data.id}`)
     //   .replaceWith(window.$(`#node_${this.props.data.id}`).clone());
   }
-
+  shouldComponentUpdate(nextProps, nextState) {
+    //TODO: determine when component should update
+    return false;
+  }
   render() {
-    //!
-    //TODO: nodes re-rendering like ridiculous. why?
-    //TODO: nodes render 3x each, why?
     console.count('node rendering!');
     return (
       <NodeGroup className="node" id={`node_${this.props.data.id}`}>

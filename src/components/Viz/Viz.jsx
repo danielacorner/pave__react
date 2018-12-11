@@ -3,7 +3,6 @@ import SchoolIcon from '@material-ui/icons/SchoolRounded';
 import React, { Component } from 'react';
 import FORCE from '../FORCE';
 import GraphContainer from '../styles/GraphContainerStyles';
-import Tooltip from '../Tooltip/Tooltip';
 import Node from './Node';
 import SummaryStatistics from './SummaryStatistics';
 import SVG3dEffect from './SVG3dEffect';
@@ -91,22 +90,8 @@ class Viz extends Component {
                 return (
                   <Node
                     key={`vizNode_${node.noc}`}
-                    onMouseOver={(event, datum) => {
-                      // const coords = localPoint(event.target.ownerSVGElement, event);
-                      // console.log('event:', event);
-                      // console.log('datum:', datum);
-                      // console.log('coords:', coords);
-                      console.count('rendering tooltip', datum);
-                      const tooltip = {
-                        data: datum,
-                        top: event.clientY,
-                        left: event.clientX,
-                        zScale: zScale,
-                        clusterSelector: clusterSelector,
-                      };
-                      this.setState({ tooltip });
-                    }}
-                    onMouseOut={() => this.setState({ tooltip: null })}
+                    onMouseOver={this.props.onMouseOver}
+                    onMouseOut={this.props.onMouseOut}
                     onClick={() => {
                       this.handleClick(node.id);
                     }}
@@ -130,7 +115,6 @@ class Viz extends Component {
             <SVG3dEffect />
           </svg>
         </GraphContainer>
-        {tooltip && <Tooltip tooltip={tooltip} />}
       </React.Fragment>
     );
   }
