@@ -39,7 +39,7 @@ class Node extends Component {
     return false;
   }
   render() {
-    console.count('node rendering!');
+    // console.count('node rendering!');
     return (
       <NodeGroup className="node" id={`node_${this.props.data.id}`}>
         <circle

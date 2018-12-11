@@ -39,7 +39,6 @@ class Viz extends Component {
     const max = stat => Math.max(...nodes.map(n => n[stat]));
     const min = stat => Math.min(...nodes.map(n => n[stat]));
     // calculate summary statistics min, max
-    console.log(min('salaryMed'));
 
     this.setState({
       totalNodes: nodes.length,
