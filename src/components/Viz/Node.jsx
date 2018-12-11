@@ -36,7 +36,11 @@ class Node extends Component {
   }
   shouldComponentUpdate(nextProps, nextState) {
     //TODO: determine when component should update
-    return false;
+    if (nextProps.isActive !== this.props.isActive) {
+      return true;
+    } else {
+      return false;
+    }
   }
   render() {
     // console.count('node rendering!');
