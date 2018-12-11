@@ -1,9 +1,10 @@
+import * as d3 from 'd3';
+import { scaleOrdinal } from 'd3-scale';
+import html2canvas from 'html2canvas';
+import debounce from 'lodash.debounce';
 import React, { Component } from 'react';
 import NOCData from '../../assets/NOC-data';
 import FORCE from '../FORCE';
-import html2canvas from 'html2canvas';
-import debounce from 'lodash.debounce';
-import * as d3 from 'd3';
 const NOCDataProcessed = NOCData.map(d => {
   d.name = d.job;
   return d;
@@ -44,6 +45,10 @@ class ContextProvider extends Component {
       sortedSize: false,
       svgBBox: 0,
       summaryBarsActive: true,
+      zScale: scaleOrdinal({
+        domain: [],
+        range: ['#6c5efb', '#c998ff', '#a44afe'],
+      }),
     };
   }
 
@@ -55,6 +60,7 @@ class ContextProvider extends Component {
       uniqueClusterValues,
     } = this.state;
 
+    // create clusters arrays
     NOCData.forEach(d => {
       const cluster = uniqueClusterValues.indexOf(d[clusterSelector]) + 1;
       // add to clusters array if it doesn't exist or the radius is larger than any other radius in the cluster
@@ -70,7 +76,17 @@ class ContextProvider extends Component {
       // }
     });
 
-    window.addEventListener('resize', this.handleResize);
+    // set the color scale based on the unique clusters
+    const keys = NOCDataProcessed.map(d => d[clusterSelector]).filter(
+      (value, index, self) => self.indexOf(value) === index,
+    );
+    this.setState({
+      zScale: scaleOrdinal({
+        domain: keys,
+        range: ['#6c5efb', '#c998ff', '#a44afe'],
+      }),
+    }),
+      window.addEventListener('resize', this.handleResize);
     setTimeout(this.handleResize, 1500);
 
     // tranlate nodes to center

@@ -1,8 +1,8 @@
+import * as d3 from 'd3';
+import 'jquery/src/jquery';
 import React, { PureComponent } from 'react';
 import ReactDOM from 'react-dom';
-import * as d3 from 'd3';
 import FORCE from '../FORCE';
-import 'jquery/src/jquery';
 import NodeGroup from '../styles/NodeStyles';
 
 class Node extends PureComponent {
@@ -36,7 +36,10 @@ class Node extends PureComponent {
   }
 
   render() {
-    // console.log('node rendering!');
+    //!
+    //TODO: nodes re-rendering like ridiculous. why?
+    //TODO: nodes render 3x each, why?
+    console.count('node rendering!');
     return (
       <NodeGroup className="node" id={`node_${this.props.data.id}`}>
         <circle

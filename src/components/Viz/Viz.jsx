@@ -1,17 +1,19 @@
-import React, { Component } from 'react';
-import FORCE from '../FORCE';
-import Node from './Node';
-import GraphContainer from '../styles/GraphContainerStyles';
-import SVG3dEffect from './SVG3dEffect';
 import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
 import SchoolIcon from '@material-ui/icons/SchoolRounded';
+import React, { Component } from 'react';
+import FORCE from '../FORCE';
+import GraphContainer from '../styles/GraphContainerStyles';
+import Tooltip from '../Tooltip/Tooltip';
+import Node from './Node';
 import SummaryStatistics from './SummaryStatistics';
+import SVG3dEffect from './SVG3dEffect';
 // import { withTooltip, Tooltip } from '@vx/tooltip';
 // import { scaleBand, scaleLinear, scaleOrdinal } from '@vx/scale';
 
 class Viz extends Component {
   state = {
     activeNodeId: null,
+    tooltip: null,
     summaryStatistics: {
       // calculate summary statistics extents as needed in cDM or context
       yearsStudy: {
@@ -67,40 +69,44 @@ class Viz extends Component {
   render() {
     const {
       radiusSelector,
-      // clusterSelector,
+      clusterSelector,
       radiusScale,
       nodes,
       summaryBarsActive,
-      // tooltipOpen,
-      // tooltipLeft,
-      // tooltipTop,
-      // tooltipData,
-      // hideTooltip,
-      // showTooltip,
+      zScale,
     } = this.props;
-    const { summaryStatistics, totalNodes } = this.state;
-
-    // const keys = nodes
-    //   .map(d => d[clusterSelector])
-    //   .filter((value, index, self) => self.indexOf(value) === index);
-
-    // const zScale = scaleOrdinal({
-    //   domain: keys,
-    //   range: ['#6c5efb', '#c998ff', '#a44afe'],
-    // });
+    const { summaryStatistics, totalNodes, tooltip } = this.state;
 
     return (
       <React.Fragment>
-        <GraphContainer id="graphContainer" style={{ overflow: 'visible' }}>
+        <GraphContainer
+          id="graphContainer"
+          style={{ overflow: 'visible' }}
+          // onMouseOver={(event, data) => this.handleMouseOver(event, data)}
+          // onMouseOut={hideTooltip}
+        >
           <svg id="svg">
             <g id="nodesG">
               {nodes.map(node => {
                 return (
                   <Node
-                    onMouseOver={(event, data) =>
-                      this.props.onMouseOver(event, data)
-                    }
-                    onMouseOut={this.props.onMouseOut}
+                    key={`vizNode_${node.noc}`}
+                    onMouseOver={(event, datum) => {
+                      // const coords = localPoint(event.target.ownerSVGElement, event);
+                      // console.log('event:', event);
+                      // console.log('datum:', datum);
+                      // console.log('coords:', coords);
+                      console.count('rendering tooltip', datum);
+                      const tooltip = {
+                        data: datum,
+                        top: event.clientY,
+                        left: event.clientX,
+                        zScale: zScale,
+                        clusterSelector: clusterSelector,
+                      };
+                      this.setState({ tooltip });
+                    }}
+                    onMouseOut={() => this.setState({ tooltip: null })}
                     onClick={() => {
                       this.handleClick(node.id);
                     }}
@@ -108,7 +114,6 @@ class Viz extends Component {
                     radiusScale={radiusScale}
                     data={node}
                     name={node.name}
-                    key={`vizNode_${node.id}`}
                     isActive={this.state.activeNodeId === node.id}
                   />
                 );
@@ -125,25 +130,7 @@ class Viz extends Component {
             <SVG3dEffect />
           </svg>
         </GraphContainer>
-        {/* {tooltipOpen && (
-          <Tooltip
-            top={tooltipTop}
-            left={tooltipLeft}
-            style={{
-              minWidth: 60,
-              backgroundColor: 'rgba(0,0,0,0.9)',
-              color: 'white',
-            }}
-          >
-            <div style={{ color: zScale(tooltipData.key) }}>
-              <strong>{tooltipData.key}</strong>
-            </div>
-            <div>{tooltipData.data[tooltipData.key]}℉</div>
-            <div>
-              <small>{tooltipData.xFormatted}</small>
-            </div>
-          </Tooltip>
-        )} */}
+        {tooltip && <Tooltip tooltip={tooltip} />}
       </React.Fragment>
     );
   }
