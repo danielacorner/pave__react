@@ -17,10 +17,10 @@ const SVG3dEffect = () => (
     <filter
       id="virtual_light"
       filterUnits="objectBoundingBox"
-      x="-0.1"
-      y="-0.1"
-      width="1.2"
-      height="1.2"
+      x="-0.2"
+      y="-0.2"
+      width="2.5"
+      height="2.5"
     >
       <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="alpha_blur" />
 
@@ -36,7 +36,7 @@ const SVG3dEffect = () => (
         lightingColor="#FFFFFF"
         result="spec_light"
       >
-        <fePointLight x="-5000" y="-10000" z="10000" />
+        <fePointLight x="-5000" y="-10000" z="4000" />
       </feSpecularLighting>
       <feComposite
         in="spec_light"
