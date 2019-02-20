@@ -1,8 +1,8 @@
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import React, { useContext, useState } from 'react';
-import { ControlsContext } from '../Context/ContextProvider';
-import SortButtonsGrid from '../styles/SortButtonsGrid';
+import { ControlsContext } from './Context/ContextProvider';
+import SortButtonsGrid from './styles/SortButtonsGrid';
 
 const handleSort = ({
   event,
@@ -53,7 +53,7 @@ const handleSort = ({
   }, 500);
 };
 
-const SortPanel = props => {
+const SortPanel = () => {
   const [sortingColour, setSortingColour] = useState(false);
   const [sortingSize, setSortingSize] = useState(false);
   const [sortedParams, setSortedParams] = useState([]);

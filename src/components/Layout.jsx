@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react';
 import { ControlsContext } from './Context/ContextProvider';
 import FiltersPanel from './Filters/FiltersPanel';
 import SnapshotsPanel from './Snapshot/SnapshotsPanel';
-import SortPanel from './Sort/SortPanel';
+import SortPanel from './SortPanel';
 import LayoutContainer from './styles/LayoutContainer';
 import Tooltip from './Tooltip';
 import Viz from './Viz/Viz';
