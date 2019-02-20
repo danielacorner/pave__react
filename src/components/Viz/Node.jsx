@@ -47,7 +47,7 @@ class Node extends Component {
     return (
       <NodeGroup className="node" id={`node_${this.props.data.id}`}>
         <circle
-          onMouseEnter={event => this.props.onMouseOver(event, this.props.data)}
+          onMouseMove={event => this.props.onMouseMove(event, this.props.data)}
           onMouseOut={this.props.onMouseOut}
           onClick={this.props.onClick}
           /* onClick={this.props.addLink} */

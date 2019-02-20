@@ -1,8 +1,8 @@
-import React from 'react';
-import FilterSlider from './FilterSlider';
-import { ControlsContext } from '../Context/ContextProvider';
 import { Button } from '@material-ui/core';
+import React from 'react';
+import { ControlsContext } from '../Context/ContextProvider';
 import FilterSlidersGrid from '../styles/FilterSlidersGrid';
+import FilterSlider from './FilterSlider';
 
 const FiltersPanel = ({ filterVariables }) => (
   <ControlsContext.Consumer>

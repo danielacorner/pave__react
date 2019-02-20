@@ -17,9 +17,10 @@
     "jquery": "^3.3.1",
     "lodash.debounce": "^4.0.8",
     "query-string": "^6.2.0",
-    "react": "^16.5.2",
+    "react": "^16.8.2",
     "react-dom": "^16.5.2",
     "react-scripts": "1.1.5",
+    "recharts": "^1.5.0",
     "styled-components": "^3.4.9"
   },
   "scripts": {
@@ -30,5 +31,10 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "http://dcorn068.github.io/pave__react"
+  "homepage": "http://dcorn068.github.io/pave__react",
+  "devDependencies": {
+    "eslint": "^5.14.1",
+    "eslint-plugin-react": "^7.12.4",
+    "eslint-plugin-react-hooks": "^1.0.2"
+  }
 }

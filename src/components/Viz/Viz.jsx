@@ -67,11 +67,9 @@ class Viz extends Component {
   render() {
     const {
       radiusSelector,
-      clusterSelector,
       radiusScale,
       nodes,
       summaryBarsActive,
-      zScale,
     } = this.props;
     const { summaryStatistics, totalNodes, tooltip } = this.state;
 
@@ -89,7 +87,7 @@ class Viz extends Component {
                 return (
                   <Node
                     key={`vizNode_${node.noc}`}
-                    onMouseOver={this.props.onMouseOver}
+                    onMouseMove={this.props.onMouseMove}
                     onMouseOut={this.props.onMouseOut}
                     onClick={() => {
                       this.handleClick(node.id);

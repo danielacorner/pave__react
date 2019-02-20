@@ -83,6 +83,7 @@ class ContextProvider extends Component {
     this.setState({
       zScale: scaleOrdinal({
         domain: keys,
+        // TODO: check this range? should it be in constants.jsx?
         range: ['#6c5efb', '#c998ff', '#a44afe'],
       }),
     }),

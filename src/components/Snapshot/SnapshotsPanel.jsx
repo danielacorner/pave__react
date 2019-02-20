@@ -1,16 +1,16 @@
-import React, { PureComponent } from 'react';
-import { Typography, IconButton } from '@material-ui/core';
+import { IconButton, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded';
+import DeleteIcon from '@material-ui/icons/DeleteForever';
 // import ShareIcon from '@material-ui/icons/Share';
 // import { Link } from '@reach/router';
 import CopyIcon from '@material-ui/icons/FileCopy';
-import DeleteIcon from '@material-ui/icons/DeleteForever';
-import SnapshotsButton from './SnapshotsButton';
+import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded';
+import React, { PureComponent } from 'react';
 import { ControlsContext } from '../Context/ContextProvider';
 import SnapshotsWrapper from '../styles/SnapshotsWrapper';
+import SnapshotsButton from './SnapshotsButton';
 
 export default class SnapshotsPanel extends PureComponent {
   state = {
