@@ -42,13 +42,13 @@ const Tooltip = React.memo(function Tooltip({ data, left, top }) {
     state: { zScale, clusterSelector },
   } = useContext(ControlsContext);
   const color = zScale(data[clusterSelector]);
-  console.log(
-    zScale,
-    clusterSelector,
-    color,
-    data[clusterSelector],
-    zScale(data[clusterSelector]),
-  );
+  // console.log(
+  //   zScale,
+  //   clusterSelector,
+  //   color,
+  //   data[clusterSelector],
+  //   zScale(data[clusterSelector]),
+  // );
   const TooltipStyles = getTooltipStyles(color);
   return (
     <TooltipWithBounds

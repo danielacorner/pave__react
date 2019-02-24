@@ -1,16 +1,20 @@
 import * as d3 from 'd3';
 import 'jquery/src/jquery';
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component, createRef } from 'react';
+import { findDOMNode } from 'react-dom';
 import FORCE from '../FORCE';
 import NodeGroup from '../styles/NodeStyles';
 
 class Node extends Component {
+  constructor(props) {
+    super(props);
+    this.node = createRef();
+  }
   componentDidMount() {
     const { radiusScale, radiusSelector } = this.props;
 
     this.d3Node = d3
-      .select(ReactDOM.findDOMNode(this))
+      .select(findDOMNode(this))
       .datum(this.props.data)
       .call(d => FORCE.enterNode(d, radiusScale, radiusSelector));
   }
@@ -45,7 +49,11 @@ class Node extends Component {
   render() {
     // console.count('node rendering!');
     return (
-      <NodeGroup className="node" id={`node_${this.props.data.id}`}>
+      <NodeGroup
+        ref={node => (this.node = node)}
+        className="node"
+        id={`node_${this.props.data.id}`}
+      >
         <circle
           onMouseMove={event => this.props.onMouseMove(event, this.props.data)}
           onMouseOut={this.props.onMouseOut}

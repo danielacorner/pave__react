@@ -14,7 +14,6 @@ import SnapshotsButton from './SnapshotsButton';
 
 const SnapshotsPanel = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [visibleDeleteButton, setVisibleDeleteButton] = useState(null);
   const [summaryBarsActive, setSummaryBarsActive] = useState(true);
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
