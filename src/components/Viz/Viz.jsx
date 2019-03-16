@@ -1,31 +1,28 @@
-import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
-import SchoolIcon from '@material-ui/icons/SchoolRounded';
 import React, { Component } from 'react';
 import FORCE from '../FORCE';
 import GraphContainer from '../styles/GraphContainerStyles';
 import Node from './Node';
-import SummaryStatistics from './SummaryStatistics';
+// import SummaryStatistics from './SummaryStatistics';
 import SVG3dEffect from './SVG3dEffect';
-// import { withTooltip, Tooltip } from '@vx/tooltip';
-// import { scaleBand, scaleLinear, scaleOrdinal } from '@vx/scale';
 
+// TODO: switch to hooks
 class Viz extends Component {
   state = {
     activeNodeId: null,
     tooltip: null,
-    summaryStatistics: {
-      // calculate summary statistics extents as needed in cDM or context
-      yearsStudy: {
-        min: 0,
-        max: 0,
-        glyph: <SchoolIcon />,
-      },
-      salaryMed: {
-        min: 0,
-        max: 0,
-        glyph: <MoneyIcon />,
-      },
-    },
+    // summaryStatistics: {
+    //   // calculate summary statistics extents as needed in cDM or context
+    //   yearsStudy: {
+    //     min: 0,
+    //     max: 0,
+    //     glyph: <SchoolIcon />,
+    //   },
+    //   salaryMed: {
+    //     min: 0,
+    //     max: 0,
+    //     glyph: <MoneyIcon />,
+    //   },
+    // },
   };
   componentDidMount() {
     const { nodes, radiusScale, clusterCenters, radiusSelector } = this.props;
@@ -69,18 +66,13 @@ class Viz extends Component {
       radiusSelector,
       radiusScale,
       nodes,
-      summaryBarsActive,
+      // summaryBarsActive,
     } = this.props;
-    const { summaryStatistics, totalNodes, tooltip } = this.state;
+    // const { summaryStatistics, totalNodes } = this.state;
 
     return (
       <React.Fragment>
-        <GraphContainer
-          id="graphContainer"
-          style={{ overflow: 'visible' }}
-          // onMouseOver={(event, data) => this.handleMouseOver(event, data)}
-          // onMouseOut={hideTooltip}
-        >
+        <GraphContainer id="graphContainer" style={{ overflow: 'visible' }}>
           <svg id="svg">
             <g id="nodesG">
               {nodes.map(node => {
@@ -102,12 +94,12 @@ class Viz extends Component {
               })}
             </g>
 
-            {totalNodes > nodes.length && summaryBarsActive && (
+            {/* {totalNodes > nodes.length && summaryBarsActive && (
               <SummaryStatistics
                 summaryStatistics={summaryStatistics}
                 nodes={nodes}
               />
-            )}
+            )} */}
 
             <SVG3dEffect />
           </svg>
