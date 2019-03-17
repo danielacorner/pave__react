@@ -4,7 +4,7 @@ import WarningIcon from '@material-ui/icons/WarningRounded';
 import { TooltipWithBounds } from '@vx/tooltip';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { ControlsContext } from './Context/ContextProvider';
+import { ControlsContext } from '../Context/ContextProvider';
 
 const getTooltipStyles = ({
   color,
@@ -12,7 +12,7 @@ const getTooltipStyles = ({
   automationRisk,
   educationPercent,
 }) => styled.div`
-  width: 300px;
+  width: 100%;
   font-family: 'Roboto light';
   border: 1px solid ${color};
   background: white;
@@ -95,7 +95,7 @@ const Tooltip = React.memo(({ data, left, top }) => {
   });
   return (
     <TooltipWithBounds
-      style={{ background: 'none', boxShadow: 'none' }}
+      style={{ background: 'none', boxShadow: 'none', width: '300px' }}
       key={Math.random()}
       top={top}
       left={left}

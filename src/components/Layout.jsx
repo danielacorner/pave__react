@@ -1,13 +1,24 @@
 // import queryString from 'query-string'
 import { localPoint } from '@vx/event';
 import React, { useContext, useState } from 'react';
+import styled from 'styled-components';
 import { ControlsContext } from './Context/ContextProvider';
-import FiltersPanel from './Filters/FiltersPanel';
-import SnapshotsPanel from './Snapshot/SnapshotsPanel';
-import SortPanel from './SortPanel';
-import LayoutContainer from './styles/LayoutContainer';
-import Tooltip from './Tooltip';
+import FiltersPanel from './Controls/FiltersPanel';
+import SnapshotsPanel from './Controls/SnapshotsPanel';
+import SortPanel from './Controls/SortPanel';
+import Tooltip from './Viz/Tooltip';
 import Viz from './Viz/Viz';
+
+const LayoutStyles = styled.div`
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  grid-gap: 16px;
+  padding: 10px 10px 0 10px;
+  box-sizing: border-box;
+`;
 
 const filterVariables = [
   'skillsLang',
@@ -32,7 +43,7 @@ const Layout = props => {
   // console.count('rendered layout')
   return (
     <React.Fragment>
-      <LayoutContainer>
+      <LayoutStyles>
         <FiltersPanel filterVariables={filterVariables} />
         <SortPanel />
         <Viz
@@ -59,7 +70,7 @@ const Layout = props => {
           zScale={zScale}
         />
         <SnapshotsPanel />
-      </LayoutContainer>
+      </LayoutStyles>
       {tooltipProps && <Tooltip {...tooltipProps} />}
     </React.Fragment>
   );

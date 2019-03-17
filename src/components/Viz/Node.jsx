@@ -2,8 +2,27 @@ import * as d3 from 'd3';
 import 'jquery/src/jquery';
 import React, { Component, createRef } from 'react';
 import { findDOMNode } from 'react-dom';
+import styled from 'styled-components';
 import FORCE from '../FORCE';
-import NodeGroup from '../styles/NodeStyles';
+
+const NodeGroupStyles = styled.g`
+  circle {
+    &:hover {
+      cursor: pointer;
+      stroke: rgba(0, 0, 0, 0.9);
+      stroke-width: 2;
+    }
+  }
+  .text-label {
+    fill: honeydew;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-anchor: middle;
+    alignment-baseline: middle;
+    font-size: 10px;
+    font-family: cursive;
+  }
+`;
 
 class Node extends Component {
   constructor(props) {
@@ -49,7 +68,7 @@ class Node extends Component {
   render() {
     // console.count('node rendering!');
     return (
-      <NodeGroup
+      <NodeGroupStyles
         ref={node => (this.node = node)}
         className="node"
         id={`node_${this.props.data.id}`}
@@ -62,7 +81,7 @@ class Node extends Component {
           filter={this.props.isActive ? 'url(#virtual_light)' : null}
         />
         <text>{this.props.data.name}</text>
-      </NodeGroup>
+      </NodeGroupStyles>
     );
   }
 }

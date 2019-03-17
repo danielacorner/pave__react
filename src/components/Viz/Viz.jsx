@@ -1,9 +1,33 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import FORCE from '../FORCE';
-import GraphContainer from '../styles/GraphContainerStyles';
 import Node from './Node';
 // import SummaryStatistics from './SummaryStatistics';
 import SVG3dEffect from './SVG3dEffect';
+
+const VizStyles = styled.div`
+  width: 100%;
+  height: 100%;
+  display: grid;
+  justify-self: center;
+  align-self: center;
+  background: rgba(0, 0, 0, 0.01);
+  box-shadow: 1px 1px 6px 2px rgba(0, 0, 0, 0.1) inset;
+  svg {
+    width: 100%;
+    height: 100%;
+    #nodesG {
+      transition: transform 0.5s ease-in-out;
+      transform: translate(50%, 50%);
+    }
+    #summaryBar {
+      transition: all 0.5s;
+    }
+    text {
+      font-family: roboto light;
+    }
+  }
+`;
 
 // TODO: switch to hooks
 class Viz extends Component {
@@ -72,7 +96,7 @@ class Viz extends Component {
 
     return (
       <React.Fragment>
-        <GraphContainer id="graphContainer" style={{ overflow: 'visible' }}>
+        <VizStyles id="graphContainer" style={{ overflow: 'visible' }}>
           <svg id="svg">
             <g id="nodesG">
               {nodes.map(node => {
@@ -103,7 +127,7 @@ class Viz extends Component {
 
             <SVG3dEffect />
           </svg>
-        </GraphContainer>
+        </VizStyles>
       </React.Fragment>
     );
   }

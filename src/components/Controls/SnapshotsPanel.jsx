@@ -8,9 +8,51 @@ import DeleteIcon from '@material-ui/icons/DeleteForever';
 import CopyIcon from '@material-ui/icons/FileCopy';
 import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded';
 import React, { useContext, useState } from 'react';
+import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
-import SnapshotsWrapper from '../styles/SnapshotsWrapper';
 import SnapshotsButton from './SnapshotsButton';
+
+const SnapshotsPanelStyles = styled.div`
+  margin: auto;
+  /* padding: 10px; */
+  display: grid;
+  grid-gap: 10px;
+  @media (min-width: 440px) {
+    /* padding: 10px; */
+  }
+  .controlsBottom {
+    display: grid;
+    grid-gap: 10px;
+    grid-auto-flow: column;
+    justify-items: space-around;
+    button {
+      width: 100%;
+    }
+  }
+  .snapshotsScrollContainer {
+    overflow-y: scroll;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    height: 0px;
+    transition: height 0.5s ease-in-out;
+    &.open {
+      height: 85px;
+    }
+  }
+  .snapshotButton {
+    display: grid;
+    grid-auto-flow: row;
+    text-transform: none;
+    height: auto;
+    img {
+      width: 75px;
+      height: 50px;
+      margin-bottom: 4px;
+      object-fit: fill;
+    }
+  }
+`;
 
 const SnapshotsPanel = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -24,7 +66,7 @@ const SnapshotsPanel = () => {
   const context = useContext(ControlsContext);
 
   return (
-    <SnapshotsWrapper>
+    <SnapshotsPanelStyles>
       <div className="controlsBottom">
         <SnapshotsButton onSnapshot={context.handleSnapshot} />
         <Button
@@ -151,7 +193,7 @@ const SnapshotsPanel = () => {
           );
         })}
       </div>
-    </SnapshotsWrapper>
+    </SnapshotsPanelStyles>
   );
 };
 export default SnapshotsPanel;

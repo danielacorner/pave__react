@@ -14,6 +14,7 @@ export const ControlsContext = React.createContext();
 
 export const $ = element => document.querySelector(element); // jQuerify
 
+// TODO: switch to hooks
 class ContextProvider extends Component {
   constructor(props) {
     super(props);
