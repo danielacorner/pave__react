@@ -3,7 +3,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Slider from '@material-ui/lab/Slider';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import {
   FILTER_RANGE,
@@ -12,6 +12,7 @@ import {
   SLIDER_WIDTH_MD,
   SUBSKILL_FILTER_TITLES,
 } from '../../utils/constants';
+import { ControlsContext } from '../Context/ContextProvider';
 
 const LabelAndSliderStyles = styled.div`
   position: relative;
@@ -48,22 +49,26 @@ const LabelAndSliderStyles = styled.div`
   }
 `;
 
-const SubskillFilters = ({ filterVar }) => {
+const SubskillFilters = ({ filterVar, onMouseUp }) => {
   const subskillFilters = SUBSKILL_FILTER_TITLES(filterVar);
+  const context = useContext(ControlsContext);
+
   return (
     <div className="subskillFilters">
       {subskillFilters.map(subskill => (
-        <div key={subskill} className="subskillLabelAndSlider">
+        <div key={subskill.dataLabel} className="subskillLabelAndSlider">
           <Typography id="label">{subskill.title}</Typography>
           <Slider
             className="slider subskillSlider"
-            // value={value}
-            // min={FILTER_RANGE(filterVar)[0]}
-            // max={FILTER_RANGE(filterVar)[1]}
-            // step={1}
-            // onChange={handleChange}
-            // onMouseUp={onMouseUp}
-            // onTouchEnd={onMouseUp}
+            value={context.state.filters[subskill.dataLabel]}
+            min={FILTER_RANGE(subskill.dataLabel)[0]}
+            max={FILTER_RANGE(subskill.dataLabel)[1]}
+            step={1}
+            onChange={(event, value) => {
+              context.handleFilterChange(subskill.dataLabel, value);
+            }}
+            onMouseUp={onMouseUp}
+            onTouchEnd={onMouseUp}
           />
         </div>
       ))}
@@ -80,8 +85,7 @@ const FilterSlider = ({ value, filterVar, onMouseUp, onChange }) => {
 
   const subskillSliderProps = {
     filterVar,
-    handleChange,
-    onChange,
+    onMouseUp,
   };
 
   return (
