@@ -28,6 +28,9 @@ const getTooltipStyles = ({
   }
   .heading {
     font-weight: bold;
+    display: grid;
+    grid-gap: 2px;
+    place-items: center start;
   }
   .grid {
     display: grid;
@@ -43,9 +46,11 @@ const getTooltipStyles = ({
   .textAlignLeft {
     text-align: left;
   }
-  .grid2Rows {
+  .iconTitle {
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: auto 1fr;
+    grid-gap: 4px;
+    place-items: center start;
   }
   .bar {
     align-self: center;
@@ -103,10 +108,10 @@ const Tooltip = React.memo(({ data, left, top }) => {
       <TooltipStyles>
         <h3 className="title center">{job}</h3>
         <div className="grid">
-          <div className="heading textAlignRight">Industry:</div>
+          <div className="heading">Industry:</div>
           <div className="data textAlignLeft">{industry}</div>
-          <div className="heading textAlignRight grid2Rows">
-            <div>
+          <div className="heading">
+            <div className="iconTitle">
               <MoneyIcon />
               Salary:
             </div>
@@ -115,8 +120,8 @@ const Tooltip = React.memo(({ data, left, top }) => {
           <div className="data textAlignLeft">
             <strong>${salaryMed.toFixed(0)}K</strong> per year
           </div>
-          <div className="heading textAlignRight grid2Rows">
-            <div>
+          <div className="heading">
+            <div className="iconTitle">
               <SchoolIcon />
               Study:
             </div>
@@ -128,8 +133,8 @@ const Tooltip = React.memo(({ data, left, top }) => {
               tasks being replaced by machine work
             </div>
           </div>
-          <div className="heading textAlignRight grid2Rows">
-            <div>
+          <div className="heading">
+            <div className="iconTitle">
               <WarningIcon />
               Risk:
             </div>

@@ -34,22 +34,16 @@ class Viz extends Component {
   state = {
     activeNodeId: null,
     tooltip: null,
-    // summaryStatistics: {
-    //   // calculate summary statistics extents as needed in cDM or context
-    //   yearsStudy: {
-    //     min: 0,
-    //     max: 0,
-    //     glyph: <SchoolIcon />,
-    //   },
-    //   salaryMed: {
-    //     min: 0,
-    //     max: 0,
-    //     glyph: <MoneyIcon />,
-    //   },
-    // },
   };
   componentDidMount() {
-    const { nodes, radiusScale, clusterCenters, radiusSelector } = this.props;
+    const {
+      nodes,
+      radiusScale,
+      clusterCenters,
+      radiusSelector,
+      filterQuery,
+      onLoadFromSnapshot,
+    } = this.props;
 
     // initialize the force simulation
     FORCE.startSimulation(
@@ -57,29 +51,8 @@ class Viz extends Component {
       this,
     );
 
-    const max = stat => Math.max(...nodes.map(n => n[stat]));
-    const min = stat => Math.min(...nodes.map(n => n[stat]));
-    // calculate summary statistics min, max
-
-    this.setState({
-      totalNodes: nodes.length,
-      summaryStatistics: {
-        // ...this.state.summaryStatistics,
-        yearsStudy: {
-          min: min('yearsStudy'),
-          max: max('yearsStudy'),
-        },
-        salaryMed: {
-          min: min('salaryMed'),
-          //! "trimming" salary outliers
-          max: max('salaryMed') - 50,
-        },
-      },
-    });
-
     // if applying a snapshot, handle in ContextProvider
-    this.props.filterQuery &&
-      this.props.onLoadFromSnapshot(this.props.filterQuery);
+    filterQuery && onLoadFromSnapshot(filterQuery);
   }
   handleClick = nodeId => {
     // apply 3d effect to clicked node
@@ -90,6 +63,8 @@ class Viz extends Component {
       radiusSelector,
       radiusScale,
       nodes,
+      onMouseMove,
+      onMouseOut,
       // summaryBarsActive,
     } = this.props;
     // const { summaryStatistics, totalNodes } = this.state;
@@ -103,8 +78,8 @@ class Viz extends Component {
                 return (
                   <Node
                     key={`vizNode_${node.noc}`}
-                    onMouseMove={this.props.onMouseMove}
-                    onMouseOut={this.props.onMouseOut}
+                    onMouseMove={onMouseMove}
+                    onMouseOut={onMouseOut}
                     onClick={() => {
                       this.handleClick(node.id);
                     }}
