@@ -51,11 +51,22 @@ const AppLayout = props => {
 
   return (
     <React.Fragment>
-      <AppLayoutStyles>
+      <AppLayoutStyles
+        onClick={event => {
+          if (
+            Array.from(event.target.classList).includes('slidersDiv') ||
+            event.target.id === 'svg' ||
+            event.target.nodeName === 'circle'
+          ) {
+            setExpanded(initialExpandedState);
+          }
+        }}
+      >
         <FiltersPanel
           filterVariables={filterVariables}
           expanded={expanded}
           setExpanded={setExpanded}
+          initialExpandedState={initialExpandedState}
         />
         <SortPanel
           initialExpandedState={initialExpandedState}
