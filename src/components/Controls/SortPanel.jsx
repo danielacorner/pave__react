@@ -1,3 +1,5 @@
+import { Button } from '@material-ui/core';
+import RestoreIcon from '@material-ui/icons/RestoreRounded';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import React, { useContext, useState } from 'react';
@@ -10,52 +12,72 @@ const inactive = 'hsl(190, 50%, 50%)';
 const hover = 'hsl(190, 50%, 45%)';
 const active = 'hsl(190, 40%, 40%)';
 const hoverActive = 'hsl(190, 40%, 35%)';
+const inactive2 = 'hsl(160, 50%, 50%)';
+const hover2 = 'hsl(160, 50%, 45%)';
+const active2 = 'hsl(160, 40%, 40%)';
+const hoverActive2 = 'hsl(160, 40%, 35%)';
 
 const SortButtonsStyles = styled.div`
-  /* width: 100%; */
-  div {
-    margin: 0 auto;
+  min-height: 36px;
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+  grid-gap: 20px;
+  .toggleGroup {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    /* grid-gap: 20px; */
+    grid-template-columns: 1fr 1fr;
     box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.5);
-    max-width: 450px;
-    button {
-      border-radius: 4px;
-      transition: all 0.2s ease-in-out;
+  }
+  button {
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+    height: 100%;
+  }
+  [value='size'] {
+    background: ${inactive};
+    color: ${white};
+    &:hover {
+      background: ${hover};
     }
-    [value='size'] {
-      background: ${inactive};
-      color: ${white};
+    &[class*='selected'] {
+      color: ${whiteActive};
+      background: ${active};
       &:hover {
-        background: ${hover};
-      }
-      &[class*='selected'] {
-        color: ${whiteActive};
-        background: ${active};
-        &:hover {
-          background: ${hoverActive};
-        }
-      }
-      &:after {
-        display: none;
+        background: ${hoverActive};
       }
     }
-    [value='colour'] {
-      color: ${white};
-      background: ${inactive};
+    &:after {
+      display: none;
+    }
+  }
+  [value='colour'] {
+    color: ${white};
+    background: ${inactive};
+    &:hover {
+      background: ${hover};
+    }
+    &[class*='selected'] {
+      color: ${whiteActive};
+      background: ${active};
       &:hover {
-        background: ${hover};
+        background: ${hoverActive};
       }
-      &[class*='selected'] {
-        color: ${whiteActive};
-        background: ${active};
-        &:hover {
-          background: ${hoverActive};
-        }
-      }
-      &:after {
-        display: none;
+    }
+    &:after {
+      display: none;
+    }
+  }
+  .btnReset {
+    padding: 2px 16px 0 16px;
+    span {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-gap: 4px;
+    }
+    &:not([disabled]) {
+      background-color: ${inactive2};
+      color: ${white};
+      &:hover {
+        background-color: ${hover2};
       }
     }
   }
@@ -119,6 +141,7 @@ const SortPanel = () => {
   return (
     <SortButtonsStyles>
       <ToggleButtonGroup
+        className="toggleGroup"
         value={sortedParams}
         onChange={(event, prevSortedParams) =>
           handleSort({
@@ -151,6 +174,27 @@ const SortPanel = () => {
           } by Colour`}
         </ToggleButton>
       </ToggleButtonGroup>
+      <Button
+        className="btnReset"
+        onClick={context.resetFilters}
+        disabled={
+          // Disable Reset button if all filters are at 0
+          !Object.values(context.state.filters).reduce(
+            (tot, curr) => tot + curr,
+            0,
+          ) > 0
+        }
+        variant={
+          Object.values(context.state.filters).reduce(
+            (tot, curr) => tot + curr,
+            0,
+          ) > 0
+            ? 'contained'
+            : 'outlined'
+        }
+      >
+        <RestoreIcon /> Reset Filters
+      </Button>
     </SortButtonsStyles>
   );
 };
