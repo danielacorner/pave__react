@@ -1,4 +1,5 @@
 import { Collapse, IconButton } from '@material-ui/core';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Slider from '@material-ui/lab/Slider';
@@ -60,14 +61,16 @@ const FilterSlider = ({ value, filterVar, onMouseUp, onChange }) => {
     <div className="labelAndSlider">
       <ExpandLabelStyles>
         <Typography id="label">{filterTitle()}</Typography>
-        <IconButton
-          className={`expand${expanded ? ' expandOpen' : ''}`}
-          onClick={() => setExpanded(!expanded)}
-          aria-expanded={expanded}
-          aria-label="Show more"
-        >
-          <ExpandMoreIcon />
-        </IconButton>
+        <Tooltip title="View Sub-Skills">
+          <IconButton
+            className={`expand${expanded ? ' expandOpen' : ''}`}
+            onClick={() => setExpanded(!expanded)}
+            aria-expanded={expanded}
+            aria-label="Show more"
+          >
+            <ExpandMoreIcon />
+          </IconButton>
+        </Tooltip>
       </ExpandLabelStyles>
       <Slider
         className="slider"
