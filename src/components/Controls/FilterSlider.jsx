@@ -3,7 +3,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Slider from '@material-ui/lab/Slider';
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import {
   FILTER_RANGE,
@@ -32,7 +32,7 @@ const LabelAndSliderStyles = styled.div`
   }
   .collapse {
     position: absolute;
-    z-index: 2;
+    z-index: 10;
     margin-left: -8px;
     padding: 8px 16px 0 16px;
     background: white;
@@ -76,27 +76,36 @@ const SubskillFilters = ({ filterVar, onMouseUp }) => {
   );
 };
 
-const FilterSlider = ({ value, filterVar, onMouseUp, onChange }) => {
+const FilterSlider = ({
+  value,
+  filterVar,
+  onMouseUp,
+  onChange,
+  expanded,
+  setExpanded,
+}) => {
   const handleChange = (event, value) => {
     onChange(value);
   };
-
-  const [expanded, setExpanded] = useState(false);
 
   const subskillSliderProps = {
     filterVar,
     onMouseUp,
   };
 
+  const filterExpanded = expanded[filterVar];
+
   return (
     <LabelAndSliderStyles className="labelAndSlider">
       <div className="expandLabel">
         <Typography id="label">{FILTER_TITLE(filterVar)}</Typography>
-        <Tooltip title={(expanded ? 'Hide' : 'View') + ' Sub-Skills'}>
+        <Tooltip title={(filterExpanded ? 'Hide' : 'View') + ' Sub-Skills'}>
           <IconButton
-            className={`expand${expanded ? ' expandOpen' : ''}`}
-            onClick={() => setExpanded(!expanded)}
-            aria-expanded={expanded}
+            className={`expand${filterExpanded ? ' expandOpen' : ''}`}
+            onClick={() =>
+              setExpanded({ ...expanded, [filterVar]: !filterExpanded })
+            }
+            aria-expanded={filterExpanded}
             aria-label="Show more"
           >
             <ExpandMoreIcon />
@@ -113,7 +122,12 @@ const FilterSlider = ({ value, filterVar, onMouseUp, onChange }) => {
         onMouseUp={onMouseUp}
         onTouchEnd={onMouseUp}
       />
-      <Collapse className="collapse" in={expanded} timeout="auto" unmountOnExit>
+      <Collapse
+        className="collapse"
+        in={filterExpanded}
+        timeout="auto"
+        unmountOnExit
+      >
         <SubskillFilters {...subskillSliderProps} />
       </Collapse>
     </LabelAndSliderStyles>

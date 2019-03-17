@@ -41,11 +41,26 @@ const AppLayout = props => {
   } = context.state;
   // TODO: can achieve performance gains with react memo anywhere?
   // console.count('rendered layout')
+  const initialExpandedState = {
+    skillsLang: false,
+    skillsLogi: false,
+    skillsMath: false,
+    skillsComp: false,
+  };
+  const [expanded, setExpanded] = useState(initialExpandedState);
+
   return (
     <React.Fragment>
       <AppLayoutStyles>
-        <FiltersPanel filterVariables={filterVariables} />
-        <SortPanel />
+        <FiltersPanel
+          filterVariables={filterVariables}
+          expanded={expanded}
+          setExpanded={setExpanded}
+        />
+        <SortPanel
+          initialExpandedState={initialExpandedState}
+          setExpanded={setExpanded}
+        />
         <Viz
           onMouseMove={(event, datum) => {
             const { x, y } = localPoint(event.target.ownerSVGElement, event);

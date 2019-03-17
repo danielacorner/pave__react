@@ -34,7 +34,7 @@ const FiltersPanelStyles = styled.div`
   }
 `;
 
-const FiltersPanel = ({ filterVariables }) => {
+const FiltersPanel = ({ filterVariables, expanded, setExpanded }) => {
   const context = useContext(ControlsContext);
 
   return (
@@ -42,6 +42,8 @@ const FiltersPanel = ({ filterVariables }) => {
       <div className="slidersDiv">
         {filterVariables.map(filterVar => (
           <FilterSlider
+            expanded={expanded}
+            setExpanded={setExpanded}
             key={filterVar}
             filterVar={filterVar}
             value={context.state.filters[filterVar]}

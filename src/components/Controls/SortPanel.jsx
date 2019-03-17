@@ -134,7 +134,7 @@ const handleSort = ({
   }, 500);
 };
 
-const SortPanel = () => {
+const SortPanel = ({ initialExpandedState, setExpanded }) => {
   const [sortingColour, setSortingColour] = useState(false);
   const [sortingSize, setSortingSize] = useState(false);
   const [sortedParams, setSortedParams] = useState([]);
@@ -178,7 +178,10 @@ const SortPanel = () => {
       </ToggleButtonGroup>
       <Button
         className="btnReset"
-        onClick={context.resetFilters}
+        onClick={() => {
+          setExpanded(initialExpandedState);
+          context.resetFilters();
+        }}
         disabled={
           // Disable Reset button if all filters are at 0
           !Object.values(context.state.filters).reduce(
