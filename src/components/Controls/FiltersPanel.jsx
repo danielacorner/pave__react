@@ -32,6 +32,7 @@ const FiltersPanelStyles = styled.div`
 
 const FiltersPanel = ({ filterVariables }) => {
   const context = useContext(ControlsContext);
+
   return (
     <FiltersPanelStyles>
       <div className="slidersDiv">
