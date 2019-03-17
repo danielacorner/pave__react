@@ -9,7 +9,7 @@ import SortPanel from './Controls/SortPanel';
 import Tooltip from './Viz/Tooltip';
 import Viz from './Viz/Viz';
 
-const LayoutStyles = styled.div`
+const AppLayoutStyles = styled.div`
   overflow: hidden;
   width: 100%;
   height: 100vh;
@@ -27,7 +27,7 @@ const filterVariables = [
   'skillsComp',
 ];
 
-const Layout = props => {
+const AppLayout = props => {
   const [tooltipProps, setTooltipProps] = useState(null);
   const context = useContext(ControlsContext);
   const {
@@ -43,7 +43,7 @@ const Layout = props => {
   // console.count('rendered layout')
   return (
     <React.Fragment>
-      <LayoutStyles>
+      <AppLayoutStyles>
         <FiltersPanel filterVariables={filterVariables} />
         <SortPanel />
         <Viz
@@ -70,10 +70,10 @@ const Layout = props => {
           zScale={zScale}
         />
         <SnapshotsPanel />
-      </LayoutStyles>
+      </AppLayoutStyles>
       {tooltipProps && <Tooltip {...tooltipProps} />}
     </React.Fragment>
   );
 };
 
-export default Layout;
+export default AppLayout;

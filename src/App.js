@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import './App.css';
+import { createMuiTheme } from '@material-ui/core/styles';
 // import Navbar from './components/Navbar';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
-import { createMuiTheme } from '@material-ui/core/styles';
 import { Router /* Link */ } from '@reach/router';
-import Layout from './components/Layout';
+import React, { Component } from 'react';
+import './App.css';
+import AppLayout from './components/AppLayout';
 import ContextProvider from './components/Context/ContextProvider';
 
 const theme = createMuiTheme({
@@ -25,8 +25,8 @@ class App extends Component {
         <ContextProvider>
           {/* <Navbar /> */}
           <Router>
-            <Layout path="/" />
-            <Layout path="/:filtersQuery" />
+            <AppLayout path="/" />
+            <AppLayout path="/:filtersQuery" />
           </Router>
         </ContextProvider>
       </MuiThemeProvider>

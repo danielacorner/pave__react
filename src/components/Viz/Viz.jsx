@@ -33,7 +33,6 @@ const VizStyles = styled.div`
 class Viz extends Component {
   state = {
     activeNodeId: null,
-    tooltip: null,
   };
   componentDidMount() {
     const {

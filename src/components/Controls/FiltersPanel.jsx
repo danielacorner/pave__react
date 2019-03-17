@@ -23,9 +23,10 @@ const FiltersPanelStyles = styled.div`
         font-size: 0.775rem;
       }
     }
-    div {
+    .slider {
       display: grid;
-      align-self: end;
+      align-items: center;
+      height: 30px;
     }
   }
 `;

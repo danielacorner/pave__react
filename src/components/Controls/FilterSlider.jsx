@@ -37,10 +37,10 @@ const FilterSlider = ({ value, filterVar, onMouseUp, onChange }) => {
   };
 
   return (
-    <div>
+    <div className="labelAndSlider">
       <Typography id="label">{filterTitle()}</Typography>
       <Slider
-        style={{ width: 'auto' }}
+        className="slider"
         value={value}
         min={filterRange()[0]}
         max={filterRange()[1]}
