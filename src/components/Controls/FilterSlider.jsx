@@ -5,62 +5,66 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Slider from '@material-ui/lab/Slider';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import {
+  FILTER_RANGE,
+  FILTER_TITLE,
+  SUBSKILL_FILTER_TITLES,
+} from '../../utils/constants';
 
-const ExpandLabelStyles = styled.div`
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  .expand {
-    padding: 5px;
-    transform: rotate(0deg);
-    margin-left: auto;
-    transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
-    &.expandOpen {
-      transform: rotate(180deg);
+const LabelAndSliderStyles = styled.div`
+  position: relative;
+  .expandLabel {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    .expand {
+      padding: 5px;
+      transform: rotate(0deg);
+      margin-left: auto;
+      transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+      &.expandOpen {
+        transform: rotate(180deg);
+      }
     }
   }
+  .subskillFilters {
+  }
 `;
+
+const SubskillFilters = ({ filterVar }) => {
+  const subskillFilters = SUBSKILL_FILTER_TITLES(filterVar);
+  return (
+    <div className="subskillFilters">
+      {subskillFilters.map(subskill => (
+        <div key={subskill} className="subskillLabelAndSlider">
+          <Typography id="label">{subskill.title}</Typography>
+          <Slider
+            className="slider subskillSlider"
+            // value={value}
+            // min={FILTER_RANGE(filterVar)[0]}
+            // max={FILTER_RANGE(filterVar)[1]}
+            // step={1}
+            // onChange={handleChange}
+            // onMouseUp={onMouseUp}
+            // onTouchEnd={onMouseUp}
+          />
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const FilterSlider = ({ value, filterVar, onMouseUp, onChange }) => {
   const handleChange = (event, value) => {
     onChange(value);
   };
 
-  const filterTitle = () => {
-    switch (filterVar) {
-      case 'skillsLang':
-        return 'Language & Communication';
-      case 'skillsLogi':
-        return 'Logic & Reasoning';
-      case 'skillsMath':
-        return 'Math & Spatial';
-      case 'skillsComp':
-        return 'Computer & Information';
-      default:
-        return;
-    }
-  };
-  const filterRange = () => {
-    switch (filterVar) {
-      case 'skillsLang':
-        return [0, 75];
-      case 'skillsLogi':
-        return [0, 75];
-      case 'skillsMath':
-        return [0, 75];
-      case 'skillsComp':
-        return [0, 75];
-      default:
-        return;
-    }
-  };
-
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="labelAndSlider">
-      <ExpandLabelStyles>
-        <Typography id="label">{filterTitle()}</Typography>
+    <LabelAndSliderStyles className="labelAndSlider">
+      <div className="expandLabel">
+        <Typography id="label">{FILTER_TITLE(filterVar)}</Typography>
         <Tooltip title="View Sub-Skills">
           <IconButton
             className={`expand${expanded ? ' expandOpen' : ''}`}
@@ -71,19 +75,21 @@ const FilterSlider = ({ value, filterVar, onMouseUp, onChange }) => {
             <ExpandMoreIcon />
           </IconButton>
         </Tooltip>
-      </ExpandLabelStyles>
+      </div>
       <Slider
         className="slider"
         value={value}
-        min={filterRange()[0]}
-        max={filterRange()[1]}
+        min={FILTER_RANGE(filterVar)[0]}
+        max={FILTER_RANGE(filterVar)[1]}
         step={1}
         onChange={handleChange}
         onMouseUp={onMouseUp}
         onTouchEnd={onMouseUp}
       />
-      <Collapse in={expanded} timeout="auto" unmountOnExit />
-    </div>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <SubskillFilters filterVar={filterVar} />
+      </Collapse>
+    </LabelAndSliderStyles>
   );
 };
 export default FilterSlider;
