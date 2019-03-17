@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { SLIDER_WIDTH_LG, SLIDER_WIDTH_MD } from '../../utils/constants';
 import { ControlsContext } from '../Context/ContextProvider';
 import FilterSlider from './FilterSlider';
 
@@ -11,10 +12,13 @@ const FiltersPanelStyles = styled.div`
   .slidersDiv {
     display: grid;
     grid-gap: 10px 30px;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(${SLIDER_WIDTH_LG}px, 1fr));
     align-items: center;
     @media (max-width: 490px) {
-      grid-template-columns: repeat(auto-fit, minmax(125px, 1fr));
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(${SLIDER_WIDTH_MD}px, 1fr)
+      );
     }
     @media (max-width: 450px) {
       grid-gap: 10px;

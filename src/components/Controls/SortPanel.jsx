@@ -18,6 +18,8 @@ const active2 = 'hsl(160, 40%, 40%)';
 const hoverActive2 = 'hsl(160, 40%, 35%)';
 
 const SortButtonsStyles = styled.div`
+  position: relative;
+  z-index: 1;
   min-height: 36px;
   display: grid;
   grid-template-columns: 2.5fr 1fr;

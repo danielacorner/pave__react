@@ -8,6 +8,8 @@ import styled from 'styled-components';
 import {
   FILTER_RANGE,
   FILTER_TITLE,
+  SLIDER_WIDTH_LG,
+  SLIDER_WIDTH_MD,
   SUBSKILL_FILTER_TITLES,
 } from '../../utils/constants';
 
@@ -27,7 +29,22 @@ const LabelAndSliderStyles = styled.div`
       }
     }
   }
-  .subskillFilters {
+  .collapse {
+    position: absolute;
+    z-index: 2;
+    margin-left: -8px;
+    padding: 8px 16px 0 16px;
+    background: white;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    box-shadow: 0px 2px 3px 3px rgba(0, 0, 0, 0.1);
+    width: ${SLIDER_WIDTH_LG}px;
+    @media (max-width: 490px) {
+      width: ${SLIDER_WIDTH_MD}px;
+    }
+    .subskillLabelAndSlider {
+      padding-bottom: 8px;
+    }
   }
 `;
 
@@ -61,11 +78,17 @@ const FilterSlider = ({ value, filterVar, onMouseUp, onChange }) => {
 
   const [expanded, setExpanded] = useState(false);
 
+  const subskillSliderProps = {
+    filterVar,
+    handleChange,
+    onChange,
+  };
+
   return (
     <LabelAndSliderStyles className="labelAndSlider">
       <div className="expandLabel">
         <Typography id="label">{FILTER_TITLE(filterVar)}</Typography>
-        <Tooltip title="View Sub-Skills">
+        <Tooltip title={(expanded ? 'Hide' : 'View') + ' Sub-Skills'}>
           <IconButton
             className={`expand${expanded ? ' expandOpen' : ''}`}
             onClick={() => setExpanded(!expanded)}
@@ -86,8 +109,8 @@ const FilterSlider = ({ value, filterVar, onMouseUp, onChange }) => {
         onMouseUp={onMouseUp}
         onTouchEnd={onMouseUp}
       />
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <SubskillFilters filterVar={filterVar} />
+      <Collapse className="collapse" in={expanded} timeout="auto" unmountOnExit>
+        <SubskillFilters {...subskillSliderProps} />
       </Collapse>
     </LabelAndSliderStyles>
   );

@@ -16,8 +16,9 @@ const getTooltipStyles = ({
 }) => styled.div`
   width: ${TOOLTIP_WIDTH}px;
   position: fixed;
+  z-index: 999;
   top: ${top}px;
-  left: ${left + TOOLTIP_WIDTH + TOOLTIP_HZ_OFFSET + 20 > window.innerWidth
+  left: ${left + TOOLTIP_WIDTH + TOOLTIP_HZ_OFFSET > window.innerWidth
     ? left - TOOLTIP_WIDTH - 2 * TOOLTIP_HZ_OFFSET
     : left + TOOLTIP_HZ_OFFSET}px;
   font-family: 'Roboto light';
@@ -86,7 +87,6 @@ const Tooltip = React.memo(({ data, left, top }) => {
   // TODO: add arrow touching circle
   // TODO: follow circle instead of mouse (update position every .5s like recharts
   // TODO: swap out circle for job image on hover
-  // TODO: limit tooltop position by window border
   // console.log(
   //   zScale,
   //   clusterSelector,
