@@ -1,4 +1,4 @@
-export const TOOLTIP_WIDTH = 300;
+export const TOOLTIP_WIDTH = 280;
 export const TOOLTIP_HZ_OFFSET = 40;
 export const SLIDER_WIDTH_LG = 200;
 export const SLIDER_WIDTH_MD = 125;

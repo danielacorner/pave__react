@@ -42,7 +42,7 @@ const getTooltipStyles = ({
   }
   .grid {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 2.7fr;
     grid-gap: 15px;
   }
   .center {
@@ -113,6 +113,7 @@ const Tooltip = React.memo(({ data, left, top }) => {
       <div className="grid">
         <div className="heading">Industry:</div>
         <div className="data textAlignLeft">{industry}</div>
+
         <div className="heading">
           <div className="iconTitle">
             <MoneyIcon />
@@ -123,6 +124,7 @@ const Tooltip = React.memo(({ data, left, top }) => {
         <div className="data textAlignLeft">
           <strong>${salaryMed.toFixed(0)}K</strong> per year
         </div>
+
         <div className="heading">
           <div className="iconTitle">
             <SchoolIcon />
@@ -132,10 +134,10 @@ const Tooltip = React.memo(({ data, left, top }) => {
         </div>
         <div>
           <div className="data textAlignLeft">
-            <strong>{(automationRisk * 100).toFixed(0)}%</strong> chance of
-            tasks being replaced by machine work
+            approx. <strong>{yearsStudy.toFixed(1)} years</strong>
           </div>
         </div>
+
         <div className="heading">
           <div className="iconTitle">
             <WarningIcon />
@@ -145,7 +147,7 @@ const Tooltip = React.memo(({ data, left, top }) => {
         </div>
         <div className="data textAlignLeft">
           <strong>{(automationRisk * 100).toFixed(0)}%</strong> chance of tasks
-          being replaced by machine work
+          being replaced by machines
         </div>
       </div>
     </TooltipStyles>
