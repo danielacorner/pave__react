@@ -1,3 +1,5 @@
+export const MOBILE_MIN_WIDTH = 360;
+export const TABLET_MIN_WIDTH = 675;
 export const TOOLTIP_WIDTH = 280;
 export const TOOLTIP_HZ_OFFSET = 40;
 export const SLIDER_WIDTH_LG = 200;

@@ -64,6 +64,8 @@ class Viz extends Component {
       nodes,
       onMouseMove,
       onMouseOut,
+      onClick,
+      isTabletOrLarger,
       // summaryBarsActive,
     } = this.props;
     // const { summaryStatistics, totalNodes } = this.state;
@@ -79,8 +81,13 @@ class Viz extends Component {
                     key={`vizNode_${node.noc}`}
                     onMouseMove={onMouseMove}
                     onMouseOut={onMouseOut}
-                    onClick={() => {
+                    onClick={(event, datum) => {
                       this.handleClick(node.id);
+                      if (!isTabletOrLarger) {
+                        console.dir(event.target);
+                        console.log({ datum });
+                        onClick(node);
+                      }
                     }}
                     radiusSelector={radiusSelector}
                     radiusScale={radiusScale}
