@@ -42,6 +42,7 @@ const getTooltipStyles = ({
   }
   .grid {
     display: grid;
+    align-items: center;
     grid-template-columns: 1fr 2.7fr;
     grid-gap: 15px;
   }

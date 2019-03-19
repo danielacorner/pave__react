@@ -6,20 +6,19 @@ import React from 'react';
 import styled from 'styled-components';
 
 const getMobileTooltipStyles = ({
-  color,
   salaryMedPercent,
   automationRisk,
   educationPercent,
 }) => styled.div`
   font-family: 'Roboto light';
   margin: 0;
-  padding: 6pt 12pt;
+  padding: 18pt;
   font-size: 12pt;
   border-radius: 4px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
   line-height: 14pt;
   .title {
-    margin: 0 0 8pt 0;
+    margin: 0 0 18pt 0;
     line-height: 16pt;
   }
   .heading {
@@ -30,6 +29,7 @@ const getMobileTooltipStyles = ({
   }
   .grid {
     display: grid;
+    align-items: center;
     grid-template-columns: 1fr 2.7fr;
     grid-gap: 15px;
   }
@@ -66,16 +66,12 @@ const getMobileTooltipStyles = ({
   }
 `;
 const MobileTooltipContents = ({ data }) => {
-  const {
-    job,
-    industry,
-    salaryMed,
-    color,
-    salaryMedPercent,
-    automationRisk,
-    educationPercent,
-    yearsStudy,
-  } = data;
+  const { job, industry, salaryMed, color, automationRisk, yearsStudy } = data;
+  // TODO: find reasonable salarymed?
+  // TODO: add "10%, 100%" and "25k, 75k" annotation line to tooltip
+  const salaryMedPercent = salaryMed / 75;
+  // TODO: years of study (min, max?)
+  const educationPercent = yearsStudy / 7;
   const MobileTooltipStyles = getMobileTooltipStyles({
     color,
     salaryMedPercent,
@@ -84,7 +80,7 @@ const MobileTooltipContents = ({ data }) => {
   });
   return (
     <MobileTooltipStyles>
-      <h3 className="title center">{job}</h3>
+      <h3 className="title textAlignLeft">{job}</h3>
       <div className="grid">
         <div className="heading">Industry:</div>
         <div className="data textAlignLeft">{industry}</div>
@@ -133,6 +129,7 @@ const MobileTooltip = ({ data, setMobileTooltipProps }) => {
   return (
     <div onClick={() => setMobileTooltipProps(null)}>
       <Drawer
+        style={{ height: 300 }}
         anchor="bottom"
         open={!!data}
         // onClose={setMobileTooltipProps(null)}

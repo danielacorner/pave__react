@@ -123,7 +123,8 @@ const FORCE = function(nsp) {
     ) => {
       if (toggleOn) {
         clearTimeout(removeLabelsTimeout);
-        const getBBox = el => el && $(el).getBoundingClientRect();
+        const getBBox = el =>
+          $(el) ? $(el).getBoundingClientRect() : { x: 0, y: 0, isEmpty: true };
         // 1. calculate the center of each cluster
         const calcCenter = clusterValue => {
           // return {x,y} cluster center-of-mass
@@ -131,18 +132,31 @@ const FORCE = function(nsp) {
             node => node[clusterSelector] === clusterValue,
           );
           // sum the x and y positions for each cluster
+          // const totals = document.querySelectorAll('.node').reduce(
+          //   (acc, node) => {
+          //     return {
+          //       x: acc.x + node.cx,
+          //       y: acc.y + node.cy,
+          //     };
+          //   },
+          //   { x: 0, y: 0 },
+          // );
+          let numNodes = clusterNodes.length;
+
           const totals = clusterNodes.reduce(
             (acc, node) => {
               const nodeBB = getBBox(`#node_${node.id}`);
+              if (nodeBB.isEmpty) {
+                numNodes = numNodes - 1;
+              }
               return {
                 x: acc.x + nodeBB.x,
                 y: acc.y + nodeBB.y,
               };
             },
-            { x: 0, y: 0 },
+            { x: 0, y: 0, denom: 1 },
           );
           // divide by the number of nodes in that cluster
-          const numNodes = clusterNodes.length;
           return { x: totals.x / numNodes, y: totals.y / numNodes };
         };
 
@@ -245,7 +259,6 @@ const FORCE = function(nsp) {
           $('#graphContainer').getBoundingClientRect().height,
         ];
         const minLength = Math.min(width, height);
-        console.log(min, max);
         nsp.force
           .force('y', null)
           .force(
