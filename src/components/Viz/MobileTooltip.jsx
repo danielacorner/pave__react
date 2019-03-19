@@ -12,20 +12,25 @@ const getMobileTooltipStyles = ({
 }) => styled.div`
   font-family: 'Roboto light';
   margin: 0;
-  padding: 18pt;
+  padding: 10pt 18pt 18pt 18pt;
   font-size: 12pt;
   border-radius: 4px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
   line-height: 14pt;
   .title {
-    margin: 0 0 18pt 0;
-    line-height: 16pt;
+    font-size: 1.8em;
+    margin: 0 0 6pt 0;
+    line-height: 1.2em;
   }
   .heading {
     font-weight: bold;
     display: grid;
     grid-gap: 2px;
     place-items: center start;
+  }
+  .industry {
+    grid-column: 1 / -1;
+    font-size: 0.9em;
   }
   .grid {
     display: grid;
@@ -82,8 +87,7 @@ const MobileTooltipContents = ({ data }) => {
     <MobileTooltipStyles>
       <h3 className="title textAlignLeft">{job}</h3>
       <div className="grid">
-        <div className="heading">Industry:</div>
-        <div className="data textAlignLeft">{industry}</div>
+        <div className="data industry textAlignLeft">{industry}</div>
 
         <div className="heading">
           <div className="iconTitle">
@@ -105,7 +109,7 @@ const MobileTooltipContents = ({ data }) => {
         </div>
         <div>
           <div className="data textAlignLeft">
-            approx. <strong>{yearsStudy.toFixed(1)} years</strong>
+            ~ <strong>{yearsStudy.toFixed(1)} years</strong>
           </div>
         </div>
 
@@ -140,7 +144,7 @@ const MobileTooltip = ({ data, setMobileTooltipProps }) => {
           // onClick={setMobileTooltipProps(null)}
           // onKeyDown={setMobileTooltipProps(null)}
         >
-          <MobileTooltipContents data={data} />
+          {!!data && <MobileTooltipContents data={data} />}
         </div>
       </Drawer>
     </div>

@@ -135,7 +135,7 @@ const Tooltip = React.memo(({ data, left, top }) => {
         </div>
         <div>
           <div className="data textAlignLeft">
-            approx. <strong>{yearsStudy.toFixed(1)} years</strong>
+            ~ <strong>{yearsStudy.toFixed(1)} years</strong>
           </div>
         </div>
 

@@ -84,8 +84,6 @@ class Viz extends Component {
                     onClick={(event, datum) => {
                       this.handleClick(node.id);
                       if (!isTabletOrLarger) {
-                        console.dir(event.target);
-                        console.log({ datum });
                         onClick(node);
                       }
                     }}
