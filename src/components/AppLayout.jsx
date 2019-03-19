@@ -59,19 +59,35 @@ const AppLayout = props => {
       {isTabletOrLarger => (
         <React.Fragment>
           <AppLayoutStyles
-            onClick={event => {
-              if (
-                Array.from(event.target.classList).includes('slidersDiv') ||
-                event.target.id === 'svg' ||
-                event.target.nodeName === 'circle'
-              ) {
-                setExpanded(initialExpandedState);
-              }
-
-              if (!isTabletOrLarger && event.target.nodeName !== 'circle') {
-                setMobileTooltipProps(null);
-              }
-            }}
+            onClick={
+              // TODO: why doesn't this work on mobile every time?
+              isTabletOrLarger
+                ? event => {
+                    if (
+                      Array.from(event.target.classList).includes(
+                        'slidersDiv',
+                      ) ||
+                      event.target.id === 'svg' ||
+                      event.target.nodeName === 'circle'
+                    ) {
+                      setExpanded(initialExpandedState);
+                    }
+                  }
+                : event => {
+                    if (
+                      Array.from(event.target.classList).includes(
+                        'slidersDiv',
+                      ) ||
+                      event.target.id === 'svg' ||
+                      event.target.nodeName === 'circle'
+                    ) {
+                      setExpanded(initialExpandedState);
+                    }
+                    if (event.target.nodeName !== 'circle') {
+                      setMobileTooltipProps(null);
+                    }
+                  }
+            }
           >
             <FiltersPanel
               filterVariables={filterVariables}

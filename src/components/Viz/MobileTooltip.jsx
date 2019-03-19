@@ -29,6 +29,7 @@ const getMobileTooltipStyles = ({
     place-items: center start;
   }
   .industry {
+    font-style: italic;
     grid-column: 1 / -1;
     font-size: 0.9em;
   }

@@ -32,13 +32,19 @@ const getTooltipStyles = ({
   line-height: 14pt;
   .title {
     margin: 0 0 8pt 0;
-    line-height: 16pt;
+    line-height: 1.2em;
+    font-size: 1.4em;
   }
   .heading {
     font-weight: bold;
     display: grid;
     grid-gap: 2px;
     place-items: center start;
+  }
+  .industry {
+    font-style: italic;
+    grid-column: 1 / -1;
+    font-size: 0.9em;
   }
   .grid {
     display: grid;
@@ -110,10 +116,9 @@ const Tooltip = React.memo(({ data, left, top }) => {
   });
   return (
     <TooltipStyles>
-      <h3 className="title center">{job}</h3>
+      <h3 className="title textAlignLeft">{job}</h3>
       <div className="grid">
-        <div className="heading">Industry:</div>
-        <div className="data textAlignLeft">{industry}</div>
+        <div className="data industry textAlignLeft">{industry}</div>
 
         <div className="heading">
           <div className="iconTitle">
