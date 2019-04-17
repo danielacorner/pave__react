@@ -35,9 +35,12 @@ const getMobileTooltipStyles = ({
   }
   .grid {
     display: grid;
-    align-items: center;
+    align-items: start;
     grid-template-columns: 1fr 2.7fr;
     grid-gap: 15px;
+  }
+  .data {
+    margin-top: 3px;
   }
   .center {
     text-align: center;
@@ -69,6 +72,15 @@ const getMobileTooltipStyles = ({
       background: cornflowerblue;
       width: ${educationPercent * 100}%;
     }
+    &:not(.emptyBar) {
+      margin: -1px 0 0 -1px;
+    }
+    &.emptyBar {
+      width: 75px;
+      height: calc(100% - 1px);
+      box-sizing: border-box;
+      border: 1px solid black;
+    }
   }
 `;
 const MobileTooltipContents = ({ data }) => {
@@ -95,7 +107,9 @@ const MobileTooltipContents = ({ data }) => {
             <MoneyIcon />
             Salary:
           </div>
-          <div className="bar salaryBar" />
+          <div className="bar emptyBar">
+            <div className="bar salaryBar" />
+          </div>
         </div>
         <div className="data textAlignLeft">
           <strong>${salaryMed.toFixed(0)}K</strong> per year
@@ -106,7 +120,9 @@ const MobileTooltipContents = ({ data }) => {
             <SchoolIcon />
             Study:
           </div>
-          <div className="bar educationBar" />
+          <div className="bar emptyBar">
+            <div className="bar educationBar" />
+          </div>
         </div>
         <div>
           <div className="data textAlignLeft">
@@ -119,7 +135,9 @@ const MobileTooltipContents = ({ data }) => {
             <WarningIcon />
             Risk:
           </div>
-          <div className="bar riskBar" />
+          <div className="bar emptyBar">
+            <div className="bar riskBar" />
+          </div>
         </div>
         <div className="data textAlignLeft">
           <strong>{(automationRisk * 100).toFixed(0)}%</strong> chance of tasks
