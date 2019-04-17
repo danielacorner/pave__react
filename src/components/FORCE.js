@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import ReactDOM from 'react-dom';
 import { $ } from './Context/ContextProvider';
 const FORCE = function(nsp) {
-  let paused, updatePositionsInterval, removeLabelsTimeout;
+  let paused, updatePositionsInterval, removeLabelsTimeout, sortedRisk;
   const // width = window.innerWidth,
     //   height = window.innerHeight,
     // optional: constrain nodes within a bounding box
@@ -288,6 +288,19 @@ const FORCE = function(nsp) {
           .restart();
       }
     },
+    sortRisk = sortByRisk => {
+      if (sortByRisk) {
+        d3.selectAll('g.node circle')
+          .transition()
+          .delay((d, i) => i * 0.5)
+          .style('fill', d => d3.interpolateRdYlGn(1 - d.automationRisk));
+      } else {
+        d3.selectAll('g.node circle')
+          .transition()
+          .delay((d, i) => i * 0.5)
+          .style('fill', d => color(d.cluster));
+      }
+    },
     startSimulation = (
       { nodes, radiusScale, clusterCenters, radiusSelector },
       that,
@@ -319,13 +332,17 @@ const FORCE = function(nsp) {
         .alphaTarget(END_SPEED)
         .restart();
     },
-    enterNode = (selection, radiusScale, radiusSelector) => {
+    enterNode = ({ selection, radiusScale, radiusSelector, sortedRisk }) => {
       // circles
       selection
         .select('circle')
         .attr('r', d => radiusScale(d[radiusSelector]))
         // .attr('r', d => 10)
-        .style('fill', d => color(d.cluster));
+        .style('fill', d =>
+          sortedRisk
+            ? d3.interpolateRdYlGn(1 - d.automationRisk)
+            : color(d.cluster),
+        );
 
       // text labels
       selection
@@ -395,6 +412,7 @@ const FORCE = function(nsp) {
   nsp.toggleClusterTags = toggleClusterAnnotations;
   nsp.sortColour = sortColour;
   nsp.sortSize = sortSize;
+  nsp.sortRisk = sortRisk;
   nsp.restartSimulation = restartSimulation;
   nsp.dragStarted = dragStarted;
   nsp.dragging = dragging;

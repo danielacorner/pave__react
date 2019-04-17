@@ -325,7 +325,6 @@ class ContextProvider extends Component {
   };
 
   sortSize = () => {
-    console.log('sorting size!');
     const { radiusSelector, getRadiusScale } = this.state;
     if (!this.state.sortedSize) {
       this.setState({ sortedSize: true });
@@ -369,18 +368,11 @@ class ContextProvider extends Component {
   sortRisk = () => {
     if (!this.state.sortedRisk) {
       this.setState({ sortedRisk: true });
-      d3.selectAll('g.node circle')
-        .transition()
-        .delay((d, i) => i * 0.5)
-        .style('fill', d => d3.interpolateRdYlGn(1 - d.automationRisk));
+      FORCE.sortRisk(true);
     } else {
       this.setState({ sortedRisk: false });
-      d3.selectAll('g.node circle')
-        .transition()
-        .delay((d, i) => i * 0.5)
-        .style('fill', d => FORCE.color(d.cluster));
+      FORCE.sortRisk(false);
     }
-    console.log('colouring by risk!');
   };
   toggleSummaryBars = () => {
     console.log(this.state.summaryBarsActive);

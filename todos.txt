@@ -1,4 +1,5 @@
 todo:
+- clean up unused code
 - tune subskill filter limits to be less excessive
 - change sort buttons to switches
 - colour by salary, study (togglegroup? or dropdown + toggle?)

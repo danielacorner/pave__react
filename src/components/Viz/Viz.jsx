@@ -65,6 +65,7 @@ class Viz extends Component {
       onMouseMove,
       onMouseOut,
       onClick,
+      sortedRisk,
       isTabletOrLarger,
       // summaryBarsActive,
     } = this.props;
@@ -78,6 +79,7 @@ class Viz extends Component {
               {nodes.map(node => {
                 return (
                   <Node
+                    sortedRisk={sortedRisk}
                     key={`vizNode_${node.noc}`}
                     onMouseMove={onMouseMove}
                     onMouseOut={onMouseOut}

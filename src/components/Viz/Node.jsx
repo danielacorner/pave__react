@@ -30,12 +30,18 @@ class Node extends Component {
     this.node = createRef();
   }
   componentDidMount() {
-    const { radiusScale, radiusSelector } = this.props;
-
+    const { radiusScale, radiusSelector, sortedRisk } = this.props;
     this.d3Node = d3
       .select(findDOMNode(this))
       .datum(this.props.data)
-      .call(d => FORCE.enterNode(d, radiusScale, radiusSelector));
+      .call(d =>
+        FORCE.enterNode({
+          selection: d,
+          radiusScale,
+          radiusSelector,
+          sortedRisk,
+        }),
+      );
   }
 
   componentDidUpdate() {
