@@ -1,7 +1,5 @@
 import { Button } from '@material-ui/core';
 import RestoreIcon from '@material-ui/icons/RestoreRounded';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
@@ -24,14 +22,14 @@ const SortButtonsStyles = styled.div`
   display: grid;
   grid-template-columns: 2.5fr 1fr;
   grid-gap: 20px;
-  .toggleGroup {
+  .sortBtnGroup {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.5);
+    grid-gap: 6px;
   }
   button {
     border-radius: 4px;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.1s ease-in-out;
     height: 100%;
   }
   [value='size'] {
@@ -86,47 +84,30 @@ const SortButtonsStyles = styled.div`
 `;
 
 const handleSort = ({
-  // event,
-  prevSortedParams,
+  sortBy,
   sortedParams,
   context,
   setSortingColour,
   setSortingSize,
   setSortedParams,
 }) => {
-  // symmetric difference between arrays
-  const difference = (arr1, arr2) => {
-    if (!arr1) return arr2;
-    if (!arr2) return arr1;
-    return arr1
-      .filter(x => !arr2.includes(x))
-      .concat(arr2.filter(x => !arr1.includes(x)));
-  };
-
-  // if sorting colour (sortedParams changed by 'colour'), sort colour
-  if (difference(sortedParams, prevSortedParams).includes('colour')) {
-    context.sortColour();
-    setSortingColour(
-      !sortedParams || !sortedParams.includes('colour'),
-      prevSortedParams,
-    );
-    setSortedParams(
-      sortedParams.includes('colour')
-        ? sortedParams.filter(d => d !== 'colour')
-        : [...sortedParams, 'colour'],
-    );
-  }
-  if (difference(sortedParams, prevSortedParams).includes('size')) {
+  if (sortBy === 'size') {
     context.sortSize();
-    setSortingSize(
-      !sortedParams || !sortedParams.includes('size'),
-      prevSortedParams,
-    );
-    setSortedParams(
-      sortedParams.includes('size')
-        ? sortedParams.filter(d => d !== 'size')
-        : [...sortedParams, 'size'],
-    );
+    if (!sortedParams.includes('size')) {
+      setSortingSize(true);
+      setSortedParams([...sortedParams, 'size']);
+    } else {
+      setSortedParams(sortedParams.filter(d => d !== 'size'));
+    }
+  }
+  if (sortBy === 'colour') {
+    context.sortColour();
+    if (!sortedParams.includes('colour')) {
+      setSortingColour(true);
+      setSortedParams([...sortedParams, 'colour']);
+    } else {
+      setSortedParams(sortedParams.filter(d => d !== 'colour'));
+    }
   }
   setTimeout(() => {
     setSortingColour(false);
@@ -142,22 +123,22 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
   const context = useContext(ControlsContext);
   return (
     <SortButtonsStyles>
-      <ToggleButtonGroup
-        className="toggleGroup"
-        value={sortedParams}
-        onChange={(event, prevSortedParams) =>
-          handleSort({
-            event,
-            prevSortedParams,
-            sortedParams,
-            context,
-            setSortingColour,
-            setSortingSize,
-            setSortedParams,
-          })
-        }
-      >
-        <ToggleButton value="size" disabled={sortingSize}>
+      <div className="sortBtnGroup">
+        <Button
+          onClick={() => {
+            handleSort({
+              sortBy: 'size',
+              sortedParams,
+              context,
+              setSortingColour,
+              setSortingSize,
+              setSortedParams,
+            });
+          }}
+          variant="outlined"
+          value="size"
+          disabled={sortingSize}
+        >
           {`Sort${
             sortingSize
               ? 'ing'
@@ -165,8 +146,22 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
               ? 'ed'
               : ''
           } by Size`}
-        </ToggleButton>
-        <ToggleButton value="colour" disabled={sortingColour}>
+        </Button>
+        <Button
+          onClick={() =>
+            handleSort({
+              sortBy: 'colour',
+              sortedParams,
+              context,
+              setSortingColour,
+              setSortingSize,
+              setSortedParams,
+            })
+          }
+          variant="outlined"
+          value="colour"
+          disabled={sortingColour}
+        >
           {`Sort${
             sortingColour
               ? 'ing'
@@ -174,8 +169,8 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
               ? 'ed'
               : ''
           } by Colour`}
-        </ToggleButton>
-      </ToggleButtonGroup>
+        </Button>
+      </div>
       <Button
         className="btnReset"
         onClick={() => {
@@ -189,14 +184,7 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
             0,
           ) > 0
         }
-        variant={
-          Object.values(context.state.filters).reduce(
-            (tot, curr) => tot + curr,
-            0,
-          ) > 0
-            ? 'contained'
-            : 'outlined'
-        }
+        variant="outlined"
       >
         <RestoreIcon /> Reset Filters
       </Button>
