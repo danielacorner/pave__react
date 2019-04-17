@@ -25,7 +25,8 @@ const SortButtonsStyles = styled.div`
   grid-gap: 6px;
   .sortBtnGroup {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, 180px);
     grid-gap: 6px;
     justify-items: start;
     .formControl {
