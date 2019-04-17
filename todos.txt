@@ -1,40 +1,14 @@
 todo:
-- change sizes
-- change colours
-- sort by sizes
-- optimize tooltip performance
-  try custom tooltip implementation (use native onMouseOver) and compare
-- move summary bars to sides:
-  either expand the body padding to 0% and apply padding to other els
-  or switch the svgs to divs (easier animations)
-  or add new svgs to the outsides
-
-- linux shortcuts
+- tune subskill filter limits to be less excessive
+- filter by risk?
+- legends
+- scatterplot
+- change sizes?
+- change colours?
 
 feature: tooltips
 
-feature: sort by sizes
 bug: filtering in colour-sorted mode shouldn't restart the simulation x,y forces
-
-feature: bar graph showing average salary, years of study
-bug: prevent bar graph showing before filtered, and after reset
-
-extract contextprovider functions into their respective component folders
-
-debug filter slider click (filters state actually changes, but should only visually change (change slider position, but don't change filter state))
-
-stop the simulation on slider click, restart simulation on mouseup (improve performance)
-
-
-add circle-pack (grab from pave-angular)
-
-improve speed
-
-radius dropdown
-cluster dropdown
-static viz
-sort sizes button
-sort clusters button
 
 Fancy Up the Visuals
 - transition circles on enter (attrtween?) with delay
