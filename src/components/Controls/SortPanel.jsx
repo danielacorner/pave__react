@@ -1,4 +1,6 @@
-import { Button } from '@material-ui/core';
+import Switch from '@material-ui/core/Switch';
+import Button from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RestoreIcon from '@material-ui/icons/RestoreRounded';
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
@@ -12,20 +14,31 @@ const active = 'hsl(190, 40%, 40%)';
 const hoverActive = 'hsl(190, 40%, 35%)';
 const inactive2 = 'hsl(160, 50%, 50%)';
 const hover2 = 'hsl(160, 50%, 45%)';
-const active2 = 'hsl(160, 40%, 40%)';
-const hoverActive2 = 'hsl(160, 40%, 35%)';
 
 const SortButtonsStyles = styled.div`
   position: relative;
   z-index: 1;
   min-height: 36px;
   display: grid;
-  grid-template-columns: 2.5fr 1fr;
-  grid-gap: 20px;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  grid-gap: 6px;
   .sortBtnGroup {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     grid-gap: 6px;
+    justify-items: start;
+    .formControl {
+      width: 180px;
+      border: 1px solid rgba(0, 0, 0, 0.26);
+      border-radius: 4px;
+      display: grid;
+      justify-items: start;
+      grid-template-columns: auto 1fr;
+    }
+    label {
+      margin: 0;
+    }
   }
   button {
     border-radius: 4px;
@@ -68,6 +81,7 @@ const SortButtonsStyles = styled.div`
   }
   .btnReset {
     padding: 2px 16px 0 16px;
+    justify-self: end;
     span {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -83,18 +97,10 @@ const SortButtonsStyles = styled.div`
   }
 `;
 
-const handleSort = ({
-  sortBy,
-  sortedParams,
-  context,
-  setSortingColour,
-  setSortingSize,
-  setSortedParams,
-}) => {
+const handleSort = ({ sortBy, sortedParams, setSortedParams, context }) => {
   if (sortBy === 'size') {
     context.sortSize();
     if (!sortedParams.includes('size')) {
-      setSortingSize(true);
       setSortedParams([...sortedParams, 'size']);
     } else {
       setSortedParams(sortedParams.filter(d => d !== 'size'));
@@ -103,73 +109,85 @@ const handleSort = ({
   if (sortBy === 'colour') {
     context.sortColour();
     if (!sortedParams.includes('colour')) {
-      setSortingColour(true);
       setSortedParams([...sortedParams, 'colour']);
     } else {
       setSortedParams(sortedParams.filter(d => d !== 'colour'));
     }
   }
-  setTimeout(() => {
-    setSortingColour(false);
-    setSortingSize(false);
-  }, 500);
+  if (sortBy === 'risk') {
+    context.sortRisk();
+    if (!sortedParams.includes('risk')) {
+      setSortedParams([...sortedParams, 'risk']);
+    } else {
+      setSortedParams(sortedParams.filter(d => d !== 'risk'));
+    }
+  }
 };
 
 const SortPanel = ({ initialExpandedState, setExpanded }) => {
-  const [sortingColour, setSortingColour] = useState(false);
-  const [sortingSize, setSortingSize] = useState(false);
   const [sortedParams, setSortedParams] = useState([]);
 
   const context = useContext(ControlsContext);
   return (
     <SortButtonsStyles>
       <div className="sortBtnGroup">
-        <Button
-          onClick={() => {
-            handleSort({
-              sortBy: 'size',
-              sortedParams,
-              context,
-              setSortingColour,
-              setSortingSize,
-              setSortedParams,
-            });
-          }}
-          variant="outlined"
-          value="size"
-          disabled={sortingSize}
-        >
-          {`Sort${
-            sortingSize
-              ? 'ing'
-              : sortedParams && sortedParams.includes('size')
-              ? 'ed'
-              : ''
-          } by Size`}
-        </Button>
-        <Button
-          onClick={() =>
-            handleSort({
-              sortBy: 'colour',
-              sortedParams,
-              context,
-              setSortingColour,
-              setSortingSize,
-              setSortedParams,
-            })
+        <FormControlLabel
+          className="formControl"
+          control={
+            <Switch
+              onChange={() => {
+                handleSort({
+                  sortBy: 'size',
+                  sortedParams,
+                  context,
+                  setSortedParams,
+                });
+              }}
+              checked={sortedParams.includes('size')}
+            />
           }
-          variant="outlined"
-          value="colour"
-          disabled={sortingColour}
-        >
-          {`Sort${
-            sortingColour
-              ? 'ing'
-              : sortedParams && sortedParams.includes('colour')
-              ? 'ed'
-              : ''
-          } by Colour`}
-        </Button>
+          label={`Sort${
+            sortedParams && sortedParams.includes('size') ? 'ed' : ''
+          } by Size`}
+        />
+        <FormControlLabel
+          className="formControl"
+          control={
+            <Switch
+              onChange={() =>
+                handleSort({
+                  sortBy: 'colour',
+                  sortedParams,
+                  context,
+                  setSortedParams,
+                })
+              }
+              checked={sortedParams.includes('colour')}
+            />
+          }
+          label={`Sort${
+            sortedParams && sortedParams.includes('colour') ? 'ed' : ''
+          } by Type`}
+        />
+        <FormControlLabel
+          className="formControl"
+          control={
+            <Switch
+              onChange={() =>
+                handleSort({
+                  sortBy: 'risk',
+                  sortedParams,
+                  context,
+                  setSortedParams,
+                })
+              }
+              checked={sortedParams.includes('risk')}
+            />
+          }
+          label={`Colour${
+            sortedParams && sortedParams.includes('risk') ? 'ed' : ''
+          } by Risk`}
+        />
       </div>
       <Button
         className="btnReset"

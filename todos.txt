@@ -1,5 +1,6 @@
 todo:
 - tune subskill filter limits to be less excessive
+- change sort buttons to switches
 - filter by risk?
 - legends
 - scatterplot

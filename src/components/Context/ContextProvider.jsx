@@ -59,6 +59,7 @@ class ContextProvider extends Component {
       snapshots: [],
       sortedColour: false,
       sortedSize: false,
+      sortedRisk: false,
       svgBBox: 0,
       summaryBarsActive: true,
       zScale: scaleOrdinal({
@@ -365,6 +366,22 @@ class ContextProvider extends Component {
       setTimeout(this.handleResize, 1500);
     }
   };
+  sortRisk = () => {
+    if (!this.state.sortedRisk) {
+      this.setState({ sortedRisk: true });
+      d3.selectAll('g.node circle')
+        .transition()
+        .delay((d, i) => i * 0.5)
+        .style('fill', d => d3.interpolateRdYlGn(1 - d.automationRisk));
+    } else {
+      this.setState({ sortedRisk: false });
+      d3.selectAll('g.node circle')
+        .transition()
+        .delay((d, i) => i * 0.5)
+        .style('fill', d => FORCE.color(d.cluster));
+    }
+    console.log('colouring by risk!');
+  };
   toggleSummaryBars = () => {
     console.log(this.state.summaryBarsActive);
     this.setState({ summaryBarsActive: !this.state.summaryBarsActive });
@@ -387,6 +404,7 @@ class ContextProvider extends Component {
           setNodes: nodes => this.setState({ nodes: nodes }),
           sortSize: this.sortSize,
           sortColour: this.sortColour,
+          sortRisk: this.sortRisk,
           toggleSummaryBars: this.toggleSummaryBars,
         }}
       >

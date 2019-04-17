@@ -403,6 +403,7 @@ const FORCE = function(nsp) {
   nsp.removeDrag = removeDrag;
   nsp.tick = tick;
   nsp.paused = paused;
+  nsp.color = color;
 
   return nsp;
 };
