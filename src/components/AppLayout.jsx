@@ -145,7 +145,7 @@ const AppLayout = props => {
               summaryBarsActive={summaryBarsActive}
               zScale={zScale}
             />
-            <SnapshotsPanel />
+            {/* <SnapshotsPanel /> */}
           </AppLayoutStyles>
 
           {tooltipProps && isTabletOrLarger && <Tooltip {...tooltipProps} />}
