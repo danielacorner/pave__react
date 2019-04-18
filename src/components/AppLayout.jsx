@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { TABLET_MIN_WIDTH } from '../utils/constants';
 import { ControlsContext } from './Context/ContextProvider';
 import FiltersPanel from './Controls/FiltersPanel';
-import SnapshotsPanel from './Controls/SnapshotsPanel';
 import SortPanel from './Controls/SortPanel';
 import MobileTooltip from './Viz/MobileTooltip';
 import Tooltip from './Viz/Tooltip';
@@ -18,7 +17,10 @@ const AppLayoutStyles = styled.div`
   height: 100vh;
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  grid-gap: 16px;
+  grid-gap: 8px;
+  @media (min-width: 400px) {
+    grid-gap: 16px;
+  }
   padding: 10px 10px 0 10px;
   box-sizing: border-box;
 `;

@@ -37,6 +37,14 @@ const SortButtonsStyles = styled.div`
       justify-items: start;
       grid-template-columns: auto 1fr;
     }
+    @media (max-width: 399px) {
+      grid-gap: 0px;
+      margin-top: -10px;
+      .formControl {
+        height: 36px;
+        border: none;
+      }
+    }
     label {
       margin: 0;
     }
@@ -152,6 +160,7 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
           } by Size`}
         />
         <FormControlLabel
+          classes={{ root: 'formControlRoot' }}
           className="formControl"
           control={
             <Switch
@@ -171,6 +180,7 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
           } by Type`}
         />
         <FormControlLabel
+          classes={{ root: 'formControlRoot' }}
           className="formControl"
           control={
             <Switch
