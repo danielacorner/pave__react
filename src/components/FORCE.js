@@ -343,17 +343,29 @@ const FORCE = function(nsp) {
         .alphaTarget(END_SPEED)
         .restart();
     },
-    enterNode = ({ selection, radiusScale, radiusSelector, sortedRisk }) => {
+    enterNode = ({
+      selection,
+      radiusScale,
+      radiusSelector,
+      colouredByValue,
+    }) => {
       // circles
       selection
         .select('circle')
         .attr('r', d => radiusScale(d[radiusSelector]))
-        // .attr('r', d => 10)
-        .style('fill', d =>
-          sortedRisk
-            ? d3.interpolateRdYlGn(1 - d.automationRisk)
-            : color(d.cluster),
-        );
+        .style('fill', d => {
+          console.log(colouredByValue);
+          switch (colouredByValue) {
+            case 'automationRisk':
+              return d3.interpolateRdYlGn(1 - d.automationRisk);
+            case 'salary':
+              return d3.interpolateGreens(d.salaryMed / 60);
+            case 'study':
+              return d3.interpolateBlues(d.yearsStudy / 5);
+            default:
+              return color(d.cluster);
+          }
+        });
 
       // text labels
       selection
@@ -366,7 +378,6 @@ const FORCE = function(nsp) {
     updateNode = selection => {
       selection
         .attr('transform', d => nodeTransform(d))
-        // is this necessary?
         .attr('cx', d => d.x)
         .attr('cy', d => d.y);
     },

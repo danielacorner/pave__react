@@ -191,6 +191,7 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
                       doColour: true,
                       variable: event.target.value,
                     });
+                    context.setCurrentColor(event.target.value);
                   }
                 }}
               >

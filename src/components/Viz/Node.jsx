@@ -30,7 +30,7 @@ class Node extends Component {
     this.node = createRef();
   }
   componentDidMount() {
-    const { radiusScale, radiusSelector, sortedRisk } = this.props;
+    const { radiusScale, radiusSelector, colouredByValue } = this.props;
     this.d3Node = d3
       .select(findDOMNode(this))
       .datum(this.props.data)
@@ -39,7 +39,7 @@ class Node extends Component {
           selection: d,
           radiusScale,
           radiusSelector,
-          sortedRisk,
+          colouredByValue,
         }),
       );
   }

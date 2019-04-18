@@ -365,13 +365,16 @@ class ContextProvider extends Component {
       setTimeout(this.handleResize, 1500);
     }
   };
+  setCurrentColor = variable => {
+    this.setState({ colouredByValue: variable });
+  };
   colourByValue = variable => {
     if (!this.state.colouredByValue) {
-      this.setState({ colouredByValue: true });
+      this.setState({ colouredByValue: variable });
       FORCE.colourByValue({ doColour: true, variable });
     } else {
       this.setState({ colouredByValue: false });
-      FORCE.colourByValue(false);
+      FORCE.colourByValue({ doColour: false, variable: null });
     }
   };
   toggleSummaryBars = () => {
@@ -397,6 +400,7 @@ class ContextProvider extends Component {
           sortSize: this.sortSize,
           sortColour: this.sortColour,
           colourByValue: this.colourByValue,
+          setCurrentColor: this.setCurrentColor,
           toggleSummaryBars: this.toggleSummaryBars,
         }}
       >

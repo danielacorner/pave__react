@@ -51,7 +51,7 @@ const AppLayout = props => {
     nodes,
     summaryBarsActive,
     zScale,
-    sortedRisk,
+    colouredByValue,
   } = context.state;
 
   // TODO: mobile layout
@@ -106,7 +106,7 @@ const AppLayout = props => {
             />
             <Viz
               isTabletOrLarger={isTabletOrLarger}
-              sortedRisk={sortedRisk}
+              colouredByValue={colouredByValue}
               onMouseMove={
                 isTabletOrLarger
                   ? (event, datum) => {
