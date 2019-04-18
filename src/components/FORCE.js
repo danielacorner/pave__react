@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import ReactDOM from 'react-dom';
 import { $ } from './Context/ContextProvider';
 const FORCE = function(nsp) {
-  let paused, updatePositionsInterval, removeLabelsTimeout, sortedRisk;
+  let paused, updatePositionsInterval, removeLabelsTimeout;
   const // width = window.innerWidth,
     //   height = window.innerHeight,
     // optional: constrain nodes within a bounding box
@@ -288,12 +288,23 @@ const FORCE = function(nsp) {
           .restart();
       }
     },
-    sortRisk = sortByRisk => {
-      if (sortByRisk) {
+    colourByValue = ({ doColour, variable }) => {
+      if (doColour) {
         d3.selectAll('g.node circle')
           .transition()
           .delay((d, i) => i * 0.5)
-          .style('fill', d => d3.interpolateRdYlGn(1 - d.automationRisk));
+          .style('fill', d => {
+            switch (variable) {
+              case 'automationRisk':
+                return d3.interpolateRdYlGn(1 - d.automationRisk);
+              case 'salary':
+                return d3.interpolateGreens(d.salaryMed / 60);
+              case 'study':
+                return d3.interpolateBlues(d.yearsStudy / 5);
+              default:
+                break;
+            }
+          });
       } else {
         d3.selectAll('g.node circle')
           .transition()
@@ -412,7 +423,7 @@ const FORCE = function(nsp) {
   nsp.toggleClusterTags = toggleClusterAnnotations;
   nsp.sortColour = sortColour;
   nsp.sortSize = sortSize;
-  nsp.sortRisk = sortRisk;
+  nsp.colourByValue = colourByValue;
   nsp.restartSimulation = restartSimulation;
   nsp.dragStarted = dragStarted;
   nsp.dragging = dragging;

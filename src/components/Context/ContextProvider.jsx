@@ -59,7 +59,7 @@ class ContextProvider extends Component {
       snapshots: [],
       sortedColour: false,
       sortedSize: false,
-      sortedRisk: false,
+      colouredByValue: false,
       svgBBox: 0,
       summaryBarsActive: true,
       zScale: scaleOrdinal({
@@ -365,13 +365,13 @@ class ContextProvider extends Component {
       setTimeout(this.handleResize, 1500);
     }
   };
-  sortRisk = () => {
-    if (!this.state.sortedRisk) {
-      this.setState({ sortedRisk: true });
-      FORCE.sortRisk(true);
+  colourByValue = variable => {
+    if (!this.state.colouredByValue) {
+      this.setState({ colouredByValue: true });
+      FORCE.colourByValue({ doColour: true, variable });
     } else {
-      this.setState({ sortedRisk: false });
-      FORCE.sortRisk(false);
+      this.setState({ colouredByValue: false });
+      FORCE.colourByValue(false);
     }
   };
   toggleSummaryBars = () => {
@@ -396,7 +396,7 @@ class ContextProvider extends Component {
           setNodes: nodes => this.setState({ nodes: nodes }),
           sortSize: this.sortSize,
           sortColour: this.sortColour,
-          sortRisk: this.sortRisk,
+          colourByValue: this.colourByValue,
           toggleSummaryBars: this.toggleSummaryBars,
         }}
       >

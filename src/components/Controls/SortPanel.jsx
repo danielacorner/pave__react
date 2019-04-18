@@ -5,13 +5,10 @@ import RestoreIcon from '@material-ui/icons/RestoreRounded';
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
+import { MenuItem, Select } from '@material-ui/core';
+import FORCE from '../FORCE';
 
 const white = 'rgba(255,255,255,0.98)';
-const whiteActive = 'hsl(0, 0%, 75%)';
-const inactive = 'hsl(190, 50%, 50%)';
-const hover = 'hsl(190, 50%, 45%)';
-const active = 'hsl(190, 40%, 40%)';
-const hoverActive = 'hsl(190, 40%, 35%)';
 const inactive2 = 'hsl(160, 50%, 50%)';
 const hover2 = 'hsl(160, 50%, 45%)';
 
@@ -36,6 +33,9 @@ const SortButtonsStyles = styled.div`
       display: grid;
       justify-items: start;
       grid-template-columns: auto 1fr;
+      &:last-child {
+        width: 215px;
+      }
     }
     @media (max-width: 399px) {
       grid-gap: 0px;
@@ -48,49 +48,25 @@ const SortButtonsStyles = styled.div`
     label {
       margin: 0;
     }
+    .labelAndSelect {
+      display: grid;
+      grid-auto-flow: column;
+      align-items: center;
+      .select {
+        transform: scale(0.85);
+      }
+    }
   }
   button {
     border-radius: 4px;
     transition: all 0.1s ease-in-out;
     height: 100%;
   }
-  [value='size'] {
-    background: ${inactive};
-    color: ${white};
-    &:hover {
-      background: ${hover};
-    }
-    &[class*='selected'] {
-      color: ${whiteActive};
-      background: ${active};
-      &:hover {
-        background: ${hoverActive};
-      }
-    }
-    &:after {
-      display: none;
-    }
-  }
-  [value='colour'] {
-    color: ${white};
-    background: ${inactive};
-    &:hover {
-      background: ${hover};
-    }
-    &[class*='selected'] {
-      color: ${whiteActive};
-      background: ${active};
-      &:hover {
-        background: ${hoverActive};
-      }
-    }
-    &:after {
-      display: none;
-    }
-  }
   .btnReset {
+    max-height: 60px;
     padding: 2px 16px 0 16px;
     justify-self: end;
+    align-self: start;
     span {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -106,35 +82,36 @@ const SortButtonsStyles = styled.div`
   }
 `;
 
-const handleSort = ({ sortBy, sortedParams, setSortedParams, context }) => {
-  if (sortBy === 'size') {
-    context.sortSize();
-    if (!sortedParams.includes('size')) {
-      setSortedParams([...sortedParams, 'size']);
-    } else {
-      setSortedParams(sortedParams.filter(d => d !== 'size'));
-    }
-  }
-  if (sortBy === 'colour') {
-    context.sortColour();
-    if (!sortedParams.includes('colour')) {
-      setSortedParams([...sortedParams, 'colour']);
-    } else {
-      setSortedParams(sortedParams.filter(d => d !== 'colour'));
-    }
-  }
-  if (sortBy === 'risk') {
-    context.sortRisk();
-    if (!sortedParams.includes('risk')) {
-      setSortedParams([...sortedParams, 'risk']);
-    } else {
-      setSortedParams(sortedParams.filter(d => d !== 'risk'));
-    }
-  }
-};
-
 const SortPanel = ({ initialExpandedState, setExpanded }) => {
+  const handleSort = ({ sortBy, sortedParams, setSortedParams, context }) => {
+    if (sortBy === 'size') {
+      context.sortSize();
+      if (!sortedParams.includes('size')) {
+        setSortedParams([...sortedParams, 'size']);
+      } else {
+        setSortedParams(sortedParams.filter(d => d !== 'size'));
+      }
+    }
+    if (sortBy === 'category') {
+      context.sortColour();
+      if (!sortedParams.includes('category')) {
+        setSortedParams([...sortedParams, 'category']);
+      } else {
+        setSortedParams(sortedParams.filter(d => d !== 'category'));
+      }
+    }
+    if (sortBy === 'colour') {
+      context.colourByValue(valueToColourBy);
+      if (!sortedParams.includes('colour')) {
+        setSortedParams([...sortedParams, 'colour']);
+      } else {
+        setSortedParams(sortedParams.filter(d => d !== 'colour'));
+      }
+    }
+  };
+
   const [sortedParams, setSortedParams] = useState([]);
+  const [valueToColourBy, setValueToColourBy] = useState('automationRisk');
 
   const context = useContext(ControlsContext);
   return (
@@ -166,17 +143,17 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
             <Switch
               onChange={() =>
                 handleSort({
-                  sortBy: 'colour',
+                  sortBy: 'category',
                   sortedParams,
                   context,
                   setSortedParams,
                 })
               }
-              checked={sortedParams.includes('colour')}
+              checked={sortedParams.includes('category')}
             />
           }
           label={`Sort${
-            sortedParams && sortedParams.includes('colour') ? 'ed' : ''
+            sortedParams && sortedParams.includes('category') ? 'ed' : ''
           } by Type`}
         />
         <FormControlLabel
@@ -186,18 +163,43 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
             <Switch
               onChange={() =>
                 handleSort({
-                  sortBy: 'risk',
+                  sortBy: 'colour',
                   sortedParams,
                   context,
                   setSortedParams,
                 })
               }
-              checked={sortedParams.includes('risk')}
+              checked={sortedParams.includes('colour')}
             />
           }
-          label={`Colour${
-            sortedParams && sortedParams.includes('risk') ? 'ed' : ''
-          } by Risk`}
+          label={
+            <div className="labelAndSelect">
+              <div>
+                Colour
+                {sortedParams && sortedParams.includes('colour')
+                  ? 'ed'
+                  : ''} by{' '}
+              </div>
+              <Select
+                classes={{ root: 'select' }}
+                value={valueToColourBy}
+                onClick={event => event.preventDefault()}
+                onChange={event => {
+                  setValueToColourBy(event.target.value);
+                  if (sortedParams.includes('colour')) {
+                    FORCE.colourByValue({
+                      doColour: true,
+                      variable: event.target.value,
+                    });
+                  }
+                }}
+              >
+                <MenuItem value="automationRisk">Risk</MenuItem>
+                <MenuItem value="salary">Salary</MenuItem>
+                <MenuItem value="study">Study</MenuItem>
+              </Select>
+            </div>
+          }
         />
       </div>
       <Button

@@ -67,9 +67,10 @@ const AppLayout = props => {
               isTabletOrLarger
                 ? event => {
                     if (
-                      Array.from(event.target.classList).includes(
-                        'slidersDiv',
-                      ) ||
+                      (event.target.classList &&
+                        Array.from(event.target.classList).includes(
+                          'slidersDiv',
+                        )) ||
                       event.target.id === 'svg' ||
                       event.target.nodeName === 'circle'
                     ) {
@@ -78,9 +79,10 @@ const AppLayout = props => {
                   }
                 : event => {
                     if (
-                      Array.from(event.target.classList).includes(
-                        'slidersDiv',
-                      ) ||
+                      (event.target.classList &&
+                        Array.from(event.target.classList).includes(
+                          'slidersDiv',
+                        )) ||
                       event.target.id === 'svg' ||
                       event.target.nodeName === 'circle'
                     ) {
