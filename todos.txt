@@ -1,6 +1,7 @@
 todo:
+- legends!!
 - tune subskill filter limits to be less excessive
-- change sort buttons to switches
+- sort by size should be smoother (turn off other forces?)
 - colour by salary, study (togglegroup? or dropdown + toggle?)
 - legends
 - scatterplot

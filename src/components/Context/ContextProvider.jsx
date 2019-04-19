@@ -325,14 +325,31 @@ class ContextProvider extends Component {
   };
 
   sortSize = () => {
-    const { radiusSelector, getRadiusScale } = this.state;
+    const {
+      radiusSelector,
+      getRadiusScale,
+      nodes,
+      clusterCenters,
+    } = this.state;
     if (!this.state.sortedSize) {
       this.setState({ sortedSize: true });
       // split the view into sections for each cluster
-      FORCE.sortSize({ sorted: true, radiusSelector, getRadiusScale });
+      FORCE.sortSize({
+        sorted: true,
+        radiusSelector,
+        getRadiusScale,
+        nodes,
+        clusterCenters,
+      });
       // FORCE.restartSimulation(nodes);
     } else {
-      FORCE.sortSize({ sorted: false });
+      FORCE.sortSize({
+        sorted: false,
+        radiusSelector,
+        getRadiusScale,
+        nodes,
+        clusterCenters,
+      });
       // FORCE.restartSimulation(nodes);
       this.setState({ sortedSize: false, radiusSelector, getRadiusScale });
     }

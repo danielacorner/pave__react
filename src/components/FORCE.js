@@ -246,13 +246,19 @@ const FORCE = function(nsp) {
         .alphaDecay(SORT_COLOUR_FRICTION)
         .restart();
     },
-    sortSize = ({ sorted, radiusSelector, getRadiusScale }) => {
-      const [SORT_SIZE_SPEED, SORT_SIZE_FRICTION] = [0.92, 0.005];
+    sortSize = ({
+      sorted,
+      radiusSelector,
+      getRadiusScale,
+      nodes,
+      clusterCenters,
+    }) => {
+      const [SORT_SIZE_SPEED, SORT_SIZE_FRICTION] = [0.15, 0.05];
 
       // TODO: temporarily reduce cluster force
 
+      const radiusScale = getRadiusScale();
       if (sorted === true) {
-        const radiusScale = getRadiusScale();
         const [min, max] = radiusScale.range();
         const [width, height] = [
           $('#svg').getBoundingClientRect().width,
@@ -260,7 +266,9 @@ const FORCE = function(nsp) {
         ];
         const minLength = Math.min(width, height);
         nsp.force
-          .force('y', null)
+          .force('x', d3.forceX().strength(CENTER_GRAVITY * 1.2))
+          .force('y', d3.forceY().strength(CENTER_GRAVITY * -12.6))
+          // .force('y', null)
           .force(
             'sortedy',
             d3
@@ -270,8 +278,17 @@ const FORCE = function(nsp) {
                 const yPosition = (0.5 - normalizedRadius) * (minLength * 0.5);
                 return yPosition;
               })
-              .strength(CENTER_GRAVITY),
+              .strength(CENTER_GRAVITY * 18),
           )
+          // .force(
+          //   'cluster',
+          //   cluster(
+          //     nodes,
+          //     radiusScale,
+          //     radiusSelector,
+          //     clusterCenters,
+          //   ).strength(9),
+          // )
           // .force(
           //   'sortedx',
           //   d3.forceX(d => d[clusterSelector]).strength(CENTER_GRAVITY),
@@ -282,7 +299,17 @@ const FORCE = function(nsp) {
       } else {
         nsp.force
           .force('sortedy', null)
+          .force('x', d3.forceX().strength(CENTER_GRAVITY))
           .force('y', d3.forceY().strength(CENTER_GRAVITY))
+          // .force(
+          //   'cluster',
+          //   cluster(
+          //     nodes,
+          //     radiusScale,
+          //     radiusSelector,
+          //     clusterCenters,
+          //   ).strength(1),
+          // )
           .alpha(SORT_SIZE_SPEED)
           .alphaDecay(SORT_SIZE_FRICTION)
           .restart();
@@ -354,7 +381,6 @@ const FORCE = function(nsp) {
         .select('circle')
         .attr('r', d => radiusScale(d[radiusSelector]))
         .style('fill', d => {
-          console.log(colouredByValue);
           switch (colouredByValue) {
             case 'automationRisk':
               return d3.interpolateRdYlGn(1 - d.automationRisk);
