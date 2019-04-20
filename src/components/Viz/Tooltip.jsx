@@ -102,7 +102,14 @@ const Tooltip = React.memo(({ data, left, top }) => {
     state: { zScale, clusterSelector },
   } = useContext(ControlsContext);
   const color = zScale(data[clusterSelector]);
-  const { salaryMed, automationRisk, job, industry, yearsStudy } = data;
+  const {
+    salaryMed,
+    automationRisk,
+    job,
+    industry,
+    yearsStudy,
+    workers,
+  } = data;
   // TODO: add arrow touching circle
   // TODO: follow circle instead of mouse (update position every .5s like recharts
   // TODO: swap out circle for job image on hover
@@ -126,11 +133,16 @@ const Tooltip = React.memo(({ data, left, top }) => {
     left,
     top,
   });
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
   return (
     <TooltipStyles>
       <h3 className="title textAlignLeft">{job}</h3>
       <div className="grid">
-        <div className="data industry textAlignLeft">{industry}</div>
+        <div className="data industry textAlignLeft">
+          {industry} - {numberWithCommas(workers)} workers
+        </div>
 
         <div className="heading">
           <div className="iconTitle">
