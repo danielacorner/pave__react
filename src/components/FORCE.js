@@ -279,10 +279,8 @@ const FORCE = function(nsp) {
           nsp.force
             .force('sortedColourX', null)
             .force('sortedColourY', null)
-            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 1.2))
+            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 0.4))
             .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -12.6))
-            // .force('x', d3.forceX().strength(CENTER_GRAVITY * -5))
-            // .force('y', d3.forceX().strength(CENTER_GRAVITY * 0))
             .alpha(START_SPEED)
             .alphaDecay(SPEED_DECAY)
             .alphaTarget(END_SPEED);
@@ -314,8 +312,8 @@ const FORCE = function(nsp) {
           const SORT_COLOUR_FRICTION = 0.022;
 
           nsp.force
-            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * -6))
-            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -28.6))
+            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * -4.2))
+            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -28.2))
             .force('sortedColourX', sortedColourX)
             .force('sortedColourY', sortedColourY)
             .force(
@@ -336,7 +334,7 @@ const FORCE = function(nsp) {
             .restart();
         } else if (!sortedColour) {
           nsp.force
-            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 1.2))
+            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 0.4))
             .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -12.6))
             .force(
               'sortedSizeY',
@@ -360,7 +358,7 @@ const FORCE = function(nsp) {
           .force('tempSizeX', null)
           .force('tempSizeY', null)
           .force('sortedSizeY', null)
-          .alpha(SORT_SIZE_SPEED)
+          .alpha(SORT_SIZE_SPEED * (sortedColour ? 0.1 : 1))
           .alphaDecay(SORT_SIZE_FRICTION * (sortedColour ? 1 : 0.1))
           .restart();
       }

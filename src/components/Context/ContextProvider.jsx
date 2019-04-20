@@ -131,7 +131,8 @@ class ContextProvider extends Component {
       $('#svg').getBoundingClientRect().width,
       $('#graphContainer').getBoundingClientRect().height,
     ];
-    return `${width / 2}px,${height / 2}px`;
+    return `${width / 2}px,${(height / 2) *
+      (this.state.sortedColour ? 1.1 : 1)}px`;
   };
   scale = () => {
     // resize the graph container to fit the screen
@@ -143,7 +144,7 @@ class ContextProvider extends Component {
     // zoom in until you hit the edge of...
     const windowConstrainingLength = this.state.sortedColour
       ? // if split into clusters, constrain by the bigger length
-        Math.max(width, height)
+        Math.max(width, height) * 0.8
       : // otherwise, constrain by the smaller length
         Math.min(width, height);
 
