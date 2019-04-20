@@ -325,12 +325,7 @@ class ContextProvider extends Component {
   };
 
   sortSize = () => {
-    const {
-      radiusSelector,
-      getRadiusScale,
-      nodes,
-      clusterCenters,
-    } = this.state;
+    const { radiusSelector, getRadiusScale, sortedColour } = this.state;
     if (!this.state.sortedSize) {
       this.setState({ sortedSize: true });
       // split the view into sections for each cluster
@@ -338,8 +333,7 @@ class ContextProvider extends Component {
         sorted: true,
         radiusSelector,
         getRadiusScale,
-        nodes,
-        clusterCenters,
+        sortedColour,
       });
       // FORCE.restartSimulation(nodes);
     } else {
@@ -347,8 +341,7 @@ class ContextProvider extends Component {
         sorted: false,
         radiusSelector,
         getRadiusScale,
-        nodes,
-        clusterCenters,
+        sortedColour,
       });
       // FORCE.restartSimulation(nodes);
       this.setState({ sortedSize: false, radiusSelector, getRadiusScale });
@@ -356,11 +349,20 @@ class ContextProvider extends Component {
     setTimeout(this.handleResize, 1500);
   };
   sortColour = () => {
-    const { nodes, uniqueClusterValues, clusterSelector } = this.state;
+    const {
+      nodes,
+      uniqueClusterValues,
+      clusterSelector,
+      sortedSize,
+    } = this.state;
     if (!this.state.sortedColour) {
       this.setState({ sortedColour: true });
       // split the view into sections for each cluster
-      FORCE.sortColour(uniqueClusterValues.length);
+      FORCE.sortColour({
+        sorted: true,
+        numClusters: uniqueClusterValues.length,
+        sortedSize,
+      });
       setTimeout(() => {
         FORCE.toggleClusterTags(
           true,
@@ -377,6 +379,11 @@ class ContextProvider extends Component {
         uniqueClusterValues,
         clusterSelector,
       );
+      FORCE.sortColour({
+        sorted: false,
+        numClusters: uniqueClusterValues.length,
+        sortedSize,
+      });
       FORCE.restartSimulation(nodes);
       this.setState({ sortedColour: false });
       setTimeout(this.handleResize, 1500);

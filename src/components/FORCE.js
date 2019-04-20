@@ -2,7 +2,11 @@ import * as d3 from 'd3';
 import ReactDOM from 'react-dom';
 import { $ } from './Context/ContextProvider';
 const FORCE = function(nsp) {
-  let paused, updatePositionsInterval, removeLabelsTimeout;
+  let paused,
+    updatePositionsInterval,
+    removeLabelsTimeout,
+    sortedColourX,
+    sortedColourY;
   const // width = window.innerWidth,
     //   height = window.innerHeight,
     // optional: constrain nodes within a bounding box
@@ -203,115 +207,150 @@ const FORCE = function(nsp) {
         clearInterval(updatePositionsInterval);
       }
     },
-    sortColour = numClusters => {
-      const [width, height] = [
-        $('#svg').getBoundingClientRect().width,
-        $('#graphContainer').getBoundingClientRect().height,
-      ];
-      // split the clusters evenly into the allotted space:
-      let positionX, positionY;
+    sortColour = ({ sorted, numClusters, sortedSize }) => {
+      if (sorted) {
+        const [width, height] = [
+          $('#svg').getBoundingClientRect().width,
+          $('#graphContainer').getBoundingClientRect().height,
+        ];
+        // split the clusters evenly into the allotted space:
+        let positionX, positionY;
 
-      // 5 columns maximum
-      const numCols = Math.min(Math.ceil(width / 225), 5);
-      const shrinkX = numCols === 2 ? 0.8 : 1;
-      positionX = d => {
-        // space horizontally into columns
-        for (let i = numCols; i >= 0; i--) {
-          // if you're in this column, go to position i
-          if (d.cluster % numCols === i)
-            return (i / numCols - 0.4) * width * shrinkX;
-          //! -0.4 works, why is -0.5 too much?
+        const growXY = sortedSize ? 1.22 : 1;
+        // 5 columns maximum
+        const numCols = Math.min(Math.ceil(width / 225), 5);
+        const shrinkX = numCols === 2 ? 0.8 : 1;
+        positionX = d => {
+          // space horizontally into columns
+          for (let i = numCols; i >= 0; i--) {
+            // if you're in this column, go to position i
+            if (d.cluster % numCols === i)
+              return (i / numCols - 0.4) * width * shrinkX * growXY;
+            //! -0.4 works, why is -0.5 too much?
+          }
+        };
+
+        // 10 rows maximum:
+        const numRows = Math.min(Math.ceil(numClusters / numCols), 10);
+        const shrinkY = numRows === 2 ? 0.4 : numCols === 2 ? 1.5 : 1;
+        positionY = d => {
+          // space vertically into rows
+          for (let i = numRows; i >= 0; i--) {
+            // if you're in this row, go to position i
+            if (d.cluster % numRows === i)
+              return (i / numRows - 0.4) * height * shrinkY * growXY;
+            //! -0.4 works, why is -0.5 too much?
+          }
+        };
+        sortedColourX = d3.forceX(positionX).strength(CENTER_GRAVITY * 20);
+        sortedColourY = d3.forceY(positionY).strength(CENTER_GRAVITY * 35);
+
+        // restart the simulation
+        if (!sortedSize) {
+          const SORT_COLOUR_SPEED = 0.8;
+          const SORT_COLOUR_FRICTION = 0.025;
+          nsp.force
+
+            .force(
+              'sortedColourX',
+              d3.forceX(positionX).strength(CENTER_GRAVITY),
+            )
+            .force(
+              'sortedColourY',
+              d3.forceY(positionY).strength(CENTER_GRAVITY),
+            )
+            .alpha(SORT_COLOUR_SPEED)
+            .alphaDecay(SORT_COLOUR_FRICTION)
+            .restart();
+        } else if (sortedSize) {
+          const SORT_COLOUR_SPEED = 0.012;
+          const SORT_COLOUR_FRICTION = 0.023;
+
+          nsp.force
+            .force('x', d3.forceX().strength(CENTER_GRAVITY * -5))
+            .force('y', d3.forceX().strength(CENTER_GRAVITY * 0))
+            .force('sortedColourX', sortedColourX)
+            .force('sortedColourY', sortedColourY)
+            .alpha(SORT_COLOUR_SPEED)
+            .alphaDecay(SORT_COLOUR_FRICTION)
+            .restart();
         }
-      };
-
-      // 10 rows maximum:
-      const numRows = Math.min(Math.ceil(numClusters / numCols), 10);
-      const shrinkY = numRows === 2 ? 0.4 : numCols === 2 ? 1.5 : 1;
-      positionY = d => {
-        // space vertically into rows
-        for (let i = numRows; i >= 0; i--) {
-          // if you're in this row, go to position i
-          if (d.cluster % numRows === i)
-            return (i / numRows - 0.4) * height * shrinkY;
-          //! -0.4 works, why is -0.5 too much?
-        }
-      };
-
-      // restart the simulation
-      const [SORT_COLOUR_SPEED, SORT_COLOUR_FRICTION] = [0.8, 0.025];
-      nsp.force
-        .force('x', d3.forceX(positionX).strength(CENTER_GRAVITY))
-        .force('y', d3.forceY(positionY).strength(CENTER_GRAVITY))
-        .alpha(SORT_COLOUR_SPEED)
-        .alphaDecay(SORT_COLOUR_FRICTION)
-        .restart();
+      } else if (!sorted) {
+        nsp.force
+          .force('sortedColourX', null)
+          .force('sortedColourY', null)
+          .force('x', d3.forceX().strength(CENTER_GRAVITY))
+          .force('y', d3.forceY().strength(CENTER_GRAVITY))
+          .velocityDecay(FRICTION)
+          .alpha(START_SPEED)
+          .alphaDecay(SPEED_DECAY)
+          .alphaTarget(END_SPEED);
+      }
     },
-    sortSize = ({
-      sorted,
-      radiusSelector,
-      getRadiusScale,
-      nodes,
-      clusterCenters,
-    }) => {
+    sortSize = ({ sorted, radiusSelector, getRadiusScale, sortedColour }) => {
       const [SORT_SIZE_SPEED, SORT_SIZE_FRICTION] = [0.15, 0.05];
 
-      // TODO: temporarily reduce cluster force
-
       const radiusScale = getRadiusScale();
-      if (sorted === true) {
+      if (sorted) {
         const [min, max] = radiusScale.range();
         const [width, height] = [
           $('#svg').getBoundingClientRect().width,
           $('#graphContainer').getBoundingClientRect().height,
         ];
         const minLength = Math.min(width, height);
+        if (sortedColour) {
+          const SORT_COLOUR_SPEED = 0.022;
+          const SORT_COLOUR_FRICTION = 0.022;
+
+          nsp.force
+            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * -6))
+            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -28.6))
+            .force('sortedColourX', sortedColourX)
+            .force('sortedColourY', sortedColourY)
+            .force(
+              'sortedSizeY',
+              d3
+                .forceY(d => {
+                  const radius = radiusScale(d[radiusSelector]);
+                  const normalizedRadius = (radius - min) / (max - min);
+                  const yPosition =
+                    (0.5 - normalizedRadius) * (minLength * 0.5);
+                  return yPosition;
+                })
+                .strength(CENTER_GRAVITY * 18),
+            )
+
+            .alpha(SORT_COLOUR_SPEED)
+            .alphaDecay(SORT_COLOUR_FRICTION)
+            .restart();
+        } else if (!sortedColour) {
+          nsp.force
+            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 1.2))
+            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -12.6))
+            .force(
+              'sortedSizeY',
+              d3
+                .forceY(d => {
+                  const radius = radiusScale(d[radiusSelector]);
+                  const normalizedRadius = (radius - min) / (max - min);
+                  const yPosition =
+                    (0.5 - normalizedRadius) * (minLength * 0.5);
+                  return yPosition;
+                })
+                .strength(CENTER_GRAVITY * 18),
+            )
+
+            .alpha(SORT_SIZE_SPEED)
+            .alphaDecay(SORT_SIZE_FRICTION)
+            .restart();
+        }
+      } else if (!sorted) {
         nsp.force
-          .force('x', d3.forceX().strength(CENTER_GRAVITY * 1.2))
-          .force('y', d3.forceY().strength(CENTER_GRAVITY * -12.6))
-          // .force('y', null)
-          .force(
-            'sortedy',
-            d3
-              .forceY(d => {
-                const radius = radiusScale(d[radiusSelector]);
-                const normalizedRadius = (radius - min) / (max - min);
-                const yPosition = (0.5 - normalizedRadius) * (minLength * 0.5);
-                return yPosition;
-              })
-              .strength(CENTER_GRAVITY * 18),
-          )
-          // .force(
-          //   'cluster',
-          //   cluster(
-          //     nodes,
-          //     radiusScale,
-          //     radiusSelector,
-          //     clusterCenters,
-          //   ).strength(9),
-          // )
-          // .force(
-          //   'sortedx',
-          //   d3.forceX(d => d[clusterSelector]).strength(CENTER_GRAVITY),
-          // )
+          .force('tempSizeX', null)
+          .force('tempSizeY', null)
+          .force('sortedSizeY', null)
           .alpha(SORT_SIZE_SPEED)
-          .alphaDecay(SORT_SIZE_FRICTION)
-          .restart();
-      } else {
-        nsp.force
-          .force('sortedy', null)
-          .force('x', d3.forceX().strength(CENTER_GRAVITY))
-          .force('y', d3.forceY().strength(CENTER_GRAVITY))
-          // .force(
-          //   'cluster',
-          //   cluster(
-          //     nodes,
-          //     radiusScale,
-          //     radiusSelector,
-          //     clusterCenters,
-          //   ).strength(1),
-          // )
-          .alpha(SORT_SIZE_SPEED)
-          .alphaDecay(SORT_SIZE_FRICTION)
+          .alphaDecay(SORT_SIZE_FRICTION * (sortedColour ? 1 : 0.1))
           .restart();
       }
     },
@@ -460,6 +499,8 @@ const FORCE = function(nsp) {
   nsp.toggleClusterTags = toggleClusterAnnotations;
   nsp.sortColour = sortColour;
   nsp.sortSize = sortSize;
+  nsp.sortedColourX = sortedColourX;
+  nsp.sortedColourY = sortedColourY;
   nsp.colourByValue = colourByValue;
   nsp.restartSimulation = restartSimulation;
   nsp.dragStarted = dragStarted;
