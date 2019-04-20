@@ -1,7 +1,7 @@
 todo:
 - legends!!
 - tune subskill filter limits to be less excessive
-- sort by size should be smoother (turn off other forces?)
+- consider adding setTimeout to FORCE sort functions to increase collision force (to spread out circles after transitions)
 - colour by salary, study (togglegroup? or dropdown + toggle?)
 - legends
 - scatterplot

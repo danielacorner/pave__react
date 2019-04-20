@@ -215,7 +215,7 @@ const FORCE = function(nsp) {
       // split the clusters evenly into the allotted space:
       let positionX, positionY;
 
-      const growXY = sortedSize ? 1.22 : 1;
+      const growXY = sortedSize ? 1.25 : 1;
       // 5 columns maximum
       const numCols = Math.min(Math.ceil(width / 225), 5);
       const shrinkX = numCols === 2 ? 0.8 : 1;
@@ -246,7 +246,7 @@ const FORCE = function(nsp) {
       if (sorted) {
         // restart the simulation
         if (!sortedSize) {
-          const SORT_COLOUR_SPEED = 0.8;
+          const SORT_COLOUR_SPEED = 0.5;
           const SORT_COLOUR_FRICTION = 0.025;
           nsp.force
 
@@ -262,8 +262,8 @@ const FORCE = function(nsp) {
             .alphaDecay(SORT_COLOUR_FRICTION)
             .restart();
         } else if (sortedSize) {
-          const SORT_COLOUR_SPEED = 0.012;
-          const SORT_COLOUR_FRICTION = 0.023;
+          const SORT_COLOUR_SPEED = 0.01;
+          const SORT_COLOUR_FRICTION = 0.007;
 
           nsp.force
             .force('x', d3.forceX().strength(CENTER_GRAVITY * -5))
@@ -308,12 +308,12 @@ const FORCE = function(nsp) {
         ];
         const minLength = Math.min(width, height);
         if (sortedColour) {
-          const SORT_COLOUR_SPEED = 0.022;
-          const SORT_COLOUR_FRICTION = 0.022;
+          const SORT_COLOUR_SPEED = 0.012;
+          const SORT_COLOUR_FRICTION = 0.007;
 
           nsp.force
             .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * -4.2))
-            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -28.2))
+            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -32.2))
             .force('sortedColourX', sortedColourX)
             .force('sortedColourY', sortedColourY)
             .force(

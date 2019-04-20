@@ -326,7 +326,12 @@ class ContextProvider extends Component {
   };
 
   sortSize = () => {
-    const { radiusSelector, getRadiusScale, sortedColour } = this.state;
+    const {
+      radiusSelector,
+      getRadiusScale,
+      sortedColour,
+      numClusters,
+    } = this.state;
     if (!this.state.sortedSize) {
       this.setState({ sortedSize: true });
       // split the view into sections for each cluster
@@ -335,6 +340,7 @@ class ContextProvider extends Component {
         radiusSelector,
         getRadiusScale,
         sortedColour,
+        numClusters,
       });
       // FORCE.restartSimulation(nodes);
     } else {
@@ -343,6 +349,7 @@ class ContextProvider extends Component {
         radiusSelector,
         getRadiusScale,
         sortedColour,
+        numClusters,
       });
       // FORCE.restartSimulation(nodes);
       this.setState({ sortedSize: false, radiusSelector, getRadiusScale });
