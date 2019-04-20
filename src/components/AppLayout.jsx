@@ -10,6 +10,7 @@ import SortPanel from './Controls/SortPanel';
 import MobileTooltip from './Viz/MobileTooltip';
 import Tooltip from './Viz/Tooltip';
 import Viz from './Viz/Viz';
+import Legend from './Viz/Legend';
 
 const AppLayoutStyles = styled.div`
   overflow: hidden;
@@ -23,6 +24,11 @@ const AppLayoutStyles = styled.div`
   }
   padding: 10px 10px 0 10px;
   box-sizing: border-box;
+  .legend {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+  }
 `;
 
 const filterVariables = [
@@ -56,6 +62,18 @@ const AppLayout = props => {
 
   // TODO: mobile layout
   // TODO: mobile tooltip
+  const legendProps = {
+    colours: [
+      { colour: '#000', text: 'industry1' },
+      { colour: '#555', text: 'industry2' },
+    ],
+    sizes: [
+      { size: 1000, text: '1000 workers' },
+      { size: 10000, text: '10000 workers' },
+      { size: 100000, text: '100000 workers' },
+    ],
+    radiusScale: getRadiusScale(),
+  };
 
   return (
     <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
@@ -151,6 +169,7 @@ const AppLayout = props => {
               summaryBarsActive={summaryBarsActive}
               zScale={zScale}
             />
+            <Legend {...legendProps} />
           </AppLayoutStyles>
 
           {tooltipProps && isTabletOrLarger && <Tooltip {...tooltipProps} />}

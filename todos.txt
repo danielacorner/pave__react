@@ -1,6 +1,7 @@
 todo:
-- legends!!
 - tune subskill filter limits to be less excessive
+- legends!!
+- clean up code
 - colour by salary, study (togglegroup? or dropdown + toggle?)
 - legends
 - scatterplot
