@@ -1,12 +1,11 @@
 todo:
 - legends!!
 - tune subskill filter limits to be less excessive
-- consider adding setTimeout to FORCE sort functions to increase collision force (to spread out circles after transitions)
 - colour by salary, study (togglegroup? or dropdown + toggle?)
 - legends
 - scatterplot
 - change sizes?
-- change colours?
+- consider adding setTimeout to FORCE sort functions to increase collision (or repel) force (to spread out circles after transitions)
 
 feature: tooltips
 

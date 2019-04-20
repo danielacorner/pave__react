@@ -131,7 +131,9 @@ class ContextProvider extends Component {
       $('#svg').getBoundingClientRect().width,
       $('#graphContainer').getBoundingClientRect().height,
     ];
-    return `${width / 2}px,${(height / 2) *
+    const nodesRect = $('#nodesG').getBoundingClientRect();
+    const offsetLeft = nodesRect.left < 0 ? -nodesRect.left : 0;
+    return `${width / 2 + offsetLeft}px,${(height / 2) *
       (this.state.sortedColour ? 1.1 : 1)}px`;
   };
   scale = () => {
