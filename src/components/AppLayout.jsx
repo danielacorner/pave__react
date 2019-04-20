@@ -24,11 +24,6 @@ const AppLayoutStyles = styled.div`
   }
   padding: 10px 10px 0 10px;
   box-sizing: border-box;
-  .legend {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-  }
 `;
 
 const filterVariables = [
@@ -58,15 +53,14 @@ const AppLayout = props => {
     summaryBarsActive,
     zScale,
     colouredByValue,
+    uniqueClusterValues,
   } = context.state;
 
-  // TODO: mobile layout
-  // TODO: mobile tooltip
+  const legendColours = uniqueClusterValues.map(val => {
+    return { colour: zScale(val), text: val };
+  });
   const legendProps = {
-    colours: [
-      { colour: '#000', text: 'industry1' },
-      { colour: '#555', text: 'industry2' },
-    ],
+    colours: legendColours,
     sizes: [
       { size: 1000, text: '1000 workers' },
       { size: 10000, text: '10000 workers' },
@@ -81,7 +75,6 @@ const AppLayout = props => {
         <React.Fragment>
           <AppLayoutStyles
             onClick={
-              // TODO: why doesn't this work on mobile every time?
               isTabletOrLarger
                 ? event => {
                     if (

@@ -62,10 +62,7 @@ class ContextProvider extends Component {
       colouredByValue: false,
       svgBBox: 0,
       summaryBarsActive: true,
-      zScale: scaleOrdinal({
-        domain: [],
-        range: ['#6c5efb', '#c998ff', '#a44afe'],
-      }),
+      zScale: d3.scaleOrdinal(d3.schemeCategory10),
     };
   }
 
@@ -94,15 +91,15 @@ class ContextProvider extends Component {
     });
 
     // set the color scale based on the unique clusters
-    const keys = NOCDataProcessed.map(d => d[clusterSelector]).filter(
-      (value, index, self) => self.indexOf(value) === index,
-    );
+    // const keys = NOCDataProcessed.map(d => d[clusterSelector]).filter(
+    //   (value, index, self) => self.indexOf(value) === index,
+    // );
     this.setState({
-      zScale: scaleOrdinal({
-        domain: keys,
-        // TODO: check this range? should it be in constants.jsx?
-        range: ['#6c5efb', '#c998ff', '#a44afe'],
-      }),
+      zScale: d3.scaleOrdinal(d3.schemeCategory10),
+      // zScale: scaleOrdinal({
+      //   domain: keys,
+      //   range: ['#6c5efb', '#c998ff', '#a44afe'],
+      // }),
     }),
       window.addEventListener('resize', this.handleResize);
     setTimeout(this.handleResize, 1500);

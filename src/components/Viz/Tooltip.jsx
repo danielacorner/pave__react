@@ -22,7 +22,7 @@ const getTooltipStyles = ({
     ? left - TOOLTIP_WIDTH - 2 * TOOLTIP_HZ_OFFSET
     : left + TOOLTIP_HZ_OFFSET}px;
   font-family: 'Roboto light';
-  border: 1px solid ${color};
+  border: 1px solid black;
   background: white;
   margin: 0;
   padding: 6pt 12pt;
@@ -111,7 +111,6 @@ const Tooltip = React.memo(({ data, left, top }) => {
     workers,
   } = data;
   // TODO: add arrow touching circle
-  // TODO: follow circle instead of mouse (update position every .5s like recharts
   // TODO: swap out circle for job image on hover
   // console.log(
   //   zScale,
@@ -121,7 +120,6 @@ const Tooltip = React.memo(({ data, left, top }) => {
   //   zScale(data[clusterSelector]),
   // );
   // TODO: find reasonable salarymed?
-  // TODO: add "10%, 100%" and "25k, 75k" annotation line to tooltip
   const salaryMedPercent = salaryMed / 75;
   // TODO: years of study (min, max?)
   const educationPercent = yearsStudy / 7;
