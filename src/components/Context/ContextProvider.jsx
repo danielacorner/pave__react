@@ -56,7 +56,7 @@ class ContextProvider extends Component {
       ),
       clusterCenters: [],
       snapshots: [],
-      sortedColour: false,
+      sortedType: false,
       sortedSize: false,
       colouredByValue: false,
       svgBBox: 0,
@@ -129,9 +129,9 @@ class ContextProvider extends Component {
     ];
     const nodesRect = $('#nodesG').getBoundingClientRect();
     const offsetLeft =
-      nodesRect.left < 0 && this.state.sortedColour ? -nodesRect.left : 0;
+      nodesRect.left < 0 && this.state.sortedType ? -nodesRect.left : 0;
     return `${width / 2 + offsetLeft}px,${(height / 2) *
-      (this.state.sortedColour ? 1.1 : 1)}px`;
+      (this.state.sortedType ? 1.05 : 1)}px`;
   };
   scale = () => {
     // resize the graph container to fit the screen
@@ -141,7 +141,7 @@ class ContextProvider extends Component {
     ];
 
     // zoom in until you hit the edge of...
-    const windowConstrainingLength = this.state.sortedColour
+    const windowConstrainingLength = this.state.sortedType
       ? // if split into clusters, constrain by the bigger length
         Math.max(width, height) * 0.8
       : // otherwise, constrain by the smaller length
@@ -228,7 +228,6 @@ class ContextProvider extends Component {
       this.filterNodes,
     );
   };
-
   handleFilterMouseup = () => {
     let newMinima = {};
     // set all filters to new minima on mouseup
@@ -254,81 +253,11 @@ class ContextProvider extends Component {
       },
     );
   };
-  handleSnapshot = () => {
-    const gc = $('#graphContainer');
-    html2canvas(
-      gc,
-      // options
-      {
-        // x: $('#nodesG').getBoundingClientRect().x,
-        // y: $('#nodesG').getBoundingClientRect().y,
-        // width: $('#nodesG').getBoundingClientRect().width,
-        // height: $('#nodesG').getBoundingClientRect()
-        //   .height,
-        // scrollX: $('#nodesG').getBoundingClientRect().left,
-        // scrollY: $('#nodesG').getBoundingClientRect().top,
-        onclone: document => {
-          $('#nodesG').style.transform =
-            // todo: calculate this (output canvas snapshot isn't the right scale)
-            `translate(150px,100px) scale(${this.scale() * 0.5})`;
-        },
-      },
-    ).then(canvas => {
-      // $(
-      //   '#nodesG'
-      // ).style.transform = `translate(0,0) scale(${this.scale()})`;
-
-      let imgData = canvas.toDataURL();
-
-      const ssID = this.state.snapshots.length;
-      const newSnapshot = {
-        id: ssID,
-        filters: this.state.filters,
-        image: imgData,
-      };
-
-      this.setState({ snapshots: [...this.state.snapshots, newSnapshot] });
-
-      localStorage.setItem(
-        'snapshots',
-        JSON.stringify([...this.state.snapshots, newSnapshot]),
-      );
-
-      setTimeout(this.handleResize, 1500);
-    });
-  };
-
-  handleApplySnapshot = id => {
-    console.log(
-      'applying snapshot ',
-      this.state.snapshots.find(ss => ss.id === id),
-    );
-    const snapshot = this.state.snapshots.find(ss => ss.id === id);
-    this.setState({ filters: snapshot.filters });
-    this.handleFilterMouseup();
-  };
-  handleLoadFromSnapshot = ssUrl => {
-    setTimeout(() => {
-      this.setState({ filters: JSON.parse(ssUrl) });
-      this.restartSimulation();
-    }, 2000);
-  };
-  handleDeleteSnapshot = id => {
-    const deleteIndex = this.state.snapshots.findIndex(ss => ss.id === id);
-    console.log('deleting', deleteIndex);
-    this.setState({
-      snapshots: [
-        ...this.state.snapshots.slice(0, deleteIndex),
-        ...this.state.snapshots.slice(deleteIndex + 1),
-      ],
-    });
-  };
-
   sortSize = () => {
     const {
       radiusSelector,
       getRadiusScale,
-      sortedColour,
+      sortedType,
       numClusters,
     } = this.state;
     if (!this.state.sortedSize) {
@@ -338,7 +267,7 @@ class ContextProvider extends Component {
         sorted: true,
         radiusSelector,
         getRadiusScale,
-        sortedColour,
+        sortedType,
         numClusters,
       });
       // FORCE.restartSimulation(nodes);
@@ -347,27 +276,33 @@ class ContextProvider extends Component {
         sorted: false,
         radiusSelector,
         getRadiusScale,
-        sortedColour,
+        sortedType,
         numClusters,
       });
       this.setState({ sortedSize: false, radiusSelector, getRadiusScale });
     }
     setTimeout(this.handleResize, 1500);
   };
-  sortColour = () => {
+  sortType = () => {
     const {
       nodes,
       uniqueClusterValues,
       clusterSelector,
       sortedSize,
+      getRadiusScale,
+      radiusScale,
+      radiusSelector,
     } = this.state;
-    if (!this.state.sortedColour) {
-      this.setState({ sortedColour: true });
+    if (!this.state.sortedType) {
+      this.setState({ sortedType: true });
       // split the view into sections for each cluster
-      FORCE.sortColour({
+      FORCE.sortType({
         sorted: true,
         numClusters: uniqueClusterValues.length,
         sortedSize,
+        radiusScale,
+        getRadiusScale,
+        radiusSelector,
       });
       setTimeout(() => {
         FORCE.toggleClusterTags(
@@ -385,13 +320,16 @@ class ContextProvider extends Component {
         uniqueClusterValues,
         clusterSelector,
       );
-      FORCE.sortColour({
+      FORCE.sortType({
         sorted: false,
         numClusters: uniqueClusterValues.length,
         sortedSize,
+        radiusScale,
+        getRadiusScale,
+        radiusSelector,
       });
       FORCE.restartSimulation(nodes);
-      this.setState({ sortedColour: false });
+      this.setState({ sortedType: false });
       setTimeout(this.handleResize, 1500);
     }
   };
@@ -428,7 +366,7 @@ class ContextProvider extends Component {
           handleDeleteSnapshot: this.handleDeleteSnapshot,
           setNodes: nodes => this.setState({ nodes: nodes }),
           sortSize: this.sortSize,
-          sortColour: this.sortColour,
+          sortType: this.sortType,
           colourByValue: this.colourByValue,
           setCurrentColor: this.setCurrentColor,
           toggleSummaryBars: this.toggleSummaryBars,

@@ -93,7 +93,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
       }
     }
     if (sortBy === 'category') {
-      context.sortColour();
+      context.sortType();
       if (!sortedParams.includes('category')) {
         setSortedParams([...sortedParams, 'category']);
       } else {

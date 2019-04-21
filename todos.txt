@@ -1,4 +1,5 @@
 todo:
+- sort size + type should call the same function
 - sort by type could be faster / more spaced-out on mobile
 - tune subskill filter limits to be less excessive
 - clean up code
