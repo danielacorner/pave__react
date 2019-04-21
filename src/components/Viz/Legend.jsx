@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import MediaQuery from 'react-responsive';
 import { MOBLET_MIN_WIDTH } from '../../utils/constants';
+import Collapse from '@material-ui/core/Collapse';
+import Button from '@material-ui/core/Button';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 const LegendStyles = styled.div`
   position: fixed;
@@ -79,6 +82,71 @@ const LegendStyles = styled.div`
     }
   }
 `;
+
+const MobileLegendStyles = styled.div`
+  margin-top: -8px;
+  display: grid;
+  place-items: center;
+  text-transform: none;
+  .icon {
+    transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    &.flip {
+      transform: rotate(180deg);
+    }
+  }
+  .colours,
+  .sizes {
+    .colourText,
+    .sizeText {
+      /* text-overflow: ellipsis; */
+      /* overflow: hidden; */
+      /* white-space: nowrap; */
+      /* max-width: 150px; */
+    }
+  }
+  .colours {
+    display: grid;
+    .colour {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      grid-gap: 7px;
+      .colourCircleWrapper {
+        padding-top: 5px;
+        pointer-events: auto;
+      }
+      .colourCircle {
+        border-radius: 100%;
+        width: 15px;
+        height: 15px;
+        border: 1px solid black;
+      }
+    }
+  }
+  .sizes {
+    display: grid;
+    grid-template-rows: 1fr auto auto auto;
+    justify-content: end;
+    align-items: center;
+    grid-gap: 20px;
+    padding-bottom: 20px;
+    .size {
+      display: grid;
+      grid-template-columns: 1fr 2.5fr;
+      align-items: center;
+      .sizeCircle {
+        justify-self: center;
+        border: 1px solid black;
+        border-radius: 100%;
+      }
+      .sizeText {
+        pointer-events: auto;
+        text-align: right;
+      }
+    }
+  }
+`;
+
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
@@ -86,12 +154,13 @@ function numberWithCommas(x) {
 // TODO: min, max radii based on radiusSelector
 // TODO: highlight clusters on hover, click
 const Legend = ({ colours, sizes, radiusScale }) => {
+  const [legendExpanded, setLegendExpanded] = useState(false);
   return (
     <MediaQuery query={`(min-width: ${MOBLET_MIN_WIDTH}px)`}>
       {isMobletOrLarger => {
         if (isMobletOrLarger) {
           return (
-            <LegendStyles className="legend">
+            <LegendStyles>
               <div className="colours">
                 {colours.map(({ colour, text }) => (
                   <div key={colour} className="colour">
@@ -125,7 +194,52 @@ const Legend = ({ colours, sizes, radiusScale }) => {
           );
         } else if (!isMobletOrLarger) {
           // TODO: mobile legend
-          return null;
+          return (
+            <MobileLegendStyles>
+              <div className="btnWrapper">
+                <Button
+                  size="small"
+                  onClick={() => setLegendExpanded(!legendExpanded)}
+                >
+                  Legend{' '}
+                  <ExpandLessIcon
+                    className={'icon' + (legendExpanded ? ' flip' : '')}
+                  />
+                </Button>
+              </div>
+              <Collapse in={legendExpanded}>
+                <div className="colours">
+                  {colours.map(({ colour, text }) => (
+                    <div key={colour} className="colour">
+                      <div className="colourCircleWrapper">
+                        <div
+                          className="colourCircle"
+                          style={{ background: colour }}
+                        />
+                      </div>
+                      <div className="colourText">{text}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="spacer" />
+                <div className="sizes">
+                  <div className="spacer" />
+                  {sizes.map(({ size, text }) => (
+                    <div key={size} className="size">
+                      <div
+                        className="sizeCircle"
+                        style={{
+                          width: `${radiusScale(size)}px`,
+                          height: `${radiusScale(size)}px`,
+                        }}
+                      />
+                      <div className="sizeText">{numberWithCommas(text)}</div>
+                    </div>
+                  ))}
+                </div>
+              </Collapse>
+            </MobileLegendStyles>
+          );
         }
       }}
     </MediaQuery>
