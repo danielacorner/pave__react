@@ -1,11 +1,11 @@
 todo:
-- tune subskill filter limits to be less excessive
 - sort by type could be faster / more spaced-out on mobile
-- ignore mobile legend size in handleResize
+- tune subskill filter limits to be less excessive
 - clean up code
 - scatterplot
 - change sizes?
 - consider adding setTimeout to FORCE sort functions to increase collision (or repel) force (to spread out circles after transitions)
+
 
 feature: tooltips
 

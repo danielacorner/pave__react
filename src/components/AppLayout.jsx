@@ -3,7 +3,7 @@ import { localPoint } from '@vx/event';
 import React, { useContext, useState } from 'react';
 import MediaQuery from 'react-responsive';
 import styled from 'styled-components';
-import { TABLET_MIN_WIDTH, MOBLET_MIN_WIDTH } from '../utils/constants';
+import { TABLET_MIN_WIDTH } from '../utils/constants';
 import { ControlsContext } from './Context/ContextProvider';
 import FiltersPanel from './Controls/FiltersPanel';
 import SortPanel from './Controls/SortPanel';
@@ -23,7 +23,7 @@ const AppLayoutStyles = styled.div`
     grid-gap: 16px;
     grid-template-rows: auto auto 1fr 16px;
   }
-  @media (min-width: ${MOBLET_MIN_WIDTH}px) {
+  @media (min-width: ${TABLET_MIN_WIDTH}px) {
     grid-template-rows: auto auto 1fr auto;
   }
   padding: 10px 10px 0 10px;

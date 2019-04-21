@@ -217,7 +217,8 @@ const FORCE = function(nsp) {
 
       const growXY = sortedSize ? 1.25 : 1;
       // 5 columns maximum
-      const numCols = Math.min(Math.ceil(width / 225), 5);
+      const minColWidth = 225;
+      const numCols = Math.min(Math.ceil(width / minColWidth), 5);
       const shrinkX = numCols === 2 ? 0.8 : 1;
       positionX = d => {
         // space horizontally into columns
