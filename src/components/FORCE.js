@@ -278,13 +278,13 @@ const FORCE = function(nsp) {
           .alpha(SORT_TYPE_SPEED)
           .alphaDecay(SORT_TYPE_FRICTION);
       } else if (sortBy.includes('size')) {
-        const SORT_SIZE_SPEED = 0.07;
-        const SORT_SIZE_FRICTION = 0.02;
+        const SORT_SIZE_SPEED = 0.045;
+        const SORT_SIZE_FRICTION = 0.015;
         nsp.force
           .force('sortedTypeX', null)
           .force('sortedTypeY', null)
-          .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 0.4))
-          .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -12.6))
+          .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 1.8))
+          .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -16.6))
           .force(
             'sortedSizeY',
             d3
@@ -299,7 +299,7 @@ const FORCE = function(nsp) {
           .force(
             'charge',
             d3.forceManyBody().strength(d => {
-              return -Math.pow(radiusScale(d[radiusSelector]), 2.13) - 0;
+              return -Math.pow(radiusScale(d[radiusSelector]), 2.16) - 150;
             }),
           )
           .alpha(SORT_SIZE_SPEED)
