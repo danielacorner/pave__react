@@ -43,6 +43,10 @@ const LegendStyles = styled.div`
       }
     }
   }
+  .coloursWrapper {
+    display: grid;
+    align-content: end;
+  }
   .colours {
     display: grid;
     .colour {
@@ -67,15 +71,17 @@ const LegendStyles = styled.div`
     grid-template-rows: 1fr auto auto auto;
     .size {
       display: grid;
-      grid-template-columns: 1fr 2.5fr;
+      grid-template-columns: 1fr auto;
       align-items: center;
+      padding-top: 20px;
+      transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
       .sizeCircle {
+        transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
         justify-self: center;
         border: 1px solid black;
         border-radius: 100%;
       }
       .sizeText {
-        padding-top: 20px;
         pointer-events: auto;
         text-align: right;
       }
@@ -115,6 +121,7 @@ const MobileLegendStyles = styled.div`
     .sizeText {
     }
   }
+
   .colours {
     display: grid;
     .colour {
@@ -146,7 +153,9 @@ const MobileLegendStyles = styled.div`
       display: grid;
       grid-template-columns: 1fr 2.5fr;
       align-items: center;
+      transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
       .sizeCircle {
+        transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
         justify-self: center;
         border: 1px solid black;
         border-radius: 100%;
@@ -167,24 +176,27 @@ function numberWithCommas(x) {
 // TODO: highlight clusters on hover, click
 const Legend = ({ colours, sizes, radiusScale }) => {
   const [legendExpanded, setLegendExpanded] = useState(false);
+
   return (
     <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
       {isAboveBreakpoint => {
         if (isAboveBreakpoint) {
           return (
             <LegendStyles>
-              <div className="colours">
-                {colours.map(({ colour, text }) => (
-                  <div key={colour} className="colour">
-                    <div className="colourCircleWrapper">
-                      <div
-                        className="colourCircle"
-                        style={{ background: colour }}
-                      />
+              <div className="coloursWrapper">
+                <div className="colours">
+                  {colours.map(({ colour, text }) => (
+                    <div key={colour} className="colour">
+                      <div className="colourCircleWrapper">
+                        <div
+                          className="colourCircle"
+                          style={{ background: colour }}
+                        />
+                      </div>
+                      <div className="colourText">{text}</div>
                     </div>
-                    <div className="colourText">{text}</div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
               <div className="spacer" />
               <div className="sizes">
@@ -194,8 +206,8 @@ const Legend = ({ colours, sizes, radiusScale }) => {
                     <div
                       className="sizeCircle"
                       style={{
-                        width: `${radiusScale(size)}px`,
-                        height: `${radiusScale(size)}px`,
+                        width: `${radiusScale(size) * 2}px`,
+                        height: `${radiusScale(size) * 2}px`,
                       }}
                     />
                     <div className="sizeText">{numberWithCommas(text)}</div>
@@ -241,8 +253,8 @@ const Legend = ({ colours, sizes, radiusScale }) => {
                       <div
                         className="sizeCircle"
                         style={{
-                          width: `${radiusScale(size)}px`,
-                          height: `${radiusScale(size)}px`,
+                          width: `${radiusScale(size) * 2}px`,
+                          height: `${radiusScale(size) * 2}px`,
                         }}
                       />
                       <div className="sizeText">{numberWithCommas(text)}</div>

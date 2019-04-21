@@ -49,7 +49,7 @@ const FiltersPanel = ({ filterVariables, expanded, setExpanded }) => {
             onChange={value => {
               context.handleFilterChange(filterVar, value);
             }}
-            onMouseUp={context.handleSliderMouseup}
+            onMouseUp={context.handleFilterMouseup}
           />
         ))}
       </div>

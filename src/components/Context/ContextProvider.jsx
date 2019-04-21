@@ -88,8 +88,8 @@ class ContextProvider extends Component {
 
     this.setState({
       zScale: d3.scaleOrdinal(d3.schemeCategory10),
-    }),
-      window.addEventListener('resize', this.handleResize);
+    });
+    window.addEventListener('resize', this.handleResize);
     setTimeout(this.handleResize, 1500);
 
     // tranlate nodes to center
@@ -145,15 +145,25 @@ class ContextProvider extends Component {
   };
 
   handleResize = debounce(() => {
-    // console.count('...resizing...');
-    // recalculate the svg height (to resize the statistic bars)
+    const newScale = this.scale();
+    const svgBBox = $('#graphContainer').getBoundingClientRect();
     this.setState({
-      svgBBox: $('#graphContainer').getBoundingClientRect(),
+      svgBBox,
     });
+    // resize size legend scale
+    const { height } = d3
+      .selectAll('.sizeCircle')
+      .style('transform', `scale(${newScale})`)
+      .style('opacity', 1 / newScale);
+    d3.selectAll('.size').style(
+      'padding-bottom',
+      `${Math.min(Math.max(newScale - 1, 0) * 40, svgBBox.height / 5)}px`,
+    );
+
     // translate the nodes group into the middle and scale to fit
     $(
       '#nodesG',
-    ).style.transform = `translate(${this.translate()}) scale(${this.scale()})`;
+    ).style.transform = `translate(${this.translate()}) scale(${newScale})`;
   }, 150);
 
   filteredNodes = () => {
@@ -267,7 +277,6 @@ class ContextProvider extends Component {
       sortedSize,
       sortedType,
       getRadiusScale,
-      radiusScale,
       radiusSelector,
     } = this.state;
     const sortBy = [];
@@ -329,11 +338,7 @@ class ContextProvider extends Component {
           handleFilterChange: this.handleFilterChange,
           resetFilters: this.resetFilters,
           restartSimulation: this.restartSimulation,
-          handleSliderMouseup: this.handleFilterMouseup,
-          handleSnapshot: this.handleSnapshot,
-          handleApplySnapshot: this.handleApplySnapshot,
-          handleLoadFromSnapshot: this.handleLoadFromSnapshot,
-          handleDeleteSnapshot: this.handleDeleteSnapshot,
+          handleFilterMouseup: this.handleFilterMouseup,
           setNodes: nodes => this.setState({ nodes: nodes }),
           sortSize: this.sortSize,
           sortType: this.sortType,
