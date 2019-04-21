@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { ControlsContext } from '../Context/ContextProvider';
+import MediaQuery from 'react-responsive';
+import { MOBLET_MIN_WIDTH } from '../../utils/constants';
 
 const LegendStyles = styled.div`
   position: fixed;
@@ -86,34 +87,48 @@ function numberWithCommas(x) {
 // TODO: highlight clusters on hover, click
 const Legend = ({ colours, sizes, radiusScale }) => {
   return (
-    <LegendStyles className="legend">
-      <div className="colours">
-        {colours.map(({ colour, text }) => (
-          <div key={colour} className="colour">
-            <div className="colourCircleWrapper">
-              <div className="colourCircle" style={{ background: colour }} />
-            </div>
-            <div className="colourText">{text}</div>
-          </div>
-        ))}
-      </div>
-      <div className="spacer" />
-      <div className="sizes">
-        <div className="spacer" />
-        {sizes.map(({ size, text }) => (
-          <div key={size} className="size">
-            <div
-              className="sizeCircle"
-              style={{
-                width: `${radiusScale(size)}px`,
-                height: `${radiusScale(size)}px`,
-              }}
-            />
-            <div className="sizeText">{numberWithCommas(text)}</div>
-          </div>
-        ))}
-      </div>
-    </LegendStyles>
+    <MediaQuery query={`(min-width: ${MOBLET_MIN_WIDTH}px)`}>
+      {isMobletOrLarger => {
+        if (isMobletOrLarger) {
+          return (
+            <LegendStyles className="legend">
+              <div className="colours">
+                {colours.map(({ colour, text }) => (
+                  <div key={colour} className="colour">
+                    <div className="colourCircleWrapper">
+                      <div
+                        className="colourCircle"
+                        style={{ background: colour }}
+                      />
+                    </div>
+                    <div className="colourText">{text}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="spacer" />
+              <div className="sizes">
+                <div className="spacer" />
+                {sizes.map(({ size, text }) => (
+                  <div key={size} className="size">
+                    <div
+                      className="sizeCircle"
+                      style={{
+                        width: `${radiusScale(size)}px`,
+                        height: `${radiusScale(size)}px`,
+                      }}
+                    />
+                    <div className="sizeText">{numberWithCommas(text)}</div>
+                  </div>
+                ))}
+              </div>
+            </LegendStyles>
+          );
+        } else if (!isMobletOrLarger) {
+          // TODO: mobile legend
+          return null;
+        }
+      }}
+    </MediaQuery>
   );
 };
 

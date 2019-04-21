@@ -11,7 +11,6 @@ import MobileTooltip from './Viz/MobileTooltip';
 import Tooltip from './Viz/Tooltip';
 import Viz from './Viz/Viz';
 import Legend from './Viz/Legend';
-import FORCE from './FORCE';
 
 const AppLayoutStyles = styled.div`
   overflow: hidden;

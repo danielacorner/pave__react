@@ -1,9 +1,8 @@
 todo:
 - tune subskill filter limits to be less excessive
-- legends!!
+- mobile legends
 - clean up code
 - colour by salary, study (togglegroup? or dropdown + toggle?)
-- legends
 - scatterplot
 - change sizes?
 - consider adding setTimeout to FORCE sort functions to increase collision (or repel) force (to spread out circles after transitions)
