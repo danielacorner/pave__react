@@ -17,10 +17,11 @@ const AppLayoutStyles = styled.div`
   width: 100%;
   height: 100vh;
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto 1fr 24px;
   grid-gap: 8px;
   @media (min-width: 400px) {
     grid-gap: 16px;
+    grid-template-rows: auto auto 1fr 16px;
   }
   padding: 10px 10px 0 10px;
   box-sizing: border-box;

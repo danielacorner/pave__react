@@ -84,6 +84,9 @@ const LegendStyles = styled.div`
 `;
 
 const MobileLegendStyles = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
   background: white;
   z-index: 999;
   margin-top: -8px;
