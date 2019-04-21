@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { ControlsContext } from '../Context/ContextProvider';
 
 const LegendStyles = styled.div`
   position: fixed;

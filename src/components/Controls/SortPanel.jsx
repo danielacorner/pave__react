@@ -82,7 +82,7 @@ const SortButtonsStyles = styled.div`
   }
 `;
 
-const SortPanel = ({ initialExpandedState, setExpanded }) => {
+const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
   const handleSort = ({ sortBy, sortedParams, setSortedParams, context }) => {
     if (sortBy === 'size') {
       context.sortSize();
@@ -100,12 +100,14 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
         setSortedParams(sortedParams.filter(d => d !== 'category'));
       }
     }
-    if (sortBy === 'colour') {
+    if (sortBy === 'colourByValue') {
       context.colourByValue(valueToColourBy);
-      if (!sortedParams.includes('colour')) {
-        setSortedParams([...sortedParams, 'colour']);
+      if (!sortedParams.includes('colourByValue')) {
+        setLegendVisible(false);
+        setSortedParams([...sortedParams, 'colourByValue']);
       } else {
-        setSortedParams(sortedParams.filter(d => d !== 'colour'));
+        setLegendVisible(true);
+        setSortedParams(sortedParams.filter(d => d !== 'colourByValue'));
       }
     }
   };
@@ -163,22 +165,23 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
             <Switch
               onChange={() =>
                 handleSort({
-                  sortBy: 'colour',
+                  sortBy: 'colourByValue',
                   sortedParams,
                   context,
                   setSortedParams,
                 })
               }
-              checked={sortedParams.includes('colour')}
+              checked={sortedParams.includes('colourByValue')}
             />
           }
           label={
             <div className="labelAndSelect">
               <div>
                 Colour
-                {sortedParams && sortedParams.includes('colour')
+                {sortedParams && sortedParams.includes('colourByValue')
                   ? 'ed'
-                  : ''} by{' '}
+                  : ''}{' '}
+                by{' '}
               </div>
               <Select
                 classes={{ root: 'select' }}
@@ -186,7 +189,7 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
                 onClick={event => event.preventDefault()}
                 onChange={event => {
                   setValueToColourBy(event.target.value);
-                  if (sortedParams.includes('colour')) {
+                  if (sortedParams.includes('colourByValue')) {
                     FORCE.colourByValue({
                       doColour: true,
                       variable: event.target.value,

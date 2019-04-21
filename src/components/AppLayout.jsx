@@ -11,6 +11,7 @@ import MobileTooltip from './Viz/MobileTooltip';
 import Tooltip from './Viz/Tooltip';
 import Viz from './Viz/Viz';
 import Legend from './Viz/Legend';
+import FORCE from './FORCE';
 
 const AppLayoutStyles = styled.div`
   overflow: hidden;
@@ -44,6 +45,7 @@ const AppLayout = props => {
     skillsComp: false,
   };
   const [expanded, setExpanded] = useState(initialExpandedState);
+  const [legendVisible, setLegendVisible] = useState(true);
   const {
     getRadiusScale,
     radiusSelector,
@@ -114,6 +116,7 @@ const AppLayout = props => {
             <SortPanel
               initialExpandedState={initialExpandedState}
               setExpanded={setExpanded}
+              setLegendVisible={setLegendVisible}
             />
             <Viz
               isTabletOrLarger={isTabletOrLarger}
@@ -125,8 +128,6 @@ const AppLayout = props => {
                         event.target.ownerSVGElement,
                         event,
                       );
-                      // console.log('event:', event);
-                      // console.log('datum:', datum);
                       const tooltipProps = {
                         data: datum,
                         top: y,
@@ -162,7 +163,7 @@ const AppLayout = props => {
               summaryBarsActive={summaryBarsActive}
               zScale={zScale}
             />
-            <Legend {...legendProps} />
+            {legendVisible && <Legend {...legendProps} />}
           </AppLayoutStyles>
 
           {tooltipProps && isTabletOrLarger && <Tooltip {...tooltipProps} />}

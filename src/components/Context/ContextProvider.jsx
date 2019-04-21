@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import { scaleOrdinal } from 'd3-scale';
 import html2canvas from 'html2canvas';
 import debounce from 'lodash.debounce';
 import React, { Component } from 'react';
@@ -351,7 +350,6 @@ class ContextProvider extends Component {
         sortedColour,
         numClusters,
       });
-      // FORCE.restartSimulation(nodes);
       this.setState({ sortedSize: false, radiusSelector, getRadiusScale });
     }
     setTimeout(this.handleResize, 1500);
