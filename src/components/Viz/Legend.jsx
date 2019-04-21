@@ -84,10 +84,21 @@ const LegendStyles = styled.div`
 `;
 
 const MobileLegendStyles = styled.div`
+  background: white;
+  z-index: 999;
   margin-top: -8px;
   display: grid;
   place-items: center;
-  text-transform: none;
+  margin-left: -10px;
+  margin-right: -10px;
+  button {
+    text-transform: none;
+  }
+  transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  &.expanded {
+    border-top: 1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
+  }
   .icon {
     transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
     &.flip {
@@ -96,12 +107,9 @@ const MobileLegendStyles = styled.div`
   }
   .colours,
   .sizes {
+    margin-left: 10px;
     .colourText,
     .sizeText {
-      /* text-overflow: ellipsis; */
-      /* overflow: hidden; */
-      /* white-space: nowrap; */
-      /* max-width: 150px; */
     }
   }
   .colours {
@@ -124,9 +132,10 @@ const MobileLegendStyles = styled.div`
     }
   }
   .sizes {
+    margin-left: 10px;
     display: grid;
     grid-template-rows: 1fr auto auto auto;
-    justify-content: end;
+    justify-content: start;
     align-items: center;
     grid-gap: 20px;
     padding-bottom: 20px;
@@ -195,7 +204,7 @@ const Legend = ({ colours, sizes, radiusScale }) => {
         } else if (!isMobletOrLarger) {
           // TODO: mobile legend
           return (
-            <MobileLegendStyles>
+            <MobileLegendStyles className={legendExpanded ? 'expanded' : ''}>
               <div className="btnWrapper">
                 <Button
                   size="small"
