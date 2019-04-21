@@ -1,7 +1,7 @@
 .clusterLabel {
   font-family: system-ui;
   position: absolute;
-  width: 125px;
+  max-width: 125px;
   height: auto;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 5px;

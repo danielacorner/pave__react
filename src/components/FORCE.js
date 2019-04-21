@@ -105,7 +105,7 @@ const FORCE = function(nsp) {
         .alphaDecay(START_FRICTION)
         .alphaTarget(END_SPEED);
     },
-    toggleClusterAnnotations = (
+    toggleClusterTags = (
       toggleOn,
       nodes,
       uniqueClusterValues,
@@ -307,26 +307,26 @@ const FORCE = function(nsp) {
       // 5 columns maximum
       const minColWidth = 225;
       const numCols = Math.min(Math.ceil(width / minColWidth), 5);
-      const shrinkX = numCols === 2 ? 0.8 : 1;
+      const growX = numCols === 2 ? 3 : 1;
       positionX = d => {
         // space horizontally into columns
         for (let i = numCols; i >= 0; i--) {
           // if you're in this column, go to position i
           if (d.cluster % numCols === i)
-            return (i / numCols - 0.4) * width * shrinkX * growXY;
+            return (i / numCols - 0.4) * width * growX * growXY;
           //! -0.4 works, why is -0.5 too much?
         }
       };
 
       // 10 rows maximum:
       const numRows = Math.min(Math.ceil(numClusters / numCols), 10);
-      const shrinkY = numRows === 2 ? 0.4 : numCols === 2 ? 1.5 : 1;
+      const growY = numRows === 2 ? 0.4 : numCols === 2 ? 2.5 : 1;
       positionY = d => {
         // space vertically into rows
         for (let i = numRows; i >= 0; i--) {
           // if you're in this row, go to position i
           if (d.cluster % numRows === i)
-            return (i / numRows - 0.4) * height * shrinkY * growXY;
+            return (i / numRows - 0.4) * height * growY * growXY;
           //! -0.4 works, why is -0.5 too much?
         }
       };
@@ -494,7 +494,7 @@ const FORCE = function(nsp) {
   nsp.initForce = initForce;
   nsp.startSimulation = startSimulation;
   nsp.stopSimulation = stopSimulation;
-  nsp.toggleClusterTags = toggleClusterAnnotations;
+  nsp.toggleClusterTags = toggleClusterTags;
   nsp.resetForceCharge = resetForceCharge;
   nsp.sortSize = sortSize;
   nsp.applySortForces = applySortForces;
