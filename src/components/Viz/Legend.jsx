@@ -2,14 +2,42 @@ import React from 'react';
 import styled from 'styled-components';
 
 const LegendStyles = styled.div`
-  position: absolute;
+  position: fixed;
   bottom: 25px;
   right: 20px;
   left: 20px;
   pointer-events: none;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr auto;
   font-family: system-ui;
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
+  }
+  .colours,
+  .sizes {
+    border-radius: 6px;
+    .colourText,
+    .sizeText {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 150px;
+    }
+    &:hover {
+      .colour,
+      .size {
+        background: rgba(255, 255, 255, 0.8);
+      }
+      .colourText,
+      .sizeText {
+        max-width: none;
+      }
+      .colourText {
+        padding-right: 7px;
+      }
+    }
+  }
   .colours {
     display: grid;
     .colour {
@@ -17,33 +45,33 @@ const LegendStyles = styled.div`
       grid-template-columns: auto 1fr;
       align-items: center;
       grid-gap: 7px;
-      margin-top: 5px;
-      .colourCircle {
+      .colourCircleWrapper {
+        padding-top: 5px;
         pointer-events: auto;
+      }
+      .colourCircle {
         border-radius: 100%;
         width: 15px;
         height: 15px;
         border: 1px solid black;
-        .colourText {
-        }
       }
     }
   }
   .sizes {
     display: grid;
     grid-template-rows: 1fr auto auto auto;
-    grid-gap: 20px;
     .size {
       display: grid;
       grid-template-columns: 1fr 2.5fr;
       align-items: center;
       .sizeCircle {
-        pointer-events: auto;
         justify-self: center;
         border: 1px solid black;
         border-radius: 100%;
       }
       .sizeText {
+        padding-top: 20px;
+        pointer-events: auto;
         text-align: right;
       }
     }
@@ -61,11 +89,14 @@ const Legend = ({ colours, sizes, radiusScale }) => {
       <div className="colours">
         {colours.map(({ colour, text }) => (
           <div key={colour} className="colour">
-            <div className="colourCircle" style={{ background: colour }} />
+            <div className="colourCircleWrapper">
+              <div className="colourCircle" style={{ background: colour }} />
+            </div>
             <div className="colourText">{text}</div>
           </div>
         ))}
       </div>
+      <div className="spacer" />
       <div className="sizes">
         <div className="spacer" />
         {sizes.map(({ size, text }) => (
