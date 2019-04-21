@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import html2canvas from 'html2canvas';
 import debounce from 'lodash.debounce';
 import React, { Component } from 'react';
 import NOCData from '../../assets/NOC-data';
@@ -85,31 +84,19 @@ class ContextProvider extends Component {
         // todo: emit new cluster centers to/from context
         this.setState({ clusterCenters: clusterCenters });
       }
-      // if ([1, 100, 200, 300, 400].includes(d.id)) {
-      // }
     });
 
-    // set the color scale based on the unique clusters
-    // const keys = NOCDataProcessed.map(d => d[clusterSelector]).filter(
-    //   (value, index, self) => self.indexOf(value) === index,
-    // );
     this.setState({
       zScale: d3.scaleOrdinal(d3.schemeCategory10),
-      // zScale: scaleOrdinal({
-      //   domain: keys,
-      //   range: ['#6c5efb', '#c998ff', '#a44afe'],
-      // }),
     }),
       window.addEventListener('resize', this.handleResize);
     setTimeout(this.handleResize, 1500);
 
     // tranlate nodes to center
-    const [width, height] = [
-      $('#svg').getBoundingClientRect().width,
-      $('#graphContainer').getBoundingClientRect().height,
-    ];
+    const { width, height } = $('#graphContainer').getBoundingClientRect();
 
-    $('#nodesG').style.transform = `translate(${width / 2}px,${height / 2}px)`;
+    $('#nodesG').style.transform = `translate(${+width / 2}px,${+height /
+      2}px)`;
   };
 
   componentWillUnmount = () => {
@@ -123,22 +110,16 @@ class ContextProvider extends Component {
   }
 
   translate = () => {
-    const [width, height] = [
-      $('#svg').getBoundingClientRect().width,
-      $('#graphContainer').getBoundingClientRect().height,
-    ];
+    const { width, height } = $('#graphContainer').getBoundingClientRect();
+
     const nodesRect = $('#nodesG').getBoundingClientRect();
     const offsetLeft =
       nodesRect.left < 0 && this.state.sortedType ? -nodesRect.left : 0;
-    return `${width / 2 + offsetLeft}px,${(height / 2) *
-      (this.state.sortedType ? 1.05 : 1)}px`;
+    return `${+width / 2 + +offsetLeft}px,${+height / 2}px`;
   };
   scale = () => {
     // resize the graph container to fit the screen
-    const [width, height] = [
-      $('#svg').getBoundingClientRect().width,
-      $('#graphContainer').getBoundingClientRect().height,
-    ];
+    const { width, height } = $('#graphContainer').getBoundingClientRect();
 
     // zoom in until you hit the edge of...
     const windowConstrainingLength = this.state.sortedType
@@ -167,7 +148,7 @@ class ContextProvider extends Component {
     // console.count('...resizing...');
     // recalculate the svg height (to resize the statistic bars)
     this.setState({
-      svgBBox: $('#svg').getBoundingClientRect(),
+      svgBBox: $('#graphContainer').getBoundingClientRect(),
     });
     // translate the nodes group into the middle and scale to fit
     $(
@@ -258,30 +239,25 @@ class ContextProvider extends Component {
       radiusSelector,
       getRadiusScale,
       sortedType,
-      numClusters,
+      uniqueClusterValues,
     } = this.state;
+    const sortBy = [];
     if (!this.state.sortedSize) {
       this.setState({ sortedSize: true });
-      // split the view into sections for each cluster
-      FORCE.sortSize({
-        sorted: true,
-        radiusSelector,
-        getRadiusScale,
-        sortedType,
-        numClusters,
-      });
-      // FORCE.restartSimulation(nodes);
+      sortBy.push('size');
     } else {
-      FORCE.sortSize({
-        sorted: false,
-        radiusSelector,
-        getRadiusScale,
-        sortedType,
-        numClusters,
-      });
       this.setState({ sortedSize: false, radiusSelector, getRadiusScale });
     }
-    setTimeout(this.handleResize, 1500);
+    if (sortedType) {
+      sortBy.push('type');
+    }
+    FORCE.applySortForces({
+      sortBy,
+      getRadiusScale,
+      radiusSelector,
+      numClusters: uniqueClusterValues.length,
+    });
+    setTimeout(this.handleResize, 2000);
   };
   sortType = () => {
     const {
@@ -289,21 +265,15 @@ class ContextProvider extends Component {
       uniqueClusterValues,
       clusterSelector,
       sortedSize,
+      sortedType,
       getRadiusScale,
       radiusScale,
       radiusSelector,
     } = this.state;
-    if (!this.state.sortedType) {
+    const sortBy = [];
+    if (!sortedType) {
       this.setState({ sortedType: true });
-      // split the view into sections for each cluster
-      FORCE.sortType({
-        sorted: true,
-        numClusters: uniqueClusterValues.length,
-        sortedSize,
-        radiusScale,
-        getRadiusScale,
-        radiusSelector,
-      });
+      sortBy.push('type');
       setTimeout(() => {
         FORCE.toggleClusterTags(
           true,
@@ -313,25 +283,25 @@ class ContextProvider extends Component {
         );
         this.handleResize();
       }, 500);
-    } else {
+    } else if (sortedType) {
       FORCE.toggleClusterTags(
         false,
         nodes,
         uniqueClusterValues,
         clusterSelector,
       );
-      FORCE.sortType({
-        sorted: false,
-        numClusters: uniqueClusterValues.length,
-        sortedSize,
-        radiusScale,
-        getRadiusScale,
-        radiusSelector,
-      });
-      FORCE.restartSimulation(nodes);
       this.setState({ sortedType: false });
       setTimeout(this.handleResize, 1500);
     }
+    if (sortedSize) {
+      sortBy.push('size');
+    }
+    FORCE.applySortForces({
+      sortBy,
+      getRadiusScale,
+      radiusSelector,
+      numClusters: uniqueClusterValues.length,
+    });
   };
   setCurrentColor = variable => {
     this.setState({ colouredByValue: variable });

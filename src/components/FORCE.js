@@ -5,6 +5,8 @@ const FORCE = function(nsp) {
   let paused,
     updatePositionsInterval,
     removeLabelsTimeout,
+    positionX,
+    positionY,
     sortedTypeX,
     sortedTypeY;
   const // width = window.innerWidth,
@@ -24,7 +26,7 @@ const FORCE = function(nsp) {
     FRICTION = 0.7,
     START_SPEED = 0.6,
     RESTART_SPEED = 0.3,
-    SPEED_DECAY = 0.01,
+    START_FRICTION = 0.01,
     END_SPEED = 0,
     // color scale
     color = d3.scaleOrdinal(d3.schemeCategory10),
@@ -102,7 +104,7 @@ const FORCE = function(nsp) {
         )
         .velocityDecay(FRICTION)
         .alpha(START_SPEED)
-        .alphaDecay(SPEED_DECAY)
+        .alphaDecay(START_FRICTION)
         .alphaTarget(END_SPEED);
     },
     toggleClusterAnnotations = (
@@ -195,11 +197,10 @@ const FORCE = function(nsp) {
     },
     resetForceCharge = ({ getRadiusScale, radiusSelector }) => {
       const radiusScale = getRadiusScale();
-
       nsp.force.force(
         'charge',
         d3.forceManyBody().strength(d => {
-          return -Math.pow(radiusScale(d[radiusSelector]), 2) - CLUSTER_PADDING; // todo: calculate this magic number
+          return -Math.pow(radiusScale(d[radiusSelector]), 2) - CLUSTER_PADDING;
         }),
       );
     },
@@ -207,57 +208,103 @@ const FORCE = function(nsp) {
       sortBy,
       getRadiusScale,
       radiusSelector,
-      positionX,
-      positionY,
+      numClusters,
     }) => {
       nsp.resetForceCharge({ getRadiusScale, radiusSelector });
-      const SORT_COLOUR_SPEED = 0.5;
-      const SORT_COLOUR_FRICTION = 0.025;
+      const radiusScale = getRadiusScale();
+      const [min, max] = radiusScale.range();
+      const { width, height } = $('#graphContainer').getBoundingClientRect();
+      const minLength = Math.min(width, height);
+      const { positionX, positionY } = getPositionXY({ numClusters });
+      sortedTypeX = d3.forceX(positionX).strength(CENTER_GRAVITY);
+      sortedTypeY = d3.forceY(positionY).strength(CENTER_GRAVITY);
+      // TODO: switch to if statements (not if else) and only apply necessary forces
       if (sortBy.length === 0) {
+        console.log('sorting off');
         nsp.force
           .force('sortedTypeX', null)
           .force('sortedTypeY', null)
+          .force('tempSizeX', null)
+          .force('tempSizeY', null)
+          .force('sortedSizeY', null)
           .force('x', d3.forceX().strength(CENTER_GRAVITY))
           .force('y', d3.forceY().strength(CENTER_GRAVITY))
           .alpha(START_SPEED)
-          .alphaDecay(SPEED_DECAY)
+          .alphaDecay(START_FRICTION)
           .alphaTarget(END_SPEED);
       } else if (sortBy.includes('type') && sortBy.includes('size')) {
-        nsp.sortSizeAndType({ getRadiusScale, radiusSelector });
-      } else if (sortBy.includes('type')) {
+        console.log('sorting both');
+        const SORT_BOTH_SPEED = 0.01;
+        const SORT_BOTH_FRICTION = 0.007;
+        sortedTypeX = d3.forceX(positionX).strength(CENTER_GRAVITY * 25);
+        sortedTypeY = d3.forceY(positionY).strength(CENTER_GRAVITY * 33);
         nsp.force
-          .force('sortedTypeX', d3.forceX(positionX).strength(CENTER_GRAVITY))
-          .force('sortedTypeY', d3.forceY(positionY).strength(CENTER_GRAVITY))
-          .alpha(SORT_COLOUR_SPEED)
-          .alphaDecay(SORT_COLOUR_FRICTION)
-          .restart();
+          .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 5))
+          .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -14.2))
+          .force('sortedTypeX', sortedTypeX)
+          .force('sortedTypeY', sortedTypeY)
+          .force(
+            'charge',
+            d3.forceManyBody().strength(d => {
+              return -Math.pow(radiusScale(d[radiusSelector]), 2.75) - 1500;
+            }),
+          )
+          .force(
+            'sortedSizeY',
+            d3
+              .forceY(d => {
+                const radius = radiusScale(d[radiusSelector]);
+                const normalizedRadius = (radius - min) / (max - min);
+                const yPosition = (0.5 - normalizedRadius) * (minLength * 0.5);
+                return yPosition;
+              })
+              .strength(CENTER_GRAVITY * 28),
+          )
+          .alpha(SORT_BOTH_SPEED)
+          .alphaDecay(SORT_BOTH_FRICTION);
+      } else if (sortBy.includes('type')) {
+        console.log('sorting type');
+        const SORT_TYPE_SPEED = 0.5;
+        const SORT_TYPE_FRICTION = 0.025;
+
+        nsp.force
+          .force('sortedTypeX', sortedTypeX)
+          .force('sortedTypeY', sortedTypeY)
+          .force('tempSizeX', null)
+          .force('tempSizeY', null)
+          .force('sortedSizeY', null)
+          .alpha(SORT_TYPE_SPEED)
+          .alphaDecay(SORT_TYPE_FRICTION);
       } else if (sortBy.includes('size')) {
+        const SORT_SIZE_SPEED = 0.5;
+        const SORT_SIZE_FRICTION = 0.025;
+        console.log('sorting size');
         nsp.force
           .force('sortedTypeX', null)
           .force('sortedTypeY', null)
           .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 0.4))
           .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -12.6))
-          .alpha(START_SPEED)
-          .alphaDecay(SPEED_DECAY)
+          .force(
+            'sortedSizeY',
+            d3
+              .forceY(d => {
+                const radius = radiusScale(d[radiusSelector]);
+                const normalizedRadius = (radius - min) / (max - min);
+                const yPosition = (0.5 - normalizedRadius) * (minLength * 0.5);
+                return yPosition;
+              })
+              .strength(CENTER_GRAVITY * 28),
+          )
+          .alpha(SORT_SIZE_SPEED)
+          .alphaDecay(SORT_SIZE_FRICTION)
           .alphaTarget(END_SPEED);
       }
+      nsp.force.restart();
     },
-    sortType = ({
-      sorted,
-      numClusters,
-      sortedSize,
-      getRadiusScale,
-      radiusSelector,
-    }) => {
-      const sortedType = sorted;
-      nsp.resetForceCharge({ getRadiusScale, radiusSelector });
-
-      const { width, height } = $('#svg').getBoundingClientRect();
+    getPositionXY = ({ numClusters }) => {
+      const { width, height } = $('#graphContainer').getBoundingClientRect();
       // split the clusters evenly into the allotted space:
-      let positionX, positionY;
-
       const growXY = 1.5;
-      // const growXY = sortedSize ? 1.25 : 1;
       // 5 columns maximum
       const minColWidth = 225;
       const numCols = Math.min(Math.ceil(width / minColWidth), 5);
@@ -275,6 +322,7 @@ const FORCE = function(nsp) {
       // 10 rows maximum:
       const numRows = Math.min(Math.ceil(numClusters / numCols), 10);
       const shrinkY = numRows === 2 ? 0.4 : numCols === 2 ? 1.5 : 1;
+      console.log({ numClusters, numCols, shrinkY });
       positionY = d => {
         // space vertically into rows
         for (let i = numRows; i >= 0; i--) {
@@ -284,8 +332,16 @@ const FORCE = function(nsp) {
           //! -0.4 works, why is -0.5 too much?
         }
       };
-      sortedTypeX = d3.forceX(positionX).strength(CENTER_GRAVITY * 20);
-      sortedTypeY = d3.forceY(positionY).strength(CENTER_GRAVITY * 35);
+      return { positionX, positionY };
+    },
+    sortSize = ({
+      sorted,
+      radiusSelector,
+      getRadiusScale,
+      sortedType,
+      numClusters,
+    }) => {
+      const sortedSize = sorted;
       const sortBy = [];
       if (sortedType) {
         sortBy.push('type');
@@ -297,63 +353,17 @@ const FORCE = function(nsp) {
         sortBy,
         getRadiusScale,
         radiusSelector,
-        positionX,
-        positionY,
+        numClusters,
       });
-    },
-    sortSize = ({ sorted, radiusSelector, getRadiusScale, sortedType }) => {
-      const sortedSize = sorted;
-      nsp.resetForceCharge({ getRadiusScale, radiusSelector });
-
-      const SORT_SIZE_SPEED = 0.15;
-      const SORT_SIZE_FRICTION = 0.05;
-
-      const radiusScale = getRadiusScale();
-      if (sortedSize) {
-        const { width, height } = $('#svg').getBoundingClientRect();
-        const [min, max] = radiusScale.range();
-        const minLength = Math.min(width, height);
-        if (sortedType) {
-          nsp.sortSizeAndType({ getRadiusScale, radiusSelector });
-        } else if (!sortedType) {
-          nsp.force
-            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 0.4))
-            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -12.6))
-            .force(
-              'sortedSizeY',
-              d3
-                .forceY(d => {
-                  const radius = radiusScale(d[radiusSelector]);
-                  const normalizedRadius = (radius - min) / (max - min);
-                  const yPosition =
-                    (0.5 - normalizedRadius) * (minLength * 0.5);
-                  return yPosition;
-                })
-                .strength(CENTER_GRAVITY * 18),
-            )
-
-            .alpha(SORT_SIZE_SPEED)
-            .alphaDecay(SORT_SIZE_FRICTION)
-            .restart();
-        }
-      } else if (!sortedSize) {
-        nsp.force
-          .force('tempSizeX', null)
-          .force('tempSizeY', null)
-          .force('sortedSizeY', null)
-          .alpha(SORT_SIZE_SPEED * (sortedType ? 0.1 : 1))
-          .alphaDecay(SORT_SIZE_FRICTION * (sortedType ? 1 : 0.1))
-          .restart();
-      }
     },
     sortSizeAndType = ({ getRadiusScale, radiusSelector }) => {
       const radiusScale = getRadiusScale();
       const [min, max] = radiusScale.range();
 
-      const SORT_COLOUR_SPEED = 0.01;
-      const SORT_COLOUR_FRICTION = 0.007;
+      const SORT_BOTH_SPEED = 0.01;
+      const SORT_BOTH_FRICTION = 0.007;
 
-      const { width, height } = $('#svg').getBoundingClientRect();
+      const { width, height } = $('#graphContainer').getBoundingClientRect();
       const minLength = Math.min(width, height);
 
       nsp.force
@@ -378,8 +388,8 @@ const FORCE = function(nsp) {
             })
             .strength(CENTER_GRAVITY * 28),
         )
-        .alpha(SORT_COLOUR_SPEED)
-        .alphaDecay(SORT_COLOUR_FRICTION)
+        .alpha(SORT_BOTH_SPEED)
+        .alphaDecay(SORT_BOTH_FRICTION)
         .restart();
     },
     colourByValue = ({ doColour, variable }) => {
@@ -433,7 +443,7 @@ const FORCE = function(nsp) {
         .force('y', d3.forceY().strength(CENTER_GRAVITY))
         .velocityDecay(FRICTION)
         .alpha(RESTART_SPEED)
-        .alphaDecay(SPEED_DECAY)
+        .alphaDecay(START_FRICTION)
         .alphaTarget(END_SPEED)
         .restart();
     },
@@ -526,12 +536,14 @@ const FORCE = function(nsp) {
   nsp.stopSimulation = stopSimulation;
   nsp.toggleClusterTags = toggleClusterAnnotations;
   nsp.resetForceCharge = resetForceCharge;
-  nsp.sortType = sortType;
   nsp.sortSize = sortSize;
   nsp.sortSizeAndType = sortSizeAndType;
   nsp.applySortForces = applySortForces;
   nsp.sortedTypeX = sortedTypeX;
   nsp.sortedTypeY = sortedTypeY;
+  nsp.getPositionXY = getPositionXY;
+  nsp.positionX = positionX;
+  nsp.positionY = positionY;
   nsp.colourByValue = colourByValue;
   nsp.restartSimulation = restartSimulation;
   nsp.dragStarted = dragStarted;
