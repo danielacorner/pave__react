@@ -147,7 +147,11 @@ const FilterSlider = ({
         step={1}
         onChange={handleChange}
         onMouseUp={onMouseUp}
-        onTouchEnd={onMouseUp}
+        onTouchStart={() => setMinMaxVisible(filterVar)}
+        onTouchEnd={() => {
+          onMouseUp();
+          setMinMaxVisible(false);
+        }}
         onMouseOver={() => setMinMaxVisible(filterVar)}
         onMouseOut={() => setMinMaxVisible(false)}
       />

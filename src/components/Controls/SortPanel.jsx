@@ -1,6 +1,7 @@
 import Switch from '@material-ui/core/Switch';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Tooltip from '@material-ui/core/Tooltip';
 import RestoreIcon from '@material-ui/icons/RestoreRounded';
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
@@ -11,6 +12,61 @@ import FORCE from '../FORCE';
 const white = 'rgba(255,255,255,0.98)';
 const inactive2 = 'hsl(160, 50%, 50%)';
 const hover2 = 'hsl(160, 50%, 45%)';
+
+const getColourByValueText = valueToColourBy => {
+  if (valueToColourBy === 'automationRisk') {
+    return (
+      <div>
+        <div>
+          Colour the circles by risk that the job will be replaced by machine
+          work.
+        </div>
+        <div>
+          Once coloured, look for{' '}
+          <span style={{ color: 'rgb(180, 223, 117)' }}>green circles</span> to
+          find jobs which won{"'"}t be taken over by machines for a long time.
+          Darker green means lower risk.
+          <div>
+            Avoid high-risk{' '}
+            <span style={{ color: 'rgb(253, 193, 114)' }}>red circles</span>.
+          </div>
+        </div>
+      </div>
+    );
+  } else if (valueToColourBy === 'salary') {
+    return (
+      <div>
+        <div>
+          Colour the circles how much money is made by the average worker.
+        </div>
+        <div>
+          Once coloured, look for{' '}
+          <span style={{ color: 'rgb(170, 213, 107)' }}>
+            dark green circles
+          </span>{' '}
+          to find jobs which make more money.
+        </div>
+      </div>
+    );
+  } else if (valueToColourBy === 'study') {
+    return (
+      <div>
+        <div>
+          Colour the circles how many years of study after high school for the
+          average person working this job (not necessarily how many are required
+          for the job).
+        </div>
+        <div>
+          Once coloured, look for{' '}
+          <span style={{ color: 'hsl(203,70%,70%)' }}>dark blue circles</span>{' '}
+          to find jobs which require more study, or{' '}
+          <span style={{ color: 'hsl(203,85%,85%)' }}>light blue circles</span>{' '}
+          for jobs which require less study.
+        </div>
+      </div>
+    );
+  }
+};
 
 const SortButtonsStyles = styled.div`
   position: relative;
@@ -66,7 +122,7 @@ const SortButtonsStyles = styled.div`
     max-height: 60px;
     padding: 2px 16px 0 16px;
     justify-self: end;
-    align-self: start;
+    align-self: center;
     span {
       display: grid;
       grid-template-columns: auto 1fr;
@@ -119,92 +175,150 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
   return (
     <SortButtonsStyles>
       <div className="sortBtnGroup">
-        <FormControlLabel
-          className="formControl"
-          control={
-            <Switch
-              onChange={() => {
-                handleSort({
-                  sortBy: 'size',
-                  sortedParams,
-                  context,
-                  setSortedParams,
-                });
-              }}
-              checked={sortedParams.includes('size')}
-            />
-          }
-          label={`Sort${
-            sortedParams && sortedParams.includes('size') ? 'ed' : ''
-          } by Size`}
-        />
-        <FormControlLabel
-          classes={{ root: 'formControlRoot' }}
-          className="formControl"
-          control={
-            <Switch
-              onChange={() =>
-                handleSort({
-                  sortBy: 'category',
-                  sortedParams,
-                  context,
-                  setSortedParams,
-                })
-              }
-              checked={sortedParams.includes('category')}
-            />
-          }
-          label={`Sort${
-            sortedParams && sortedParams.includes('category') ? 'ed' : ''
-          } by Type`}
-        />
-        <FormControlLabel
-          classes={{ root: 'formControlRoot' }}
-          className="formControl"
-          control={
-            <Switch
-              onChange={() =>
-                handleSort({
-                  sortBy: 'colourByValue',
-                  sortedParams,
-                  context,
-                  setSortedParams,
-                })
-              }
-              checked={sortedParams.includes('colourByValue')}
-            />
-          }
-          label={
-            <div className="labelAndSelect">
+        <Tooltip
+          title={
+            <div>
+              <div>Sort by workers in each job.</div>
               <div>
-                Colour
-                {sortedParams && sortedParams.includes('colourByValue')
-                  ? 'ed'
-                  : ''}{' '}
-                by{' '}
+                More workers means more people are needed right now -- but it
+                doesn{"'"}t guarantee this type of job will be around forever.
               </div>
-              <Select
-                classes={{ root: 'select' }}
-                value={valueToColourBy}
-                onClick={event => event.preventDefault()}
-                onChange={event => {
-                  setValueToColourBy(event.target.value);
-                  if (sortedParams.includes('colourByValue')) {
-                    FORCE.colourByValue({
-                      doColour: true,
-                      variable: event.target.value,
-                    });
-                    context.setCurrentColor(event.target.value);
-                  }
-                }}
-              >
-                <MenuItem value="automationRisk">Risk</MenuItem>
-                <MenuItem value="salary">Salary</MenuItem>
-                <MenuItem value="study">Study</MenuItem>
-              </Select>
             </div>
           }
-        />
+        >
+          <FormControlLabel
+            className="formControl"
+            control={
+              <Switch
+                onChange={() => {
+                  handleSort({
+                    sortBy: 'size',
+                    sortedParams,
+                    context,
+                    setSortedParams,
+                  });
+                }}
+                checked={sortedParams.includes('size')}
+              />
+            }
+            label={`Sort${
+              sortedParams && sortedParams.includes('size') ? 'ed' : ''
+            } by Size`}
+          />
+        </Tooltip>
+        <Tooltip
+          title={
+            <div>
+              <div>Sort by job industry.</div>
+              <div>
+                Spot the differences between the ten types of job. If you{"'"}re
+                not sure what kind of work you want to do, look within
+                industries with low Risk and high Salary.
+              </div>
+            </div>
+          }
+        >
+          <FormControlLabel
+            classes={{ root: 'formControlRoot' }}
+            className="formControl"
+            control={
+              <Switch
+                onChange={() =>
+                  handleSort({
+                    sortBy: 'category',
+                    sortedParams,
+                    context,
+                    setSortedParams,
+                  })
+                }
+                checked={sortedParams.includes('category')}
+              />
+            }
+            label={`Sort${
+              sortedParams && sortedParams.includes('category') ? 'ed' : ''
+            } by Type`}
+          />
+        </Tooltip>
+        <Tooltip title={getColourByValueText(valueToColourBy)}>
+          <FormControlLabel
+            classes={{ root: 'formControlRoot' }}
+            className="formControl"
+            control={
+              <Switch
+                onChange={() =>
+                  handleSort({
+                    sortBy: 'colourByValue',
+                    sortedParams,
+                    context,
+                    setSortedParams,
+                  })
+                }
+                checked={sortedParams.includes('colourByValue')}
+              />
+            }
+            label={
+              <div className="labelAndSelect">
+                <div>
+                  Colour
+                  {sortedParams && sortedParams.includes('colourByValue')
+                    ? 'ed'
+                    : ''}{' '}
+                  by{' '}
+                </div>
+                <Select
+                  classes={{ root: 'select' }}
+                  value={valueToColourBy}
+                  onClick={event => event.preventDefault()}
+                  onMouseOver={event => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                  }}
+                  onTouchStart={event => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                  }}
+                  onChange={event => {
+                    setValueToColourBy(event.target.value);
+                    if (sortedParams.includes('colourByValue')) {
+                      FORCE.colourByValue({
+                        doColour: true,
+                        variable: event.target.value,
+                      });
+                      context.setCurrentColor(event.target.value);
+                    }
+                  }}
+                >
+                  <MenuItem value="automationRisk">
+                    <Tooltip
+                      placement="right"
+                      title={'Risk that tasks will be replaced by machine work'}
+                    >
+                      <div>Risk</div>
+                    </Tooltip>
+                  </MenuItem>
+                  <MenuItem value="salary">
+                    <Tooltip
+                      placement="right"
+                      title={'Average yearly income in $CAD'}
+                    >
+                      <div>Salary</div>
+                    </Tooltip>
+                  </MenuItem>
+                  <MenuItem value="study">
+                    <Tooltip
+                      placement="right"
+                      title={
+                        'Average years of study for people working in this job (not necessarily required for the job)'
+                      }
+                    >
+                      <div>Study</div>
+                    </Tooltip>
+                  </MenuItem>
+                </Select>
+              </div>
+            }
+          />
+        </Tooltip>
       </div>
       <Button
         className="btnReset"
