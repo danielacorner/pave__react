@@ -3,7 +3,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Slider from '@material-ui/lab/Slider';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import {
   FILTER_RANGE,
@@ -15,6 +15,7 @@ import {
 import { ControlsContext } from '../Context/ContextProvider';
 
 const LabelAndSliderStyles = styled.div`
+  font-family: system-ui;
   position: relative;
   .expandLabel {
     display: grid;
@@ -47,11 +48,32 @@ const LabelAndSliderStyles = styled.div`
       padding-bottom: 8px;
     }
   }
+  .minmax {
+    height: 0px;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-between;
+    font-size: 12px;
+    transform: translateY(-5px);
+    &.hidden {
+      transform: translateY(-10px);
+      opacity: 0;
+    }
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
 `;
+
+const MinMax = ({ visible, title }) => (
+  <div className={`minmax${visible === title ? '' : ' hidden'}`}>
+    <div>Min</div>
+    <div>Max</div>
+  </div>
+);
 
 const SubskillFilters = ({ filterVar, onMouseUp }) => {
   const subskillFilters = SUBSKILL_FILTER_TITLES(filterVar);
   const context = useContext(ControlsContext);
+  const [minMaxVisible, setMinMaxVisible] = useState(false);
 
   return (
     <div className="subskillFilters">
@@ -69,7 +91,10 @@ const SubskillFilters = ({ filterVar, onMouseUp }) => {
             }}
             onMouseUp={onMouseUp}
             onTouchEnd={onMouseUp}
+            onMouseOver={() => setMinMaxVisible(subskill.title)}
+            onMouseOut={() => setMinMaxVisible(false)}
           />
+          <MinMax visible={minMaxVisible} title={subskill.title} />
         </div>
       ))}
     </div>
@@ -84,6 +109,8 @@ const FilterSlider = ({
   expanded,
   setExpanded,
 }) => {
+  const [minMaxVisible, setMinMaxVisible] = useState(false);
+
   const handleChange = (event, value) => {
     onChange(value);
   };
@@ -121,7 +148,10 @@ const FilterSlider = ({
         onChange={handleChange}
         onMouseUp={onMouseUp}
         onTouchEnd={onMouseUp}
+        onMouseOver={() => setMinMaxVisible(filterVar)}
+        onMouseOut={() => setMinMaxVisible(false)}
       />
+      <MinMax visible={minMaxVisible} title={filterVar} />
       <Collapse
         className="collapse"
         in={filterExpanded}
