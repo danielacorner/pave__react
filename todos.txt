@@ -1,3 +1,21 @@
+TODOS:
+Title
+“Goodjob: Explore Canadian Careers”
+One-line instructions above filters
+Adjust the skill level controls to filter your search. Click/hover over a circle to see a result.
+Filter slider: how to tell what's big vs small
+Add "skills" to the ends of each category
+Percents? Of what?
+Min and max
+Tooltips:
+Filter expand-more buttons
+Sort toggle buttons
+Risk/Salary/Study menu items
+Legend for colours (study/salary/risk)
+To-do for Trello - Remove the most bottom circle legend
+
+
+
 todo:
 - sort by type could be more spaced-out on mobile
 - tune subskill filter limits to be less excessive
@@ -6,8 +24,6 @@ todo:
 - change sizes?
 - consider adding setTimeout to FORCE sort functions to increase collision (or repel) force (to spread out circles after transitions)
 
-
-feature: tooltips
 
 bug: filtering in colour-sorted mode shouldn't restart the simulation x,y forces
 
