@@ -12,20 +12,58 @@ import Tooltip from './Viz/Tooltip';
 import Viz from './Viz/Viz';
 import Legend from './Viz/Legend';
 
+const AppTitleStyles = styled.div`
+  font-family: system-ui;
+  margin: 8px 12px 0 12px;
+  h1 {
+    font-size: 24px;
+    margin: 0;
+  }
+  h5 {
+    margin: 8px 0 0 0;
+  }
+  span {
+    font-size: 18px;
+    text-shadow: none;
+  }
+`;
+const AppTitle = () => (
+  <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
+    {isTabletOrLarger => (
+      <AppTitleStyles>
+        <h1>
+          Goodjob 🎈 <span>Explore Canadian Careers</span>
+        </h1>
+        <h5>
+          Adjust the skill level controls to filter your search.{' '}
+          {isTabletOrLarger ? 'Hover over' : 'Click'} a circle to see a result.
+        </h5>
+      </AppTitleStyles>
+    )}
+  </MediaQuery>
+);
+
 const AppLayoutStyles = styled.div`
-  overflow: hidden;
+position: relative;
   width: 100%;
-  height: 100vh;
   display: grid;
-  grid-template-rows: auto auto 1fr 24px;
   grid-gap: 8px;
+  /* Mobile */
+  grid-template-rows:auto auto auto 1fr 24px;
+  height: 100vh;
+  min-height: 890px;
+  @media (min-width: 340px) {
+  min-height: 750px;
+  }
+  /* Tablet and up */
   @media (min-width: 400px) {
+  overflow: hidden;
     grid-gap: 16px;
-    grid-template-rows: auto auto 1fr 16px;
+    grid-template-rows:auto auto auto 1fr 16px;
   }
-  @media (min-width: ${TABLET_MIN_WIDTH}px) {
+  /* @media (min-width: ${TABLET_MIN_WIDTH}px) {
     grid-template-rows: auto auto 1fr auto;
-  }
+  } */
   padding: 10px 10px 0 10px;
   box-sizing: border-box;
 `;
@@ -110,6 +148,7 @@ const AppLayout = props => {
                   }
             }
           >
+            <AppTitle />
             <FiltersPanel
               filterVariables={filterVariables}
               expanded={expanded}

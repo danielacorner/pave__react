@@ -17,6 +17,8 @@ To-do for Trello - Remove the most bottom circle legend
 
 
 todo:
+- add pop-up mobile tooltip to desktop on click
+- add more info to mobile tooltip (links...)
 - sort by type could be more spaced-out on mobile
 - tune subskill filter limits to be less excessive
 - clean up code

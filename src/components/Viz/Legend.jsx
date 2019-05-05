@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import MediaQuery from 'react-responsive';
-import { TABLET_MIN_WIDTH } from '../../utils/constants';
+import { TABLET_MIN_WIDTH, NEVER_MIN_WIDTH } from '../../utils/constants';
 import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
@@ -178,7 +178,7 @@ const Legend = ({ colours, sizes, radiusScale }) => {
   const [legendExpanded, setLegendExpanded] = useState(false);
 
   return (
-    <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
+    <MediaQuery query={`(min-width: ${NEVER_MIN_WIDTH}px)`}>
       {isAboveBreakpoint => {
         if (isAboveBreakpoint) {
           return (
@@ -217,7 +217,6 @@ const Legend = ({ colours, sizes, radiusScale }) => {
             </LegendStyles>
           );
         } else if (!isAboveBreakpoint) {
-          // TODO: mobile legend
           return (
             <MobileLegendStyles className={legendExpanded ? 'expanded' : ''}>
               <div className="btnWrapper">

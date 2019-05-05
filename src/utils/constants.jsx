@@ -1,6 +1,7 @@
 export const MOBILE_MIN_WIDTH = 360;
 export const MOBLET_MIN_WIDTH = 475;
 export const TABLET_MIN_WIDTH = 675;
+export const NEVER_MIN_WIDTH = 999999;
 export const TOOLTIP_WIDTH = 280;
 export const TOOLTIP_HZ_OFFSET = 40;
 export const SLIDER_WIDTH_LG = 200;
@@ -8,13 +9,13 @@ export const SLIDER_WIDTH_MD = 125;
 export const FILTER_TITLE = filterVar => {
   switch (filterVar) {
     case 'skillsLang':
-      return 'Language & Communication';
+      return 'Language & Communication Skills';
     case 'skillsLogi':
-      return 'Logic & Reasoning';
+      return 'Logic & Reasoning Skills';
     case 'skillsMath':
-      return 'Math & Spatial';
+      return 'Math & Spatial Skills';
     case 'skillsComp':
-      return 'Computer & Information';
+      return 'Computer & Information Skills';
     default:
       return;
   }
