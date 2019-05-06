@@ -151,8 +151,7 @@ class ContextProvider extends Component {
       svgBBox,
     });
     // resize size legend scale
-    const { height } = d3
-      .selectAll('.sizeCircle')
+    d3.selectAll('.sizeCircle')
       .style('transform', `scale(${newScale})`)
       .style('opacity', 1 / newScale);
     d3.selectAll('.size').style(
@@ -336,6 +335,7 @@ class ContextProvider extends Component {
           setRadiusSelector: x => this.setState({ radiusSelector: x }),
           setClusterSelector: x => this.setState({ clusterSelector: x }),
           handleFilterChange: this.handleFilterChange,
+          handleResize: this.handleResize,
           resetFilters: this.resetFilters,
           restartSimulation: this.restartSimulation,
           handleFilterMouseup: this.handleFilterMouseup,

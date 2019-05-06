@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import MediaQuery from 'react-responsive';
-import { TABLET_MIN_WIDTH, NEVER_MIN_WIDTH } from '../../utils/constants';
+import { NEVER_MIN_WIDTH } from '../../utils/constants';
 import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';

@@ -1,9 +1,9 @@
 // import queryString from 'query-string'
 import { localPoint } from '@vx/event';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import MediaQuery from 'react-responsive';
 import styled from 'styled-components';
-import { TABLET_MIN_WIDTH } from '../utils/constants';
+import { TABLET_MIN_WIDTH, RESIZE_INTERVAL_MS } from '../utils/constants';
 import { ControlsContext } from './Context/ContextProvider';
 import FiltersPanel from './Controls/FiltersPanel';
 import SortPanel from './Controls/SortPanel';
@@ -98,6 +98,13 @@ const AppLayout = props => {
     colouredByValue,
     uniqueClusterValues,
   } = context.state;
+
+  const { handleResize } = context;
+
+  useEffect(() => {
+    const resizeTimer = setInterval(handleResize, RESIZE_INTERVAL_MS);
+    return () => clearInterval(resizeTimer);
+  }, []);
 
   const legendColours = uniqueClusterValues.map(val => {
     return { colour: zScale(val), text: val };

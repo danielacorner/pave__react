@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+export const RESIZE_INTERVAL_MS = 5000;
 export const MOBILE_MIN_WIDTH = 360;
 export const MOBLET_MIN_WIDTH = 475;
 export const TABLET_MIN_WIDTH = 675;
