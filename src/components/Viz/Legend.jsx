@@ -90,6 +90,7 @@ const LegendStyles = styled.div`
 `;
 
 const MobileLegendStyles = styled.div`
+  font-family: system-ui;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -166,6 +167,10 @@ const MobileLegendStyles = styled.div`
       }
     }
   }
+  .title {
+    margin: 20px 0 8px 8px;
+    font-size: 24px;
+  }
 `;
 
 function numberWithCommas(x) {
@@ -184,6 +189,7 @@ const Legend = ({ colours, sizes, radiusScale }) => {
           return (
             <LegendStyles>
               <div className="coloursWrapper">
+                <div className="title">Career Industries</div>
                 <div className="colours">
                   {colours.map(({ colour, text }) => (
                     <div key={colour} className="colour">
@@ -200,6 +206,7 @@ const Legend = ({ colours, sizes, radiusScale }) => {
               </div>
               <div className="spacer" />
               <div className="sizes">
+                <div className="title">Career Sizes</div>
                 <div className="spacer" />
                 {sizes.map(({ size, text }) => (
                   <div key={size} className="size">
@@ -231,6 +238,7 @@ const Legend = ({ colours, sizes, radiusScale }) => {
                 </Button>
               </div>
               <Collapse in={legendExpanded}>
+                <div className="title">Career Industries</div>
                 <div className="colours">
                   {colours.map(({ colour, text }) => (
                     <div key={colour} className="colour">
@@ -245,6 +253,7 @@ const Legend = ({ colours, sizes, radiusScale }) => {
                   ))}
                 </div>
                 <div className="spacer" />
+                <div className="title">Career Sizes</div>
                 <div className="sizes">
                   <div className="spacer" />
                   {sizes.map(({ size, text }) => (
