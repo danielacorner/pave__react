@@ -3,7 +3,7 @@ Title
 “Goodjob: Explore Canadian Careers”
 Legend for colours (study/salary/risk)
 To-do for Trello - Remove the most bottom circle legend
-
+- filters should be coloured up?
 
 
 todo:

@@ -11,6 +11,7 @@ import {
   SLIDER_WIDTH_LG,
   SLIDER_WIDTH_MD,
   SUBSKILL_FILTER_TITLES,
+  SLIDER_TOOLTIP_TEXT,
 } from '../../utils/constants';
 import { ControlsContext } from '../Context/ContextProvider';
 
@@ -125,7 +126,9 @@ const FilterSlider = ({
   return (
     <LabelAndSliderStyles className="labelAndSlider">
       <div className="expandLabel">
-        <Typography id="label">{FILTER_TITLE(filterVar)}</Typography>
+        <Tooltip title={SLIDER_TOOLTIP_TEXT(filterVar)}>
+          <Typography id="label">{FILTER_TITLE(filterVar)}</Typography>
+        </Tooltip>
         <Tooltip title={(filterExpanded ? 'Hide' : 'View') + ' Sub-Skills'}>
           <IconButton
             className={`expand${filterExpanded ? ' expandOpen' : ''}`}

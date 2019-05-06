@@ -49,7 +49,7 @@ const FiltersPanel = ({ filterVariables, expanded, setExpanded }) => {
             onChange={value => {
               context.handleFilterChange(filterVar, value);
             }}
-            onMouseUp={context.handleFilterMouseup}
+            Tooltipp={context.handleFilterMouseup}
           />
         ))}
       </div>

@@ -1,3 +1,6 @@
+import React from 'react';
+import styled from 'styled-components';
+
 export const MOBILE_MIN_WIDTH = 360;
 export const MOBLET_MIN_WIDTH = 475;
 export const TABLET_MIN_WIDTH = 675;
@@ -16,6 +19,102 @@ export const FILTER_TITLE = filterVar => {
       return 'Math & Spatial Skills';
     case 'skillsComp':
       return 'Computer & Information Skills';
+    default:
+      return;
+  }
+};
+
+const SliderTooltipStyles = styled.div`
+  .sliderTooltip {
+    span {
+      text-decoration: underline;
+    }
+  }
+`;
+export const SLIDER_TOOLTIP_TEXT = filterVar => {
+  switch (filterVar) {
+    // TODO:
+    case 'skillsLang':
+      return (
+        <SliderTooltipStyles>
+          <div className="sliderTooltip">
+            <span>Oral Communication:</span> Verbally expressing ideas and
+            information to others.
+          </div>
+          <div className="sliderTooltip">
+            <span>Reading:</span> Understanding written materials.
+          </div>
+          <div className="sliderTooltip">
+            <span>Writing:</span> Expressing ideas in writing.
+          </div>
+        </SliderTooltipStyles>
+      );
+    case 'skillsLogi':
+      return (
+        <SliderTooltipStyles>
+          <div className="sliderTooltip">
+            <span>Decision Making:</span> Making a choice from different options
+            by using information.
+          </div>
+          <div className="sliderTooltip">
+            <span>Job Task Planning and Organizing:</span> Planning and
+            organizing one{"'"}s own work.
+          </div>
+          <div className="sliderTooltip">
+            <span>Problem Solving:</span> Identifying and breaking down problems
+            into solvable steps.
+          </div>
+          <div className="sliderTooltip">
+            <span>Critical Thinking:</span> Making judgments by using standards
+            to evaluate ideas, information, and related results.
+          </div>
+        </SliderTooltipStyles>
+      );
+    case 'skillsMath':
+      return (
+        <SliderTooltipStyles>
+          <div className="sliderTooltip">
+            <span>Measurement and Calculation:</span> Measuing and calculating
+            amounts, areas, volumes, distances.
+          </div>
+          <div className="sliderTooltip">
+            <span>Money Math:</span> Using math skills to deal with money, such
+            as handling cash, preparing bills, making payments.
+          </div>
+          <div className="sliderTooltip">
+            <span>Number Estimation:</span> Quickly guessing answers to
+            arithmetic questions (addition, subtraction, multiplication,
+            division).
+          </div>
+          <div className="sliderTooltip">
+            <span>Scheduling, Budgeting, Accounting:</span> Planning for the
+            best use of time and money, and monitoring the use of time and
+            money.
+          </div>
+        </SliderTooltipStyles>
+      );
+    case 'skillsComp':
+      return (
+        <SliderTooltipStyles>
+          <div className="sliderTooltip">
+            <span>Data Analysis:</span> Gathering and analyzing numerical or
+            categorical data.
+          </div>
+          <div className="sliderTooltip">
+            <span>Finding Information:</span> Searching through various sources
+            to figure out how to complete a task.
+          </div>
+          <div className="sliderTooltip">
+            <span>Digital Technology:</span> Using any type of digital
+            technology.
+          </div>
+          <div className="sliderTooltip">
+            <span>Document Use:</span> Using different types of material
+            (labels, signs, lists, tables, graphs, forms, diagrams,
+            blueprints...) to gather information.
+          </div>
+        </SliderTooltipStyles>
+      );
     default:
       return;
   }
