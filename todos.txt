@@ -8,16 +8,13 @@ legend titles
 
 todo:
 - filters should be coloured up?
-- add pop-up mobile tooltip to desktop on click (for more info)
 - add more info to mobile tooltip (links...)
-- add interval to resize, don't just call it once
+- fix resize/translate function when size-sorted
 - sort by type could be more spaced-out on mobile
 - tune subskill filter limits to be less excessive
 - clean up code
-- scatterplot
-- change sizes?
+- scatterplot?
 - consider adding setTimeout to FORCE sort functions to increase collision (or repel) force (to spread out circles after transitions)
-
 
 bug: filtering in colour-sorted mode shouldn't restart the simulation x,y forces
 
