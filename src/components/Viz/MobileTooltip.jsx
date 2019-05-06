@@ -1,15 +1,40 @@
 import Drawer from '@material-ui/core/Drawer';
+import Button from '@material-ui/core/Button';
 import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
 import SchoolIcon from '@material-ui/icons/SchoolRounded';
 import WarningIcon from '@material-ui/icons/WarningRounded';
+import OpenInNewIcon from '@material-ui/icons/OpenInNewRounded';
 import React from 'react';
 import styled from 'styled-components';
+import { TABLET_MIN_WIDTH } from '../../utils/constants';
 
 const getMobileTooltipStyles = ({
   salaryMedPercent,
   automationRisk,
   educationPercent,
 }) => styled.div`
+  position: relative;
+  .btnWrapper {
+    width: 100%;
+    display: grid;
+    justify-items: end;
+    @media (min-width: ${TABLET_MIN_WIDTH}px) {
+    }
+  }
+  .btnMoreInfo {
+    padding: 5px 12px;
+    span:first-child {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-gap: 8px;
+    }
+
+    @media (min-width: ${TABLET_MIN_WIDTH}px) {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+    }
+  }
   font-family: 'Roboto light';
   margin: 0;
   padding: 10pt 18pt 18pt 18pt;
@@ -36,8 +61,12 @@ const getMobileTooltipStyles = ({
   .grid {
     display: grid;
     align-items: start;
-    grid-template-columns: 1fr 2.7fr;
-    grid-gap: 15px;
+    grid-template-columns: auto 1fr;
+    grid-gap: 15px 30px;
+    margin-bottom: 18px;
+    @media (min-width: ${TABLET_MIN_WIDTH}px) {
+      margin-bottom: 0;
+    }
   }
   .data {
     margin-top: 3px;
@@ -82,6 +111,12 @@ const getMobileTooltipStyles = ({
       border: 1px solid black;
     }
   }
+  .salary {
+    margin-left: -1ch;
+  }
+  .study {
+    margin-left: -1.5ch;
+  }
 `;
 const MobileTooltipContents = ({ data }) => {
   const { job, industry, salaryMed, color, automationRisk, yearsStudy } = data;
@@ -111,7 +146,7 @@ const MobileTooltipContents = ({ data }) => {
             <div className="bar salaryBar" />
           </div>
         </div>
-        <div className="data textAlignLeft">
+        <div className="data textAlignLeft salary">
           <strong>${salaryMed.toFixed(0)}K</strong> per year
         </div>
 
@@ -125,7 +160,7 @@ const MobileTooltipContents = ({ data }) => {
           </div>
         </div>
         <div>
-          <div className="data textAlignLeft">
+          <div className="data textAlignLeft study">
             ~ <strong>{yearsStudy.toFixed(1)} years</strong>
           </div>
         </div>
@@ -139,10 +174,15 @@ const MobileTooltipContents = ({ data }) => {
             <div className="bar riskBar" />
           </div>
         </div>
-        <div className="data textAlignLeft">
+        <div className="data textAlignLeft automation">
           <strong>{(automationRisk * 100).toFixed(0)}%</strong> chance of tasks
           being replaced by machines
         </div>
+      </div>
+      <div className="btnWrapper">
+        <Button variant="outlined" className="btnMoreInfo" disabled={true}>
+          Learn More <OpenInNewIcon />
+        </Button>
       </div>
     </MobileTooltipStyles>
   );

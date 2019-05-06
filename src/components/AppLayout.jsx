@@ -216,7 +216,7 @@ const AppLayout = props => {
           </AppLayoutStyles>
 
           {tooltipProps && isTabletOrLarger && <Tooltip {...tooltipProps} />}
-          {!isTabletOrLarger && <MobileTooltip {...mobileTooltipProps} />}
+          <MobileTooltip {...mobileTooltipProps} />
         </React.Fragment>
       )}
     </MediaQuery>
