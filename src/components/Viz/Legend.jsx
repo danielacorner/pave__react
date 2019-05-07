@@ -6,88 +6,88 @@ import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
-const LegendStyles = styled.div`
-  position: fixed;
-  bottom: 25px;
-  right: 20px;
-  left: 20px;
-  pointer-events: none;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  font-family: system-ui;
-  opacity: 0.5;
-  &:hover {
-    opacity: 1;
-  }
-  .colours,
-  .sizes {
-    border-radius: 6px;
-    .colourText,
-    .sizeText {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      max-width: 150px;
-    }
-    &:hover {
-      .colour,
-      .size {
-        background: rgba(255, 255, 255, 0.8);
-      }
-      .colourText,
-      .sizeText {
-        max-width: none;
-      }
-      .colourText {
-        padding-right: 7px;
-      }
-    }
-  }
-  .coloursWrapper {
-    display: grid;
-    align-content: end;
-  }
-  .colours {
-    display: grid;
-    .colour {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: center;
-      grid-gap: 7px;
-      .colourCircleWrapper {
-        padding-top: 5px;
-        pointer-events: auto;
-      }
-      .colourCircle {
-        border-radius: 100%;
-        width: 15px;
-        height: 15px;
-        border: 1px solid black;
-      }
-    }
-  }
-  .sizes {
-    display: grid;
-    grid-template-rows: 1fr auto auto auto;
-    .size {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      padding-top: 20px;
-      transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
-      .sizeCircle {
-        transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
-        justify-self: center;
-        border: 1px solid black;
-        border-radius: 100%;
-      }
-      .sizeText {
-        pointer-events: auto;
-        text-align: right;
-      }
-    }
-  }
-`;
+// const LegendStyles = styled.div`
+//   position: fixed;
+//   bottom: 25px;
+//   right: 20px;
+//   left: 20px;
+//   pointer-events: none;
+//   display: grid;
+//   grid-template-columns: auto 1fr auto;
+//   font-family: system-ui;
+//   opacity: 0.5;
+//   &:hover {
+//     opacity: 1;
+//   }
+//   .colours,
+//   .sizes {
+//     border-radius: 6px;
+//     .colourText,
+//     .sizeText {
+//       text-overflow: ellipsis;
+//       overflow: hidden;
+//       white-space: nowrap;
+//       max-width: 150px;
+//     }
+//     &:hover {
+//       .colour,
+//       .size {
+//         background: rgba(255, 255, 255, 0.8);
+//       }
+//       .colourText,
+//       .sizeText {
+//         max-width: none;
+//       }
+//       .colourText {
+//         padding-right: 7px;
+//       }
+//     }
+//   }
+//   .coloursWrapper {
+//     display: grid;
+//     align-content: end;
+//   }
+//   .colours {
+//     display: grid;
+//     .colour {
+//       display: grid;
+//       grid-template-columns: auto 1fr;
+//       align-items: center;
+//       grid-gap: 7px;
+//       .colourCircleWrapper {
+//         padding-top: 5px;
+//         pointer-events: auto;
+//       }
+//       .colourCircle {
+//         border-radius: 100%;
+//         width: 15px;
+//         height: 15px;
+//         border: 1px solid black;
+//       }
+//     }
+//   }
+//   .sizes {
+//     display: grid;
+//     grid-template-rows: 1fr auto auto auto;
+//     .size {
+//       display: grid;
+//       grid-template-columns: 1fr auto;
+//       align-items: center;
+//       padding-top: 20px;
+//       transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+//       .sizeCircle {
+//         transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+//         justify-self: center;
+//         border: 1px solid black;
+//         border-radius: 100%;
+//       }
+//       .sizeText {
+//         pointer-events: auto;
+//         text-align: right;
+//       }
+//     }
+//   }
+// `;
 
 const MobileLegendStyles = styled.div`
   font-family: system-ui;
@@ -229,7 +229,8 @@ const Legend = ({ colours, sizes, radiusScale }) => {
             <MobileLegendStyles className={legendExpanded ? 'expanded' : ''}>
               <div className="btnWrapper">
                 <Button
-                  size="small"
+                  size="large"
+                  style={{ padding: '8px 16px 8px 24px' }}
                   onClick={() => setLegendExpanded(!legendExpanded)}
                 >
                   Legend{' '}

@@ -49,7 +49,7 @@ position: relative;
   display: grid;
   grid-gap: 8px;
   /* Mobile */
-  grid-template-rows:auto auto auto 1fr 24px;
+  grid-template-rows:auto auto auto 1fr 34px;
   height: 100vh;
   min-height: 890px;
   @media (min-width: 340px) {
@@ -59,7 +59,7 @@ position: relative;
   @media (min-width: 400px) {
   overflow: hidden;
     grid-gap: 16px;
-    grid-template-rows:auto auto auto 1fr 16px;
+    grid-template-rows:auto auto auto 1fr 26px;
   }
   /* @media (min-width: ${TABLET_MIN_WIDTH}px) {
     grid-template-rows: auto auto 1fr auto;
