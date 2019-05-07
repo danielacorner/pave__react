@@ -135,7 +135,7 @@ const Tooltip = React.memo(({ data, left, top }) => {
           <div className="bar emptyBar">
             <div
               className="bar salaryBar"
-              style={{ width: salaryMedPercent * 100 }}
+              style={{ width: `${salaryMedPercent * 100}%` }}
             />
           </div>
         </div>
@@ -151,7 +151,7 @@ const Tooltip = React.memo(({ data, left, top }) => {
           <div className="bar emptyBar">
             <div
               className="bar educationBar"
-              style={{ width: educationPercent * 100 }}
+              style={{ width: `${educationPercent * 100}%` }}
             />
           </div>
         </div>
@@ -169,7 +169,7 @@ const Tooltip = React.memo(({ data, left, top }) => {
           <div className="bar emptyBar">
             <div
               className="bar riskBar"
-              style={{ width: automationRisk * 100 }}
+              style={{ width: `${automationRisk * 100}%` }}
             />
           </div>
         </div>
