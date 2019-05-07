@@ -145,12 +145,12 @@ const MobileLegendStyles = styled.div`
   .sizes {
     margin-left: 10px;
     display: grid;
-    grid-template-rows: 1fr auto auto auto;
     justify-content: start;
     align-items: center;
-    grid-gap: 20px;
     padding-bottom: 20px;
+    grid-gap: 5%;
     .size {
+      min-height: 30px;
       display: grid;
       grid-template-columns: 1fr 2.5fr;
       align-items: center;
@@ -187,41 +187,42 @@ const Legend = ({ colours, sizes, radiusScale }) => {
       {isAboveBreakpoint => {
         if (isAboveBreakpoint) {
           return (
-            <LegendStyles>
-              <div className="coloursWrapper">
-                <div className="title">Career Industries</div>
-                <div className="colours">
-                  {colours.map(({ colour, text }) => (
-                    <div key={colour} className="colour">
-                      <div className="colourCircleWrapper">
-                        <div
-                          className="colourCircle"
-                          style={{ background: colour }}
-                        />
-                      </div>
-                      <div className="colourText">{text}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="spacer" />
-              <div className="sizes">
-                <div className="title">Career Sizes</div>
-                <div className="spacer" />
-                {sizes.map(({ size, text }) => (
-                  <div key={size} className="size">
-                    <div
-                      className="sizeCircle"
-                      style={{
-                        width: `${radiusScale(size) * 2}px`,
-                        height: `${radiusScale(size) * 2}px`,
-                      }}
-                    />
-                    <div className="sizeText">{numberWithCommas(text)}</div>
-                  </div>
-                ))}
-              </div>
-            </LegendStyles>
+            // <LegendStyles>
+            //   <div className="coloursWrapper">
+            //     <div className="title">Career Industries</div>
+            //     <div className="colours">
+            //       {colours.map(({ colour, text }) => (
+            //         <div key={colour} className="colour">
+            //           <div className="colourCircleWrapper">
+            //             <div
+            //               className="colourCircle"
+            //               style={{ background: colour }}
+            //             />
+            //           </div>
+            //           <div className="colourText">{text}</div>
+            //         </div>
+            //       ))}
+            //     </div>
+            //   </div>
+            //   <div className="spacer" />
+            //   <div className="sizes">
+            //     <div className="title">Career Sizes</div>
+            //     <div className="spacer" />
+            //     {sizes.map(({ size, text }, idx) => (
+            //       <div key={size} className={`size size${idx + 1}`}>
+            //         <div
+            //           className="sizeCircle"
+            //           style={{
+            //             width: `${radiusScale(size) * 2}px`,
+            //             height: `${radiusScale(size) * 2}px`,
+            //           }}
+            //         />
+            //         <div className="sizeText">{numberWithCommas(text)}</div>
+            //       </div>
+            //     ))}
+            //   </div>
+            // </LegendStyles>
+            null
           );
         } else if (!isAboveBreakpoint) {
           return (
@@ -255,9 +256,8 @@ const Legend = ({ colours, sizes, radiusScale }) => {
                 <div className="spacer" />
                 <div className="title">Career Sizes</div>
                 <div className="sizes">
-                  <div className="spacer" />
-                  {sizes.map(({ size, text }) => (
-                    <div key={size} className="size">
+                  {sizes.map(({ size, text }, idx) => (
+                    <div key={size} className={`size size${idx + 1}`}>
                       <div
                         className="sizeCircle"
                         style={{

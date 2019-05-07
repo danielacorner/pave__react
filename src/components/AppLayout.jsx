@@ -115,7 +115,7 @@ const AppLayout = props => {
     sizes: [
       { size: 1000, text: '1000 workers' },
       { size: 10000, text: '10000 workers' },
-      { size: 100000, text: '100000 workers' },
+      { size: 50000, text: '50000 workers' },
     ],
     radiusScale: getRadiusScale(),
   };
