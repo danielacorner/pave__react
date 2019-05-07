@@ -133,7 +133,8 @@ const AppLayout = props => {
   };
   const stopTooltipActive = () => {
     tooltipTimer.current = setTimeout(() => {
-      document.querySelector('.mouseoverTooltip').classList.add('fadeOut');
+      const tooltip = document.querySelector('.mouseoverTooltip');
+      tooltip && tooltip.classList.add('fadeOut');
       setTimeout(() => {
         setIsTooltipActive(false), setTooltipProps(null);
       }, TOOLTIP_FADEOUT);
