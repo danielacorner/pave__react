@@ -113,7 +113,8 @@ const Tooltip = React.memo(({ data, left, top }) => {
     <TooltipStyles
       className="mouseoverTooltip"
       style={{
-        top,
+        // TODO: top seems to increase with window width BUT WHY
+        top: top + 50,
         left:
           left + TOOLTIP_WIDTH + TOOLTIP_HZ_OFFSET > window.innerWidth
             ? left - TOOLTIP_WIDTH - 2 * TOOLTIP_HZ_OFFSET

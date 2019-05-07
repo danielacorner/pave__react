@@ -7,10 +7,9 @@ legend titles
 
 
 todo:
-- tooltips should glide like Recharts (content changes but div doesn't re-render)
-- filters should be coloured up?
-- add more info to mobile tooltip (links...)
-- fix resize/translate function when size-sorted
+- filters should be coloured upwards? (reversed, start filled, drag right to empty)
+- add more info to bottomsheet tooltip (links...)
+- fix resize/translate function when size-sorted (circles shouldn't overlap container)
 - sort by type could be more spaced-out on mobile
 - tune subskill filter limits to be less excessive
 - clean up code
