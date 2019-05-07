@@ -1,26 +1,19 @@
 import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
 import SchoolIcon from '@material-ui/icons/SchoolRounded';
 import WarningIcon from '@material-ui/icons/WarningRounded';
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
-import { ControlsContext } from '../Context/ContextProvider';
 
-const getTooltipStyles = ({
-  color,
-  salaryMedPercent,
-  automationRisk,
-  educationPercent,
-  left,
-  top,
-}) => styled.div`
+const TooltipStyles = styled.div`
+  &.fadeOut {
+    opacity: 0;
+  }
+  pointer-events: none;
+  transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
   width: ${TOOLTIP_WIDTH}px;
   position: fixed;
   z-index: 999;
-  top: ${top}px;
-  left: ${left + TOOLTIP_WIDTH + TOOLTIP_HZ_OFFSET > window.innerWidth
-    ? left - TOOLTIP_WIDTH - 2 * TOOLTIP_HZ_OFFSET
-    : left + TOOLTIP_HZ_OFFSET}px;
   font-family: 'Roboto light';
   border: 1px solid black;
   background: white;
@@ -75,15 +68,12 @@ const getTooltipStyles = ({
     height: 10px;
     &.salaryBar {
       background: lime;
-      width: ${salaryMedPercent * 100}%;
     }
     &.riskBar {
       background: tomato;
-      width: ${automationRisk * 100}%;
     }
     &.educationBar {
       background: cornflowerblue;
-      width: ${educationPercent * 100}%;
     }
     &:not(.emptyBar) {
       margin: -1px 0 0 -1px;
@@ -98,10 +88,10 @@ const getTooltipStyles = ({
 `;
 
 const Tooltip = React.memo(({ data, left, top }) => {
-  const {
-    state: { zScale, clusterSelector },
-  } = useContext(ControlsContext);
-  const color = zScale(data[clusterSelector]);
+  // const {
+  //   state: { zScale, clusterSelector },
+  // } = useContext(ControlsContext);
+  // const color = zScale(data[clusterSelector]);
   const {
     salaryMed,
     automationRisk,
@@ -112,30 +102,24 @@ const Tooltip = React.memo(({ data, left, top }) => {
   } = data;
   // TODO: add arrow touching circle
   // TODO: swap out circle for job image on hover
-  // console.log(
-  //   zScale,
-  //   clusterSelector,
-  //   color,
-  //   data[clusterSelector],
-  //   zScale(data[clusterSelector]),
-  // );
   // TODO: find reasonable salarymed?
   const salaryMedPercent = salaryMed / 75;
   // TODO: years of study (min, max?)
   const educationPercent = yearsStudy / 7;
-  const TooltipStyles = getTooltipStyles({
-    color,
-    salaryMedPercent,
-    automationRisk,
-    educationPercent,
-    left,
-    top,
-  });
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
   return (
-    <TooltipStyles>
+    <TooltipStyles
+      className="mouseoverTooltip"
+      style={{
+        top,
+        left:
+          left + TOOLTIP_WIDTH + TOOLTIP_HZ_OFFSET > window.innerWidth
+            ? left - TOOLTIP_WIDTH - 2 * TOOLTIP_HZ_OFFSET
+            : left + TOOLTIP_HZ_OFFSET,
+      }}
+    >
       <h3 className="title textAlignLeft">{job}</h3>
       <div className="grid">
         <div className="data industry textAlignLeft">
@@ -148,7 +132,10 @@ const Tooltip = React.memo(({ data, left, top }) => {
             Salary:
           </div>
           <div className="bar emptyBar">
-            <div className="bar salaryBar" />
+            <div
+              className="bar salaryBar"
+              style={{ width: salaryMedPercent * 100 }}
+            />
           </div>
         </div>
         <div className="data textAlignLeft">
@@ -161,7 +148,10 @@ const Tooltip = React.memo(({ data, left, top }) => {
             Study:
           </div>
           <div className="bar emptyBar">
-            <div className="bar educationBar" />
+            <div
+              className="bar educationBar"
+              style={{ width: educationPercent * 100 }}
+            />
           </div>
         </div>
         <div>
@@ -176,7 +166,10 @@ const Tooltip = React.memo(({ data, left, top }) => {
             Risk:
           </div>
           <div className="bar emptyBar">
-            <div className="bar riskBar" />
+            <div
+              className="bar riskBar"
+              style={{ width: automationRisk * 100 }}
+            />
           </div>
         </div>
         <div className="data textAlignLeft">

@@ -1,6 +1,6 @@
 // import queryString from 'query-string'
 import { localPoint } from '@vx/event';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import MediaQuery from 'react-responsive';
 import styled from 'styled-components';
 import { TABLET_MIN_WIDTH, RESIZE_INTERVAL_MS } from '../utils/constants';
@@ -78,6 +78,7 @@ const filterVariables = [
 const AppLayout = props => {
   const [tooltipProps, setTooltipProps] = useState(null);
   const [mobileTooltipProps, setMobileTooltipProps] = useState(null);
+  const [isTooltipActive, setIsTooltipActive] = useState(null);
   const context = useContext(ControlsContext);
   const initialExpandedState = {
     skillsLang: false,
@@ -119,6 +120,25 @@ const AppLayout = props => {
     radiusScale: getRadiusScale(),
   };
 
+  const tooltipTimer = useRef();
+
+  const TOOLTIP_DURATION = 1500;
+  const TOOLTIP_FADEOUT = 500;
+
+  const startTooltipActive = () => {
+    clearTimeout(tooltipTimer.current);
+    if (!isTooltipActive) {
+      setIsTooltipActive(true);
+    }
+  };
+  const stopTooltipActive = () => {
+    tooltipTimer.current = setTimeout(() => {
+      document.querySelector('.mouseoverTooltip').classList.add('fadeOut');
+      setTimeout(() => {
+        setIsTooltipActive(false), setTooltipProps(null);
+      }, TOOLTIP_FADEOUT);
+    }, TOOLTIP_DURATION);
+  };
   return (
     <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
       {isTabletOrLarger => (
@@ -183,6 +203,7 @@ const AppLayout = props => {
                         left: x + 20,
                       };
                       setTooltipProps(tooltipProps);
+                      startTooltipActive();
                     }
                   : () => {}
               }
@@ -193,13 +214,7 @@ const AppLayout = props => {
                 };
                 setMobileTooltipProps(mobileTooltipProps);
               }}
-              onMouseOut={
-                isTabletOrLarger
-                  ? () => {
-                      setTooltipProps(null);
-                    }
-                  : () => {}
-              }
+              onMouseOut={isTabletOrLarger ? stopTooltipActive : () => {}}
               filtersQuery={props.location.search}
               onLoadFromSnapshot={ssUrl =>
                 context.handleLoadFromSnapshot(ssUrl)
@@ -215,7 +230,7 @@ const AppLayout = props => {
             {legendVisible && <Legend {...legendProps} />}
           </AppLayoutStyles>
 
-          {tooltipProps && isTabletOrLarger && <Tooltip {...tooltipProps} />}
+          {isTooltipActive && isTabletOrLarger && <Tooltip {...tooltipProps} />}
           <MobileTooltip {...mobileTooltipProps} />
         </React.Fragment>
       )}
