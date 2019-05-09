@@ -83,6 +83,7 @@ const SortButtonsStyles = styled.div`
     grid-gap: 6px;
     justify-items: start;
     .formControl {
+      background: white;
       width: 180px;
       border: 1px solid rgba(0, 0, 0, 0.26);
       border-radius: 4px;
@@ -119,6 +120,8 @@ const SortButtonsStyles = styled.div`
     height: 100%;
   }
   .btnReset {
+    text-transform: none;
+    background: white;
     max-height: 60px;
     padding: 2px 16px 0 16px;
     justify-self: end;

@@ -6,6 +6,8 @@ import SendIcon from '@material-ui/icons/SendRounded';
 import * as emailjs from 'emailjs-com';
 
 const FeedbackFormStyles = styled.div`
+  border-radius: 4px;
+  font-family: system-ui;
   position: fixed;
   z-index: 99999;
   top: 0;
@@ -15,6 +17,9 @@ const FeedbackFormStyles = styled.div`
   display: grid;
   place-items: center center;
   background: rgba(0, 0, 0, 0.4);
+  h1 {
+    margin: 0;
+  }
   .formWrapper {
     background: white;
     position: relative;
@@ -159,10 +164,13 @@ export const FeedbackForm = ({ setIsFeedbackOpen }) => {
             </Button>
           </div>
         </form>
+        <IconButton
+          className="btnClose"
+          onClick={() => setIsFeedbackOpen(false)}
+        >
+          <CloseIcon />
+        </IconButton>
       </div>
-      <IconButton>
-        <CloseIcon />
-      </IconButton>
     </FeedbackFormStyles>
   );
 };

@@ -90,11 +90,13 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 // `;
 
 const MobileLegendStyles = styled.div`
+  .btnLegendWrapper {
+    background: white;
+  }
   font-family: system-ui;
   position: absolute;
   bottom: 0;
   width: 100%;
-  background: white;
   z-index: 99;
   margin-top: -8px;
   display: grid;

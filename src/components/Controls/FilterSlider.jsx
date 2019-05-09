@@ -16,6 +16,7 @@ import {
 import { ControlsContext } from '../Context/ContextProvider';
 
 const LabelAndSliderStyles = styled.div`
+  background: white;
   font-family: system-ui;
   position: relative;
   .expandLabel {

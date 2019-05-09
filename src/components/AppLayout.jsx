@@ -16,10 +16,12 @@ import MessageIcon from '@material-ui/icons/MessageRounded';
 import { FeedbackForm } from './FeedbackForm';
 
 const AppTitleStyles = styled.div`
+  background: white;
   position: relative;
   font-family: system-ui;
   margin: 8px 12px 0 12px;
-  h1 {
+  h1.title {
+    max-width: 500px;
     font-size: 24px;
     margin: 0;
   }
@@ -30,22 +32,9 @@ const AppTitleStyles = styled.div`
     font-size: 18px;
     text-shadow: none;
   }
-  .btnFeedback {
-    text-transform: none;
-    position: absolute;
-    top: 0;
-    right: 0;
-    span {
-      display: grid;
-      grid-template-columns: auto auto;
-      grid-gap: 5px;
-    }
-  }
 `;
 
 const AppTitle = () => {
-  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
-
   return (
     <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
       {isTabletOrLarger => (
@@ -60,15 +49,6 @@ const AppTitle = () => {
               result.
             </h5>
           </div>
-          <Button
-            onClick={() => setIsFeedbackOpen(true)}
-            className="btnFeedback"
-          >
-            Feedback <MessageIcon />
-          </Button>
-          {isFeedbackOpen && (
-            <FeedbackForm setIsFeedbackOpen={setIsFeedbackOpen} />
-          )}
         </AppTitleStyles>
       )}
     </MediaQuery>
@@ -76,7 +56,19 @@ const AppTitle = () => {
 };
 
 const AppLayoutStyles = styled.div`
-position: relative;
+ .btnFeedback {
+    background: white;
+    text-transform: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    span {
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-gap: 5px;
+    }
+  }
+  position: relative;
   width: 100%;
   display: grid;
   grid-gap: 8px;
@@ -85,11 +77,11 @@ position: relative;
   height: 100vh;
   min-height: 890px;
   @media (min-width: 340px) {
-  min-height: 750px;
+    min-height: 750px;
   }
   /* Tablet and up */
   @media (min-width: 400px) {
-  overflow: hidden;
+    overflow: hidden;
     grid-gap: 16px;
     grid-template-rows:auto auto auto 1fr 26px;
   }
@@ -98,7 +90,7 @@ position: relative;
   } */
   padding: 10px 10px 0 10px;
   box-sizing: border-box;
-`;
+  `;
 
 const filterVariables = [
   'skillsLang',
@@ -108,6 +100,7 @@ const filterVariables = [
 ];
 
 const AppLayout = props => {
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [tooltipProps, setTooltipProps] = useState(null);
   const [mobileTooltipProps, setMobileTooltipProps] = useState(null);
   const [isTooltipActive, setIsTooltipActive] = useState(null);
@@ -209,6 +202,15 @@ const AppLayout = props => {
             }
           >
             <AppTitle />
+            <Button
+              onClick={() => setIsFeedbackOpen(true)}
+              className="btnFeedback"
+            >
+              Feedback <MessageIcon />
+            </Button>
+            {isFeedbackOpen && (
+              <FeedbackForm setIsFeedbackOpen={setIsFeedbackOpen} />
+            )}
             <FiltersPanel
               filterVariables={filterVariables}
               expanded={expanded}
