@@ -131,7 +131,9 @@ const FilterSlider = ({
         </Tooltip>
         <Tooltip title={(filterExpanded ? 'Hide' : 'View') + ' Sub-Skills'}>
           <IconButton
-            className={`expand${filterExpanded ? ' expandOpen' : ''}`}
+            className={`expand expand${filterVar}${
+              filterExpanded ? ' expandOpen' : ''
+            }`}
             onClick={() =>
               setExpanded({ ...expanded, [filterVar]: !filterExpanded })
             }

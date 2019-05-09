@@ -95,7 +95,7 @@ const MobileLegendStyles = styled.div`
   bottom: 0;
   width: 100%;
   background: white;
-  z-index: 999;
+  z-index: 99;
   margin-top: -8px;
   display: grid;
   place-items: center;
@@ -227,7 +227,7 @@ const Legend = ({ colours, sizes, radiusScale }) => {
         } else if (!isAboveBreakpoint) {
           return (
             <MobileLegendStyles className={legendExpanded ? 'expanded' : ''}>
-              <div className="btnWrapper">
+              <div className="btnLegendWrapper">
                 <Button
                   size="large"
                   style={{ padding: '8px 16px 8px 24px' }}

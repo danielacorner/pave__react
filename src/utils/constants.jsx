@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
+export const COLOUR_SALARY = 'lime';
+export const COLOUR_STUDY = 'cornflowerblue';
+export const COLOUR_RISK = 'tomato';
+
 export const RESIZE_INTERVAL_MS = 5000;
 export const MOBILE_MIN_WIDTH = 360;
 export const MOBLET_MIN_WIDTH = 475;

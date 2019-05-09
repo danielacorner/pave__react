@@ -13,3 +13,6 @@
   pointer-events: none;
   font-size: calc(0.7rem + 0.3vmin);
 }
+.react-joyride__tooltip {
+  font-family: system-ui;
+}

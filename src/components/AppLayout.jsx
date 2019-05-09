@@ -11,8 +11,12 @@ import MobileTooltip from './Viz/MobileTooltip';
 import Tooltip from './Viz/Tooltip';
 import Viz from './Viz/Viz';
 import Legend from './Viz/Legend';
+import { Button } from '@material-ui/core';
+import MessageIcon from '@material-ui/icons/MessageRounded';
+import { FeedbackForm } from './FeedbackForm';
 
 const AppTitleStyles = styled.div`
+  position: relative;
   font-family: system-ui;
   margin: 8px 12px 0 12px;
   h1 {
@@ -26,22 +30,50 @@ const AppTitleStyles = styled.div`
     font-size: 18px;
     text-shadow: none;
   }
+  .btnFeedback {
+    text-transform: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    span {
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-gap: 5px;
+    }
+  }
 `;
-const AppTitle = () => (
-  <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
-    {isTabletOrLarger => (
-      <AppTitleStyles>
-        <h1>
-          Goodjob 🎈 <span>Explore Canadian Careers</span>
-        </h1>
-        <h5>
-          Adjust the skill level controls to filter your search.{' '}
-          {isTabletOrLarger ? 'Hover over' : 'Click'} a circle to see a result.
-        </h5>
-      </AppTitleStyles>
-    )}
-  </MediaQuery>
-);
+
+const AppTitle = () => {
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
+  return (
+    <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
+      {isTabletOrLarger => (
+        <AppTitleStyles>
+          <div>
+            <h1 className="title">
+              Goodjob 🎈 <span>Explore Canadian Careers</span>
+            </h1>
+            <h5>
+              Adjust the skill level controls to filter your search.{' '}
+              {isTabletOrLarger ? 'Hover over' : 'Click'} a circle to see a
+              result.
+            </h5>
+          </div>
+          <Button
+            onClick={() => setIsFeedbackOpen(true)}
+            className="btnFeedback"
+          >
+            Feedback <MessageIcon />
+          </Button>
+          {isFeedbackOpen && (
+            <FeedbackForm setIsFeedbackOpen={setIsFeedbackOpen} />
+          )}
+        </AppTitleStyles>
+      )}
+    </MediaQuery>
+  );
+};
 
 const AppLayoutStyles = styled.div`
 position: relative;
