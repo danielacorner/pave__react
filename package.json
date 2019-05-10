@@ -12,7 +12,6 @@
     "@material-ui/icons": "^3.0.1",
     "@material-ui/lab": "^3.0.0-alpha.17",
     "@reach/router": "^1.2.1",
-    "@rehooks/window-size": "^1.0.2",
     "@vx/axis": "^0.0.179",
     "@vx/event": "^0.0.179",
     "@vx/scale": "^0.0.179",
@@ -32,7 +31,8 @@
     "react-responsive": "^6.1.1",
     "react-scripts": "1.1.5",
     "recharts": "^1.5.0",
-    "styled-components": "^3.4.9"
+    "styled-components": "^3.4.9",
+    "terser": "^3.17.0"
   },
   "scripts": {
     "start": "react-app-rewired start",

@@ -15,7 +15,7 @@ import { Button } from '@material-ui/core';
 import MessageIcon from '@material-ui/icons/MessageRounded';
 import { FeedbackForm } from './FeedbackForm';
 import FORCE from './FORCE';
-import useWindowSize from '@rehooks/window-size';
+import { useWindowSize } from './useWindowSize';
 
 const AppTitleStyles = styled.div`
   background: white;
