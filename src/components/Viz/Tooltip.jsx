@@ -5,7 +5,8 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
 import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
-const TOOLTIP_TRANSITION = `all 0.7s cubic-bezier(0.165, 0.84, 0.44, 1)`;
+const TOOLTIP_TRANSITION = (type, time) =>
+  `${type} ${time}s cubic-bezier(0.165, 0.84, 0.44, 1)`;
 
 const TooltipStyles = styled.div`
   &.fadeOut {
@@ -42,14 +43,17 @@ const TooltipStyles = styled.div`
     grid-column: 1 / -1;
     font-size: 0.9em;
     .industry {
+      margin-bottom: 3px;
       display: grid;
       grid-template-columns: auto 1fr;
       align-items: center;
       grid-gap: 5px;
       .industryColour {
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
+        border: 1px solid black;
         border-radius: 100%;
+        transition: ${TOOLTIP_TRANSITION('all', 0.6)};
       }
     }
   }
@@ -78,7 +82,7 @@ const TooltipStyles = styled.div`
     place-items: center start;
   }
   .bar {
-    transition: ${TOOLTIP_TRANSITION};
+    transition: ${TOOLTIP_TRANSITION('all', 0.6)};
     align-self: center;
     height: 10px;
     &.salaryBar {
@@ -105,33 +109,32 @@ const TooltipStyles = styled.div`
     position: relative;
   }
   .workersPointer {
-    transition: ${TOOLTIP_TRANSITION};
+    transition: ${TOOLTIP_TRANSITION('all', 0.4)};
     position: absolute;
     height: 1px;
     top: 1.25ch;
     background: rgba(0, 0, 0, 0.8);
-  }
-  .industryColour {
-    transition: ${TOOLTIP_TRANSITION};
   }
 `;
 
 const FloatingCircleStyles = styled.div`
   position: absolute;
   .floatingCircle {
-    transition: ${TOOLTIP_TRANSITION};
+    transition: ${TOOLTIP_TRANSITION('background', 0.4)};
     position: relative;
     border-radius: 100%;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
     .floatingCircleMeasure {
-      transition: ${TOOLTIP_TRANSITION};
+      transition: none;
+      /* transition: ${TOOLTIP_TRANSITION(0.4)}; */
       position: absolute;
       background: rgba(0, 0, 0, 0.8);
       left: -6px;
       width: 1px;
     }
     .floatingCircleTick {
-      transition: ${TOOLTIP_TRANSITION};
+      transition: none;
+      /* transition: ${TOOLTIP_TRANSITION(0.4)}; */
       position: absolute;
       background: rgba(0, 0, 0, 0.8);
       width: 6px;
@@ -158,11 +161,7 @@ const FloatingCircle = ({ width, background, right, bottom }) => {
   );
 };
 
-const Tooltip = React.memo(({ data, left, bottom, width }) => {
-  // const {
-  //   state: { zScale, clusterSelector },
-  // } = useContext(ControlsContext);
-  // const color = zScale(data[clusterSelector]);
+const Tooltip = ({ data, left, bottom, width }) => {
   const {
     salaryMed,
     automationRisk,
@@ -279,5 +278,5 @@ const Tooltip = React.memo(({ data, left, bottom, width }) => {
       </div>
     </TooltipStyles>
   );
-});
+};
 export default Tooltip;
