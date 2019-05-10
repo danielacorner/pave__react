@@ -14,6 +14,7 @@ import Legend from './Viz/Legend';
 import { Button } from '@material-ui/core';
 import MessageIcon from '@material-ui/icons/MessageRounded';
 import { FeedbackForm } from './FeedbackForm';
+import FORCE from './FORCE';
 
 const AppTitleStyles = styled.div`
   background: white;
@@ -104,7 +105,12 @@ const AppLayout = props => {
   const [tooltipProps, setTooltipProps] = useState(null);
   const [mobileTooltipProps, setMobileTooltipProps] = useState(null);
   const [isTooltipActive, setIsTooltipActive] = useState(null);
-  const context = useContext(ControlsContext);
+  const {
+    state,
+    handleResize,
+    restartSimulation,
+    handleLoadFromSnapshot,
+  } = useContext(ControlsContext);
   const initialExpandedState = {
     skillsLang: false,
     skillsLogi: false,
@@ -123,11 +129,14 @@ const AppLayout = props => {
     zScale,
     colouredByValue,
     uniqueClusterValues,
-  } = context.state;
-
-  const { handleResize } = context;
+  } = state;
 
   useEffect(() => {
+    window.addEventListener('mouseup', () => {
+      if (FORCE.paused) {
+        restartSimulation();
+      }
+    });
     const resizeTimer = setInterval(handleResize, RESIZE_INTERVAL_MS);
     return () => clearInterval(resizeTimer);
   }, []);
@@ -147,7 +156,7 @@ const AppLayout = props => {
 
   const tooltipTimer = useRef();
 
-  const TOOLTIP_DURATION = 1500;
+  const TOOLTIP_DURATION = 500;
   const TOOLTIP_FADEOUT = 500;
 
   const startTooltipActive = () => {
@@ -251,9 +260,7 @@ const AppLayout = props => {
               }}
               onMouseOut={isTabletOrLarger ? stopTooltipActive : () => {}}
               filtersQuery={props.location.search}
-              onLoadFromSnapshot={ssUrl =>
-                context.handleLoadFromSnapshot(ssUrl)
-              }
+              onLoadFromSnapshot={ssUrl => handleLoadFromSnapshot(ssUrl)}
               radiusScale={getRadiusScale()}
               radiusSelector={radiusSelector}
               clusterSelector={clusterSelector}

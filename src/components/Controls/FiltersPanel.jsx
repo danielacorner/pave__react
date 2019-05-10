@@ -34,7 +34,9 @@ const FiltersPanelStyles = styled.div`
 `;
 
 const FiltersPanel = ({ filterVariables, expanded, setExpanded }) => {
-  const context = useContext(ControlsContext);
+  const { handleFilterMouseup, handleFilterChange, state } = useContext(
+    ControlsContext,
+  );
 
   return (
     <FiltersPanelStyles>
@@ -45,11 +47,11 @@ const FiltersPanel = ({ filterVariables, expanded, setExpanded }) => {
             setExpanded={setExpanded}
             key={filterVar}
             filterVar={filterVar}
-            value={context.state.filters[filterVar]}
+            value={state.filters[filterVar]}
             onChange={value => {
-              context.handleFilterChange(filterVar, value);
+              handleFilterChange(filterVar, value);
             }}
-            onMouseUp={context.handleFilterMouseup}
+            onMouseUp={handleFilterMouseup}
           />
         ))}
       </div>

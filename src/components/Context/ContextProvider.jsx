@@ -219,15 +219,16 @@ class ContextProvider extends Component {
     );
   };
   handleFilterMouseup = () => {
-    let newMinima = {};
-    // set all filters to new minima on mouseup
     setTimeout(() => {
-      Object.keys(this.state.filters).forEach(filter => {
-        // console.log(Math.max(...this.state.nodes[filter]));
-        newMinima[filter] = Math.min(...this.state.nodes.map(d => d[filter]));
-      });
+      // set all filters to new minima on mouseup
+      // let newMinima = {};
+      // Object.keys(this.state.filters).forEach(filter => {
+      //   newMinima[filter] = Math.min(...this.state.nodes.map(d => d[filter]));
+      // });
       // restart the simulation
-      this.setState({ filters: newMinima }, this.restartSimulation());
+      // this.setState({ filters: newMinima },
+      this.restartSimulation();
+      // );
     }, 0);
   };
   resetFilters = () => {

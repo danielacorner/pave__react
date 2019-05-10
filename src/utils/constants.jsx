@@ -127,11 +127,11 @@ export const SLIDER_TOOLTIP_TEXT = filterVar => {
 export const FILTER_RANGE = filterVar => {
   switch (filterVar) {
     case 'skillsLang':
-      return [0, 75];
+      return [0, 60];
     case 'skillsLogi':
-      return [0, 75];
+      return [0, 60];
     case 'skillsMath':
-      return [0, 75];
+      return [0, 35];
     case 'skillsComp':
       return [0, 75];
 

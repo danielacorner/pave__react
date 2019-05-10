@@ -2,7 +2,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 // import Navbar from './components/Navbar';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { Router /* Link */ } from '@reach/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import AppLayout from './components/AppLayout';
 import ContextProvider from './components/Context/ContextProvider';
@@ -21,10 +21,6 @@ const theme = createMuiTheme({
 });
 
 function App() {
-  useEffect(() => {
-    return () => window.removeEventListener('keydown');
-  }, []);
-
   return (
     <MuiThemeProvider theme={theme}>
       <ContextProvider>
