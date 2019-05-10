@@ -203,8 +203,9 @@ class ContextProvider extends Component {
       nodes: this.filteredNodes(),
     });
     const isStrongForce = this.state.sortedSize && this.state.sortedType;
+    const isMediumForce = this.state.sortedSize;
     setTimeout(() => {
-      FORCE.restartSimulation(this.state.nodes, isStrongForce);
+      FORCE.restartSimulation(this.state.nodes, isStrongForce, isMediumForce);
     }, 200);
     setTimeout(() => {
       this.handleResize();
