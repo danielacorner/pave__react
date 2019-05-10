@@ -120,6 +120,7 @@ const TooltipStyles = styled.div`
 const FloatingCircleStyles = styled.div`
   position: absolute;
   .floatingCircle {
+    opacity:0.4;
     transition: ${TOOLTIP_TRANSITION('background', 0.4)};
     position: relative;
     border-radius: 100%;
@@ -128,7 +129,7 @@ const FloatingCircleStyles = styled.div`
       transition: none;
       /* transition: ${TOOLTIP_TRANSITION(0.4)}; */
       position: absolute;
-      background: rgba(0, 0, 0, 0.8);
+      background: black;
       left: -6px;
       width: 1px;
     }
@@ -136,7 +137,7 @@ const FloatingCircleStyles = styled.div`
       transition: none;
       /* transition: ${TOOLTIP_TRANSITION(0.4)}; */
       position: absolute;
-      background: rgba(0, 0, 0, 0.8);
+      background: black;
       width: 6px;
       height: 1px;
       left: -6px;
