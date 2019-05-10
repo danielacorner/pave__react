@@ -57,6 +57,7 @@ export const FeedbackForm = ({ setIsFeedbackOpen }) => {
   const [sending, setSending] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [senderEmail, setSenderEmail] = useState('');
+  const [senderName, setSenderName] = useState('');
 
   useEffect(() => {
     const keydownListener = event => {
@@ -74,6 +75,7 @@ export const FeedbackForm = ({ setIsFeedbackOpen }) => {
   const sendFeedback = ({
     templateId,
     senderEmail,
+    senderName,
     receiverEmail,
     feedback,
     userId,
@@ -84,6 +86,7 @@ export const FeedbackForm = ({ setIsFeedbackOpen }) => {
         templateId,
         {
           senderEmail,
+          senderName,
           receiverEmail,
           feedback,
         },
@@ -108,7 +111,14 @@ export const FeedbackForm = ({ setIsFeedbackOpen }) => {
       REACT_APP_EMAILJS_USERID: userId,
     } = process.env;
     setSending('sending');
-    sendFeedback({ templateId, senderEmail, receiverEmail, feedback, userId });
+    sendFeedback({
+      templateId,
+      senderName,
+      senderEmail,
+      receiverEmail,
+      feedback,
+      userId,
+    });
   };
 
   return (
@@ -116,6 +126,17 @@ export const FeedbackForm = ({ setIsFeedbackOpen }) => {
       <div className="formWrapper">
         <form className="feedbackForm" onSubmit={handleSubmit}>
           <h1>Your Feedback</h1>
+          <TextField
+            variant="outlined"
+            className="textInput"
+            id="nameEntry"
+            name="nameEntry"
+            onChange={event => {
+              setSenderName(event.target.value);
+            }}
+            placeholder="Name (Optional)"
+            value={senderName}
+          />
           <TextField
             variant="outlined"
             className="textInput"

@@ -16,3 +16,6 @@
 .react-joyride__tooltip {
   font-family: system-ui;
 }
+#root {
+  background: white;
+}

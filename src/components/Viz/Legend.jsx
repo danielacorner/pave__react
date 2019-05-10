@@ -90,6 +90,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 // `;
 
 const MobileLegendStyles = styled.div`
+  background: white;
   .btnLegendWrapper {
     background: white;
   }

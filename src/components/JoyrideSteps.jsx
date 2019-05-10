@@ -7,7 +7,12 @@ const JoyrideTooltipStyles = styled.div`
   margin-bottom: -20px;
   font-size: 18px;
   span {
-    font-style: italic;
+    &.italic {
+      font-style: italic;
+    }
+    &.bold {
+      font-weight: bold;
+    }
     &.salary {
       color: ${COLOUR_SALARY};
     }
@@ -47,8 +52,9 @@ export const joyrideSteps = [
       <JoyrideTooltipStyles>
         <p>Woah, what{`'`}s all this junk?</p>
         <p>
-          Thanks for asking! It{`'`}s called a data visualization, and it
-          contains tonnes of handy-dandy information 🤓.
+          Thanks for asking! It{`'`}s called a{' '}
+          <span className="bold">data visualization</span>, and it contains
+          tonnes of handy-dandy information 🤓.
         </p>
         <p>You could probably spend a while here...</p>
         <p>
@@ -63,9 +69,9 @@ export const joyrideSteps = [
     content: (
       <JoyrideTooltipStyles>
         <p>
-          These {`'`}filter sliders{`'`} will trim away jobs that don{`'`}t suit
-          the skills you may want to learn, so you can make the visualization
-          more relevant to you.
+          These <span className="bold">filter sliders</span> will trim away jobs
+          that don{`'`}t suit the skills you may want to learn, so you can make
+          the visualization more relevant to you.
         </p>
       </JoyrideTooltipStyles>
     ),
@@ -75,9 +81,9 @@ export const joyrideSteps = [
     content: (
       <JoyrideTooltipStyles>
         <p>
-          If you want to get <span>really</span> specific 🔬, click on the{' '}
-          <ExpandMoreIcon /> button to see a total of fifteen sub-skills that
-          make up each of the top-level skill categories.
+          If you want to get <span className="italic">really</span> specific 🔬,
+          click on the <ExpandMoreIcon /> button to see a total of fifteen
+          sub-skills that make up each of the top-level skill categories.
         </p>
       </JoyrideTooltipStyles>
     ),
@@ -87,8 +93,8 @@ export const joyrideSteps = [
     content: (
       <JoyrideTooltipStyles>
         <p>
-          Click here to go <span>back 🕛 in 🕙 time 🕖</span> and reset all the
-          filters to zero.
+          Click here to go <span className="italic">back 🕛 in 🕙 time 🕖</span>{' '}
+          and reset all the filters to zero.
         </p>
       </JoyrideTooltipStyles>
     ),
@@ -117,15 +123,17 @@ export const joyrideSteps = [
     ),
   },
   {
-    target: '.labelAndSelect',
+    target: '.colourByValue',
     content: (
       <JoyrideTooltipStyles>
         <p>We highly recommend 👆 this one here.</p>
         <p>
           You can use it to colour-code the jobs by{' '}
-          <span className="salary">salary per year</span>,{' '}
-          <span className="study">years of study</span>, or{' '}
-          <span className="risk">risk of tasks being replaced by machines</span>
+          <span className="salary bold">salary per year</span>,{' '}
+          <span className="study bold">years of study</span>, or{' '}
+          <span className="risk bold">
+            risk of tasks being replaced by machines
+          </span>
           .
         </p>
       </JoyrideTooltipStyles>
@@ -139,6 +147,7 @@ export const joyrideSteps = [
           Goodjob is a work in progress, and we{`'`}d love to hear what you
           think -- click here to send us a message.
         </p>
+        <p style={{ transform: 'scale(1.5)' }}>🛠</p>
         <p>Thanks for visiting, and check back often for updates! 🎈</p>
       </JoyrideTooltipStyles>
     ),

@@ -2,7 +2,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 // import Navbar from './components/Navbar';
 import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import { Router /* Link */ } from '@reach/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import AppLayout from './components/AppLayout';
 import ContextProvider from './components/Context/ContextProvider';
@@ -21,10 +21,29 @@ const theme = createMuiTheme({
 });
 
 function App() {
+  useEffect(() => {
+    return () => window.removeEventListener('keydown');
+  }, []);
+
   return (
     <MuiThemeProvider theme={theme}>
       <ContextProvider>
-        <Joyride steps={joyrideSteps} continuous={true} />
+        <Joyride
+          spotlightClicks={true}
+          steps={joyrideSteps}
+          continuous={true}
+          getHelpers={helpers => {
+            const leftRightListener = event => {
+              const [LEFT_ARROW, RIGHT_ARROW] = [37, 39];
+              if (event.keyCode === LEFT_ARROW) {
+                helpers.prev();
+              } else if (event.keyCode === RIGHT_ARROW) {
+                helpers.next();
+              }
+            };
+            window.addEventListener('keydown', leftRightListener);
+          }}
+        />
         {/* <Navbar /> */}
         <Router>
           <AppLayout path="/" />

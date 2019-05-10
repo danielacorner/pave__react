@@ -190,7 +190,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
           }
         >
           <FormControlLabel
-            className="formControl"
+            className="formControl sortBySize"
             control={
               <Switch
                 onChange={() => {
@@ -223,7 +223,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
         >
           <FormControlLabel
             classes={{ root: 'formControlRoot' }}
-            className="formControl"
+            className="formControl sortByType"
             control={
               <Switch
                 onChange={() =>
@@ -245,7 +245,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
         <Tooltip title={getColourByValueText(valueToColourBy)}>
           <FormControlLabel
             classes={{ root: 'formControlRoot' }}
-            className="formControl"
+            className="formControl colourByValue"
             control={
               <Switch
                 onChange={() =>
