@@ -1,5 +1,5 @@
 // import queryString from 'query-string'
-import { localPoint } from '@vx/event';
+// import { localPoint } from '@vx/event';
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import MediaQuery from 'react-responsive';
 import styled from 'styled-components';
@@ -15,6 +15,7 @@ import { Button } from '@material-ui/core';
 import MessageIcon from '@material-ui/icons/MessageRounded';
 import { FeedbackForm } from './FeedbackForm';
 import FORCE from './FORCE';
+import useWindowSize from '@rooks/use-window-size';
 
 const AppTitleStyles = styled.div`
   background: white;
@@ -101,6 +102,7 @@ const filterVariables = [
 ];
 
 const AppLayout = props => {
+  const { innerHeight } = useWindowSize();
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [tooltipProps, setTooltipProps] = useState(null);
   const [mobileTooltipProps, setMobileTooltipProps] = useState(null);
@@ -237,14 +239,22 @@ const AppLayout = props => {
               onMouseMove={
                 isTabletOrLarger
                   ? (event, datum) => {
-                      const { x, y } = localPoint(
-                        event.target.ownerSVGElement,
-                        event,
-                      );
+                      // const { x,y } = localPoint(
+                      //   event.target.ownerSVGElement,
+                      //   event,
+                      // );
+                      const {
+                        bottom,
+                        height,
+                        left,
+                        width,
+                      } = event.target.getBoundingClientRect();
+
                       const tooltipProps = {
                         data: datum,
-                        top: y,
-                        left: x + 20,
+                        bottom: innerHeight - bottom + height / 2,
+                        left: left + width / 2 + 20,
+                        width,
                       };
                       setTooltipProps(tooltipProps);
                       startTooltipActive();

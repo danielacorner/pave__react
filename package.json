@@ -12,6 +12,7 @@
     "@material-ui/icons": "^3.0.1",
     "@material-ui/lab": "^3.0.0-alpha.17",
     "@reach/router": "^1.2.1",
+    "@rooks/use-window-size": "^3.0.1",
     "@vx/axis": "^0.0.179",
     "@vx/event": "^0.0.179",
     "@vx/scale": "^0.0.179",

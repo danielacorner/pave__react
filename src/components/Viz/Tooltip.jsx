@@ -1,8 +1,9 @@
 import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
 import SchoolIcon from '@material-ui/icons/SchoolRounded';
 import WarningIcon from '@material-ui/icons/WarningRounded';
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { ControlsContext } from '../Context/ContextProvider';
 import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
 
 const TooltipStyles = styled.div`
@@ -23,6 +24,7 @@ const TooltipStyles = styled.div`
   border-radius: 4px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
   line-height: 14pt;
+  overflow: hidden;
   .title {
     margin: 0 0 8pt 0;
     line-height: 1.2em;
@@ -34,10 +36,21 @@ const TooltipStyles = styled.div`
     grid-gap: 2px;
     place-items: center start;
   }
-  .industry {
+  .subtitle {
     font-style: italic;
     grid-column: 1 / -1;
     font-size: 0.9em;
+    .industry {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      grid-gap: 5px;
+      .industryColour {
+        width: 10px;
+        height: 10px;
+        border-radius: 100%;
+      }
+    }
   }
   .grid {
     display: grid;
@@ -85,9 +98,58 @@ const TooltipStyles = styled.div`
       border: 1px solid black;
     }
   }
+  .workers {
+    width: 100%;
+    position: relative;
+  }
+  .workersPointer {
+    position: absolute;
+    height: 1px;
+    top: 1.25ch;
+    background: rgba(0, 0, 0, 0.8);
+  }
 `;
 
-const Tooltip = React.memo(({ data, left, top }) => {
+const FloatingCircleStyles = styled.div`
+  position: absolute;
+  .floatingCircle {
+    position: relative;
+    border-radius: 100%;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+    .floatingCircleMeasure {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.8);
+      left: -6px;
+      width: 1px;
+    }
+    .floatingCircleTick {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.8);
+      width: 6px;
+      height: 1px;
+      left: -6px;
+      &.top {
+        top: 0;
+      }
+    }
+  }
+`;
+const FloatingCircle = ({ width, background, right, bottom }) => {
+  return (
+    <FloatingCircleStyles style={{ right, bottom }}>
+      <div
+        className="floatingCircle"
+        style={{ width, height: width, background }}
+      >
+        <div className="floatingCircleMeasure" style={{ height: width }} />
+        <div className="floatingCircleTick top" />
+        <div className="floatingCircleTick bottom" style={{ top: width }} />
+      </div>
+    </FloatingCircleStyles>
+  );
+};
+
+const Tooltip = React.memo(({ data, left, bottom, width }) => {
   // const {
   //   state: { zScale, clusterSelector },
   // } = useContext(ControlsContext);
@@ -109,22 +171,50 @@ const Tooltip = React.memo(({ data, left, top }) => {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
+  const { state } = useContext(ControlsContext);
+  const { zScale } = state;
+  const getLeft = () =>
+    left + TOOLTIP_WIDTH + TOOLTIP_HZ_OFFSET > window.innerWidth
+      ? left - TOOLTIP_WIDTH - 2 * TOOLTIP_HZ_OFFSET
+      : left + TOOLTIP_HZ_OFFSET;
+
+  const floatingCircleProps = {
+    width,
+    background: zScale(industry),
+    right: -width / 2,
+    bottom: 175 - width / 2,
+  };
   return (
     <TooltipStyles
       className="mouseoverTooltip"
       style={{
         // TODO: top seems to increase with window width BUT WHY
-        top: top + 50,
-        left:
-          left + TOOLTIP_WIDTH + TOOLTIP_HZ_OFFSET > window.innerWidth
-            ? left - TOOLTIP_WIDTH - 2 * TOOLTIP_HZ_OFFSET
-            : left + TOOLTIP_HZ_OFFSET,
+        bottom,
+        left: getLeft(),
       }}
     >
+      <FloatingCircle {...floatingCircleProps} />
       <h3 className="title textAlignLeft">{job}</h3>
       <div className="grid">
-        <div className="data industry textAlignLeft">
-          {industry} - {numberWithCommas(workers)} workers
+        <div className="data subtitle textAlignLeft">
+          <div className="industry textAlignLeft">
+            <div
+              className="industryColour"
+              style={{ background: zScale(industry) }}
+            />
+            {industry}
+          </div>
+          <div className="workers textAlignLeft">
+            {numberWithCommas(workers.toFixed(0))} workers
+            <div
+              className="workersPointer"
+              style={{
+                right: width / 2 - 10,
+                left: `${`${numberWithCommas(workers.toFixed(0))} workers`
+                  .length - 1}ch`,
+              }}
+            />
+          </div>
         </div>
 
         <div className="heading">
