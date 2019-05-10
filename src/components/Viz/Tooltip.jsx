@@ -5,7 +5,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
 import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
-const TOOLTIP_TRANSITION = `all 0.7s cubic - bezier(0.165, 0.84, 0.44, 1)`;
+const TOOLTIP_TRANSITION = `all 0.7s cubic-bezier(0.165, 0.84, 0.44, 1)`;
 
 const TooltipStyles = styled.div`
   &.fadeOut {
