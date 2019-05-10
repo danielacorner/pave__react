@@ -7,11 +7,9 @@ legend titles
 
 
 todo:
-- highlight tutorial intro button (material ui?)
+- highlight tutorial beacon?
 - start with grey same-sizes?
-- tooltip should include the circle itself + size, colour meaning
 - tooltip cards? https://material-ui.com/demos/cards/
-- consider bottom-aligning tooltips to stabilize the bars
 - NLP for related jobs
 - more datasets! https://toolbox.google.com/datasetsearch
   - jobs in high demand
