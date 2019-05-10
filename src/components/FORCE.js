@@ -396,7 +396,7 @@ const FORCE = function(nsp) {
       paused = true;
       nsp.paused = true;
     },
-    restartSimulation = nodes => {
+    restartSimulation = (nodes, isStrongForce = false) => {
       paused = false;
       nsp.paused = false;
       nsp.force
@@ -404,7 +404,7 @@ const FORCE = function(nsp) {
         .force('x', d3.forceX().strength(CENTER_GRAVITY))
         .force('y', d3.forceY().strength(CENTER_GRAVITY))
         .velocityDecay(FRICTION)
-        .alpha(RESTART_SPEED)
+        .alpha(RESTART_SPEED * (isStrongForce ? 0.03 : 1))
         .alphaDecay(START_FRICTION)
         .alphaTarget(END_SPEED)
         .restart();

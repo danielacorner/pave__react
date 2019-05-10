@@ -143,11 +143,11 @@ export const joyrideSteps = [
     target: '.btnFeedback',
     content: (
       <JoyrideTooltipStyles>
+        <p style={{ transform: 'scale(1.5)' }}>🛠</p>
         <p>
           Goodjob is a work in progress, and we{`'`}d love to hear what you
           think -- click here to send us a message.
         </p>
-        <p style={{ transform: 'scale(1.5)' }}>🛠</p>
         <p>Thanks for visiting, and check back often for updates! 🎈</p>
       </JoyrideTooltipStyles>
     ),

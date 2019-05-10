@@ -18,7 +18,7 @@ import FORCE from './FORCE';
 
 const AppTitleStyles = styled.div`
   background: white;
-  position: relative;
+  /* position: relative; */
   font-family: system-ui;
   margin: 8px 12px 0 12px;
   h1.title {

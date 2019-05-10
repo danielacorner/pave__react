@@ -25,6 +25,7 @@ function App() {
     <MuiThemeProvider theme={theme}>
       <ContextProvider>
         <Joyride
+          // showSkipButton={true}
           spotlightClicks={true}
           steps={joyrideSteps}
           continuous={true}
