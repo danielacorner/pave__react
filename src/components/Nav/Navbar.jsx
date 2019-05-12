@@ -1,118 +1,116 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import Input from '@material-ui/core/Input';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
+import { Button } from '@material-ui/core';
+import MessageIcon from '@material-ui/icons/MessageRounded';
+import InfoIcon from '@material-ui/icons/InfoRounded';
+import styled from 'styled-components';
+import React, { useState } from 'react';
+import MediaQuery from 'react-responsive';
+import { MOBILE_MIN_WIDTH, TABLET_MIN_WIDTH } from '../../utils/constants';
+import { FeedbackForm } from '../FeedbackForm';
+export const NAV_HEIGHT = 64;
+const NAV_PADDING_TOP = 12;
+const NavBarStyles = styled.div`
+  height: ${NAV_HEIGHT - NAV_PADDING_TOP}px;
+  padding-top: ${NAV_PADDING_TOP}px;
+  background: white;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  font-family: system-ui;
+  margin: 12px 12px 0 20px;
 
-const styles = theme => ({
-  root: {
-    width: '100%'
-  },
-  grow: {
-    flexGrow: 1
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
-  },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block'
+  h1.title {
+    max-width: 500px;
+    font-size: 24px;
+    margin: 0;
+  }
+  h2.subtitle {
+    font-size: 16px;
+    margin: 0;
+  }
+  h5 {
+    margin: 8px 0 0 0;
+  }
+  .navButtons {
+    display: grid;
+    grid-auto-flow: row;
+    place-items: start end;
+    justify-content: end;
+    grid-gap: 5px;
+    button {
+      display: grid;
+      place-items: center center;
+      background: white;
+      text-transform: none;
+      height: 34px;
+      & > span {
+        display: grid;
+        grid-template-columns: auto auto;
+        grid-gap: 4px;
+      }
     }
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25)
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit,
-      width: 'auto'
-    }
-  },
-  searchIcon: {
-    width: theme.spacing.unit * 9,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%'
-  },
-  inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: 120,
-      '&:focus': {
-        width: 200
+
+    .small {
+      span {
+        grid-gap: 4px;
+      }
+      svg {
+        max-width: 20px;
       }
     }
   }
-});
+  @media (min-width: ${MOBILE_MIN_WIDTH + 15}px) {
+    .navButtons {
+      grid-auto-flow: column;
+    }
+    button {
+      height: 40px;
+      padding: 5px 12px;
+      &:hover {
+        background: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+`;
 
-function SearchAppBar(props) {
-  const { classes } = props;
+export const NavBar = ({ setTourStarted, forceUpdate }) => {
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
   return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar style={{ minHeight: null }}>
-          <IconButton
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            className={classes.title}
-            variant="title"
-            color="inherit"
-            noWrap
-          >
-            Material-UI
-          </Typography>
-          <div className={classes.grow} />
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <Input
-              placeholder="Search…"
-              disableUnderline
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
-              }}
-            />
+    <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
+      {isTabletOrLarger => (
+        <NavBarStyles>
+          <div className="titleColumn">
+            <h1 className="title">Goodjob 🎈</h1>
+            <h2 className="subtitle">Explore Canadian Careers</h2>
           </div>
-        </Toolbar>
-      </AppBar>
-    </div>
+          <div className="navButtons">
+            <Button
+              size={isTabletOrLarger ? 'medium' : 'small'}
+              variant="outlined"
+              onClick={() => setIsFeedbackOpen(true)}
+              className={`btnFeedback ${isTabletOrLarger ? 'large' : 'small'}`}
+            >
+              Feedback <MessageIcon />
+            </Button>
+            <Button
+              disabled={true}
+              size={isTabletOrLarger ? 'medium' : 'small'}
+              variant="outlined"
+              onClick={() => {
+                setTourStarted(false);
+                setTimeout(() => setTourStarted(true));
+
+                forceUpdate();
+              }}
+              className={`btnHelp ${isTabletOrLarger ? 'large' : 'small'}`}
+            >
+              Help <InfoIcon />
+            </Button>
+          </div>
+          {isFeedbackOpen && (
+            <FeedbackForm setIsFeedbackOpen={setIsFeedbackOpen} />
+          )}
+        </NavBarStyles>
+      )}
+    </MediaQuery>
   );
-}
-
-SearchAppBar.propTypes = {
-  classes: PropTypes.object.isRequired
 };
-
-export default withStyles(styles)(SearchAppBar);

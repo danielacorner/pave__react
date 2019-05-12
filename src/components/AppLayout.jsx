@@ -11,72 +11,19 @@ import MobileTooltip from './Viz/MobileTooltip';
 import Tooltip from './Viz/Tooltip';
 import Viz from './Viz/Viz';
 import Legend from './Viz/Legend';
-import { Button } from '@material-ui/core';
-import MessageIcon from '@material-ui/icons/MessageRounded';
-import { FeedbackForm } from './FeedbackForm';
+
 import FORCE from './FORCE';
 import { useWindowSize } from './useWindowSize';
-
-const AppTitleStyles = styled.div`
-  background: white;
-  /* position: relative; */
-  font-family: system-ui;
-  margin: 8px 12px 0 12px;
-  h1.title {
-    max-width: 500px;
-    font-size: 24px;
-    margin: 0;
-  }
-  h5 {
-    margin: 8px 0 0 0;
-  }
-  span {
-    font-size: 18px;
-    text-shadow: none;
-  }
-`;
-
-const AppTitle = () => {
-  return (
-    <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
-      {isTabletOrLarger => (
-        <AppTitleStyles>
-          <div>
-            <h1 className="title">
-              Goodjob 🎈 <span>Explore Canadian Careers</span>
-            </h1>
-            <h5>
-              Adjust the skill level controls to filter your search.{' '}
-              {isTabletOrLarger ? 'Hover over' : 'Click'} a circle to see a
-              result.
-            </h5>
-          </div>
-        </AppTitleStyles>
-      )}
-    </MediaQuery>
-  );
-};
+import { NAV_HEIGHT } from './Nav/Navbar';
 
 const AppLayoutStyles = styled.div`
- .btnFeedback {
-    background: white;
-    text-transform: none;
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    span {
-      display: grid;
-      grid-template-columns: auto auto;
-      grid-gap: 5px;
-    }
-  }
   position: relative;
   width: 100%;
   display: grid;
   grid-gap: 8px;
   /* Mobile */
-  grid-template-rows:auto auto auto 1fr 34px;
-  height: 100vh;
+  grid-template-rows:auto auto 1fr 34px;
+  height: calc(100vh - ${NAV_HEIGHT}px);
   min-height: 890px;
   @media (min-width: 340px) {
     min-height: 750px;
@@ -85,12 +32,16 @@ const AppLayoutStyles = styled.div`
   @media (min-width: 400px) {
     overflow: hidden;
     grid-gap: 16px;
-    grid-template-rows:auto auto auto 1fr 26px;
+    grid-template-rows:auto auto 1fr 26px;
   }
   /* @media (min-width: ${TABLET_MIN_WIDTH}px) {
     grid-template-rows: auto auto 1fr auto;
   } */
   padding: 10px 10px 0 10px;
+  @media (min-width: 400px) {
+    padding: 10px 20px 0 20px;
+
+                  }
   box-sizing: border-box;
   `;
 
@@ -101,9 +52,8 @@ const filterVariables = [
   'skillsComp',
 ];
 
-const AppLayout = props => {
+const AppLayout = ({ location }) => {
   const { innerHeight } = useWindowSize();
-  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [tooltipProps, setTooltipProps] = useState(null);
   const [mobileTooltipProps, setMobileTooltipProps] = useState(null);
   const [isTooltipActive, setIsTooltipActive] = useState(null);
@@ -212,16 +162,6 @@ const AppLayout = props => {
                   }
             }
           >
-            <AppTitle />
-            <Button
-              onClick={() => setIsFeedbackOpen(true)}
-              className="btnFeedback"
-            >
-              Feedback <MessageIcon />
-            </Button>
-            {isFeedbackOpen && (
-              <FeedbackForm setIsFeedbackOpen={setIsFeedbackOpen} />
-            )}
             <FiltersPanel
               filterVariables={filterVariables}
               expanded={expanded}
@@ -269,7 +209,7 @@ const AppLayout = props => {
                 setMobileTooltipProps(mobileTooltipProps);
               }}
               onMouseOut={isTabletOrLarger ? stopTooltipActive : () => {}}
-              filtersQuery={props.location.search}
+              filtersQuery={location.search}
               onLoadFromSnapshot={ssUrl => handleLoadFromSnapshot(ssUrl)}
               radiusScale={getRadiusScale()}
               radiusSelector={radiusSelector}

@@ -97,6 +97,7 @@ const SortButtonsStyles = styled.div`
     @media (max-width: 399px) {
       grid-gap: 0px;
       margin-top: -10px;
+      margin-bottom: 10px;
       .formControl {
         height: 36px;
         border: none;

@@ -5,7 +5,8 @@ import { ControlsContext } from '../Context/ContextProvider';
 import FilterSlider from './FilterSlider';
 
 const FiltersPanelStyles = styled.div`
-  margin: 10px 20px 0px 20px;
+  margin: 10px 0px 0px 6px;
+
   height: auto;
   display: grid;
   grid-gap: 10px;

@@ -32,7 +32,7 @@ const JoyrideTooltipStyles = styled.div`
 // TODO: add padding / white backgrounds to anything that will be spotlighted (each of these targets)
 export const joyrideSteps = [
   {
-    target: '.title',
+    target: '.titleColumn',
     content: (
       <JoyrideTooltipStyles>
         <p>✨ Hey, welcome to Goodjob! 🚀</p>

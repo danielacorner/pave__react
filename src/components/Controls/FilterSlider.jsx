@@ -20,6 +20,7 @@ const LabelAndSliderStyles = styled.div`
   font-family: system-ui;
   position: relative;
   .expandLabel {
+    margin-left: -6px;
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
