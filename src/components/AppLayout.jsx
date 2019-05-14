@@ -22,7 +22,7 @@ const AppLayoutStyles = styled.div`
   display: grid;
   grid-gap: 8px;
   /* Mobile */
-  grid-template-rows:auto auto 1fr 34px;
+  grid-template-rows: auto auto 1fr auto;
   height: calc(100vh - ${NAV_HEIGHT}px);
   min-height: 890px;
   @media (min-width: 340px) {
@@ -32,7 +32,6 @@ const AppLayoutStyles = styled.div`
   @media (min-width: 400px) {
     overflow: hidden;
     grid-gap: 16px;
-    grid-template-rows:auto auto 1fr 26px;
   }
   /* @media (min-width: ${TABLET_MIN_WIDTH}px) {
     grid-template-rows: auto auto 1fr auto;

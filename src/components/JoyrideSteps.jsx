@@ -129,6 +129,7 @@ export const joyrideSteps = [
   {
     target: '.btnLegendWrapper',
     placement: 'top-end',
+    isFixed: true,
     content: (
       <JoyrideTooltipStyles>
         <p>

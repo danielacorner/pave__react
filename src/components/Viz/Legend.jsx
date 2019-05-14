@@ -100,14 +100,13 @@ const MobileLegendStyles = styled.div`
   }
   .btnLegendWrapper {
     transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-    background: white;
     position: fixed;
     z-index: 10;
-    bottom: 10px;
-    right: 20px;
+    bottom: 20px;
+    left: 20px;
     @media (min-width: ${MOBILE_MIN_WIDTH + 50}px) {
-      bottom: 50px;
-      right: 40px;
+      bottom: 36px;
+      left: 40px;
     }
   }
   font-family: system-ui;

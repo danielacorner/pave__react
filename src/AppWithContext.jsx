@@ -47,16 +47,16 @@ function AppWithContext() {
           helpers.prev();
         } else if (event.keyCode === RIGHT_ARROW) {
           // disable right arrow if btnNext is disabled
-          if (!Array.from(btnNext.classList).includes('btnNextDisabled')) {
+          if (
+            btnNext &&
+            btnNext.classList &&
+            !Array.from(btnNext.classList).includes('btnNextDisabled')
+          ) {
             helpers.next();
           }
         }
       };
       window.addEventListener('keydown', leftRightListener);
-    },
-    floaterProps: e => {
-      console.log(e);
-      return null;
     },
     callback: data => {
       const btnNext = document.querySelector(
