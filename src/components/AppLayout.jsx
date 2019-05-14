@@ -40,8 +40,7 @@ const AppLayoutStyles = styled.div`
   padding: 10px 10px 0 10px;
   @media (min-width: 400px) {
     padding: 10px 20px 0 20px;
-
-                  }
+  }
   box-sizing: border-box;
   `;
 
@@ -122,7 +121,8 @@ const AppLayout = ({ location }) => {
       const tooltip = document.querySelector('.mouseoverTooltip');
       tooltip && tooltip.classList.add('fadeOut');
       setTimeout(() => {
-        setIsTooltipActive(false), setTooltipProps(null);
+        setIsTooltipActive(false);
+        setTooltipProps(null);
       }, TOOLTIP_FADEOUT);
     }, TOOLTIP_DURATION);
   };

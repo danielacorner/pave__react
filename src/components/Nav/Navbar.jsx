@@ -71,7 +71,7 @@ const NavBarStyles = styled.div`
   }
 `;
 
-export const NavBar = ({ setTourStarted, forceUpdate }) => {
+export const NavBar = () => {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   return (
@@ -79,7 +79,12 @@ export const NavBar = ({ setTourStarted, forceUpdate }) => {
       {isTabletOrLarger => (
         <NavBarStyles>
           <div className="titleColumn">
-            <h1 className="title">Goodjob 🎈</h1>
+            <h1 className="title">
+              Goodjob{' '}
+              <span role="img" aria-label="balloon">
+                🎈
+              </span>
+            </h1>
             <h2 className="subtitle">Explore Canadian Careers</h2>
           </div>
           <div className="navButtons">
@@ -96,10 +101,7 @@ export const NavBar = ({ setTourStarted, forceUpdate }) => {
               size={isTabletOrLarger ? 'medium' : 'small'}
               variant="outlined"
               onClick={() => {
-                setTourStarted(false);
-                setTimeout(() => setTourStarted(true));
-
-                forceUpdate();
+                return;
               }}
               className={`btnHelp ${isTabletOrLarger ? 'large' : 'small'}`}
             >

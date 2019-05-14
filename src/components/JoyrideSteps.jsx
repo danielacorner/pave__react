@@ -35,7 +35,15 @@ export const joyrideSteps = [
     target: '.titleColumn',
     content: (
       <JoyrideTooltipStyles>
-        <p>✨ Hey, welcome to Goodjob! 🚀</p>
+        <p>
+          <span role="img" aria-label="stars">
+            ✨
+          </span>{' '}
+          Hey, welcome to Goodjob!{' '}
+          <span role="img" aria-label="rocket">
+            🚀
+          </span>
+        </p>
         <p>
           This app can help you learn about all kinds of jobs and careers in
           Canada.
@@ -54,7 +62,11 @@ export const joyrideSteps = [
         <p>
           Thanks for asking! It{`'`}s called a{' '}
           <span className="bold">data visualization</span>, and it contains
-          tonnes of handy-dandy information 🤓.
+          tonnes of handy-dandy information{' '}
+          <span role="img" aria-label="nerd-smiley">
+            🤓
+          </span>
+          .
         </p>
         <p>You could probably spend a while here...</p>
         <p>
@@ -73,6 +85,7 @@ export const joyrideSteps = [
           that don{`'`}t suit the skills you may want to learn, so you can make
           the visualization more relevant to you.
         </p>
+        <p>Try filtering the dataset now.</p>
       </JoyrideTooltipStyles>
     ),
   },
@@ -93,7 +106,21 @@ export const joyrideSteps = [
     content: (
       <JoyrideTooltipStyles>
         <p>
-          Click here to go <span className="italic">back 🕛 in 🕙 time 🕖</span>{' '}
+          Click here to go{' '}
+          <span className="italic">
+            back{' '}
+            <span role="img" aria-label="clock-3">
+              🕛
+            </span>{' '}
+            in{' '}
+            <span role="img" aria-label="clock-2">
+              🕙
+            </span>{' '}
+            time{' '}
+            <span role="img" aria-label="clock-1">
+              🕖
+            </span>
+          </span>{' '}
           and reset all the filters to zero.
         </p>
       </JoyrideTooltipStyles>
@@ -108,7 +135,12 @@ export const joyrideSteps = [
           at in the visualization above -- it also changes with the
           visualization.
         </p>
-        <p>Legendary! 😎</p>
+        <p>
+          Legendary!{' '}
+          <span role="img" aria-label="sunglasses-smiley">
+            😎
+          </span>
+        </p>
       </JoyrideTooltipStyles>
     ),
   },
@@ -126,7 +158,13 @@ export const joyrideSteps = [
     target: '.colourByValue',
     content: (
       <JoyrideTooltipStyles>
-        <p>We highly recommend 👆 this one here.</p>
+        <p>
+          We highly recommend{' '}
+          <span role="img" aria-label="hand-point-up">
+            👆
+          </span>{' '}
+          this one here.
+        </p>
         <p>
           You can use it to colour-code the jobs by{' '}
           <span className="salary bold">salary per year</span>,{' '}
@@ -143,12 +181,21 @@ export const joyrideSteps = [
     target: '.btnFeedback',
     content: (
       <JoyrideTooltipStyles>
-        <p style={{ transform: 'scale(1.5)' }}>🛠</p>
+        <p style={{ transform: 'scale(1.5)' }}>
+          <span role="img" aria-label="tools">
+            🛠
+          </span>
+        </p>
         <p>
           Goodjob is a work in progress, and we{`'`}d love to hear what you
-          think -- click here to send us a message.
+          think -- comments, suggestions, and feature requests are all welcome.
         </p>
-        <p>Thanks for visiting, and check back often for updates! 🎈</p>
+        <p>
+          Thanks for visiting, and check back often for updates!{' '}
+          <span role="img" aria-label="balloon">
+            🎈
+          </span>
+        </p>
       </JoyrideTooltipStyles>
     ),
   },

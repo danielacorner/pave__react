@@ -7,7 +7,7 @@ legend titles
 
 
 todo:
-- highlight tutorial beacon?
+- find dataset for NLP
 - controlled tutorial, control "next" with performing actions (from grey same size to multicolor multisized)
 - start with grey same-sizes?
 - tooltip cards? https://material-ui.com/demos/cards/
