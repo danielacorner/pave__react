@@ -10,12 +10,14 @@ export const NAV_HEIGHT = 64;
 const NAV_PADDING_TOP = 12;
 const NavBarStyles = styled.div`
   height: ${NAV_HEIGHT - NAV_PADDING_TOP}px;
-  padding-top: ${NAV_PADDING_TOP}px;
   background: white;
   display: grid;
   grid-template-columns: auto 1fr;
   font-family: system-ui;
-  margin: 12px 12px 0 20px;
+  padding: 12px 10px 0 10px;
+  @media (min-width: ${MOBILE_MIN_WIDTH}px) {
+    padding: ${NAV_PADDING_TOP}px 12px 0 20px;
+  }
 
   h1.title {
     max-width: 500px;
@@ -24,7 +26,10 @@ const NavBarStyles = styled.div`
   }
   h2.subtitle {
     font-size: 16px;
-    margin: 0;
+    margin: 6px 0 0 0;
+    @media (min-width: ${MOBILE_MIN_WIDTH}px) {
+      margin: 0;
+    }
   }
   h5 {
     margin: 8px 0 0 0;
@@ -79,13 +84,15 @@ export const NavBar = () => {
       {isTabletOrLarger => (
         <NavBarStyles>
           <div className="titleColumn">
-            <h1 className="title">
-              Goodjob{' '}
-              <span role="img" aria-label="balloon">
-                🎈
-              </span>
-            </h1>
-            <h2 className="subtitle">Explore Canadian Careers</h2>
+            <div className="titleWrapper">
+              <h1 className="title">
+                Goodjob{' '}
+                <span role="img" aria-label="balloon">
+                  🎈
+                </span>
+              </h1>
+              <h2 className="subtitle">Explore Canadian Careers</h2>
+            </div>
           </div>
           <div className="navButtons">
             <Button
