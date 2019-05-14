@@ -1,12 +1,11 @@
 import { Router } from '@reach/router';
-import React, { useContext } from 'react';
+import React from 'react';
 import './App.css';
 import AppLayout from './components/AppLayout';
 import Joyride from 'react-joyride';
 import { joyrideSteps } from './components/JoyrideSteps';
 import { NavBar } from './components/Nav/Navbar';
 import * as d3 from 'd3';
-import { ControlsContext } from './components/Context/ContextProvider';
 // import styled, { keyframes } from 'styled-components';
 
 //   const pulse = keyframes`

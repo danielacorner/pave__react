@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import MediaQuery from 'react-responsive';
-import { NEVER_MIN_WIDTH, MOBILE_MIN_WIDTH } from '../../utils/constants';
+import {
+  NEVER_MIN_WIDTH,
+  MOBILE_MIN_WIDTH,
+  TABLET_MIN_WIDTH,
+} from '../../utils/constants';
 import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
@@ -93,6 +97,8 @@ const MobileLegendStyles = styled.div`
   .collapse {
     background: white;
     position: fixed;
+    left: 0;
+    right: 0;
     bottom: 0;
     height: 0;
     padding: 0 20px;
@@ -102,9 +108,9 @@ const MobileLegendStyles = styled.div`
     transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
     position: fixed;
     z-index: 10;
-    bottom: 20px;
-    left: 20px;
-    @media (min-width: ${MOBILE_MIN_WIDTH + 50}px) {
+    bottom: 10px;
+    left: 10px;
+    @media (min-width: ${TABLET_MIN_WIDTH - 200}px) {
       bottom: 36px;
       left: 40px;
     }
@@ -170,6 +176,9 @@ const MobileLegendStyles = styled.div`
     justify-content: start;
     align-items: center;
     padding-bottom: 20px;
+    @media (min-width: ${MOBILE_MIN_WIDTH}px) {
+      padding-bottom: 80px;
+    }
     grid-gap: 5%;
     .size {
       min-height: 30px;
