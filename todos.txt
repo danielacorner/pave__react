@@ -1,15 +1,13 @@
 TODOS:
 
-Legend for colours (study/salary/risk)
-To-do for Trello - Remove the most bottom circle legend
-
-legend titles
-
-
 todo:
-- find dataset for NLP
 - controlled tutorial, control "next" with performing actions (from grey same size to multicolor multisized)
 - start with grey same-sizes?
+- debug why can't touch-drag through tour spotlight
+
+- remove the most bottom circle legend
+- legend for colours (study/salary/risk)
+- find dataset for NLP
 - tooltip cards? https://material-ui.com/demos/cards/
 - NLP for related jobs
 - more datasets! https://toolbox.google.com/datasetsearch

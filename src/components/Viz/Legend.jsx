@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import MediaQuery from 'react-responsive';
-import { NEVER_MIN_WIDTH } from '../../utils/constants';
+import { NEVER_MIN_WIDTH, MOBILE_MIN_WIDTH } from '../../utils/constants';
 import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
@@ -90,9 +90,25 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 // `;
 
 const MobileLegendStyles = styled.div`
-  background: white;
-  .btnLegendWrapper {
+  .collapse {
     background: white;
+    position: fixed;
+    bottom: 0;
+    height: 0;
+    padding: 0 20px;
+    z-index: 1;
+  }
+  .btnLegendWrapper {
+    transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+    background: white;
+    position: fixed;
+    z-index: 10;
+    bottom: 10px;
+    right: 20px;
+    @media (min-width: ${MOBILE_MIN_WIDTH + 50}px) {
+      bottom: 50px;
+      right: 40px;
+    }
   }
   font-family: system-ui;
   position: absolute;
@@ -110,8 +126,11 @@ const MobileLegendStyles = styled.div`
   }
   transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
   &.expanded {
-    border-top: 1px solid rgba(0, 0, 0, 0.3);
-    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
+    .collapse {
+      padding: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.3);
+      box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.3);
+    }
   }
   .icon {
     transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -233,6 +252,7 @@ const Legend = ({ colours, sizes, radiusScale }) => {
             <MobileLegendStyles className={legendExpanded ? 'expanded' : ''}>
               <div className="btnLegendWrapper">
                 <Button
+                  variant="contained"
                   size="large"
                   style={{ padding: '8px 16px 8px 24px' }}
                   onClick={() => setLegendExpanded(!legendExpanded)}
@@ -243,7 +263,7 @@ const Legend = ({ colours, sizes, radiusScale }) => {
                   />
                 </Button>
               </div>
-              <Collapse in={legendExpanded}>
+              <Collapse className="collapse" in={legendExpanded}>
                 <div className="title">Career Industries</div>
                 <div className="colours">
                   {colours.map(({ colour, text }) => (

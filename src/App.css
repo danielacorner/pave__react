@@ -1,3 +1,8 @@
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 .clusterLabel {
   font-family: system-ui;
   position: absolute;
@@ -18,7 +23,11 @@
 }
 #root {
   background: white;
-  min-height: 100vh;
+}
+@media (min-width: 385px) {
+  #root {
+    min-height: 100vh;
+  }
 }
 [data-test-id='button-primary'][aria-label='Next'] {
   transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);

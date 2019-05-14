@@ -82,8 +82,7 @@ export const joyrideSteps = [
       <JoyrideTooltipStyles>
         <p>
           These <span className="bold">filter sliders</span> will trim away jobs
-          that don{`'`}t suit the skills you may want to learn, so you can make
-          the visualization more relevant to you.
+          that don{`'`}t suit your skill preferences.
         </p>
         <p>Try filtering the dataset now.</p>
       </JoyrideTooltipStyles>
@@ -103,6 +102,7 @@ export const joyrideSteps = [
   },
   {
     target: '.btnReset',
+    placement: 'bottom-end',
     content: (
       <JoyrideTooltipStyles>
         <p>
@@ -128,6 +128,7 @@ export const joyrideSteps = [
   },
   {
     target: '.btnLegendWrapper',
+    placement: 'top-end',
     content: (
       <JoyrideTooltipStyles>
         <p>
@@ -156,6 +157,7 @@ export const joyrideSteps = [
   },
   {
     target: '.colourByValue',
+    placement: 'bottom-start',
     content: (
       <JoyrideTooltipStyles>
         <p>
@@ -179,6 +181,7 @@ export const joyrideSteps = [
   },
   {
     target: '.btnFeedback',
+    placement: 'bottom-end',
     content: (
       <JoyrideTooltipStyles>
         <p style={{ transform: 'scale(1.5)' }}>

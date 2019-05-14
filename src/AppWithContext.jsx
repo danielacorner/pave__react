@@ -32,8 +32,6 @@ import { ControlsContext } from './components/Context/ContextProvider';
 // const HideBeacon = () => null;
 
 function AppWithContext() {
-  const { state } = useContext(ControlsContext);
-
   const joyrideProps = {
     spotlightClicks: true,
     steps: joyrideSteps,
@@ -56,6 +54,10 @@ function AppWithContext() {
       };
       window.addEventListener('keydown', leftRightListener);
     },
+    floaterProps: e => {
+      console.log(e);
+      return null;
+    },
     callback: data => {
       const btnNext = document.querySelector(
         `[data-test-id="button-primary"][aria-label="Next"]`,
@@ -76,11 +78,17 @@ function AppWithContext() {
         disableNext();
 
         const MIN_FILTER_BEFORE_NEXT = 20;
-        d3.selectAll('[role="slider"]').on('mouseup', function() {
-          if (this.getAttribute('aria-valuenow') > MIN_FILTER_BEFORE_NEXT) {
-            enableNext();
-          }
-        });
+        d3.selectAll('[role="slider"]')
+          .on('mouseup', function() {
+            if (this.getAttribute('aria-valuenow') > MIN_FILTER_BEFORE_NEXT) {
+              enableNext();
+            }
+          })
+          .on('touchend', function() {
+            if (this.getAttribute('aria-valuenow') > MIN_FILTER_BEFORE_NEXT) {
+              enableNext();
+            }
+          });
       } else {
         enableNext();
       }
