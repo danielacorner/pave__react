@@ -3,9 +3,44 @@ import React from 'react';
 import styled from 'styled-components';
 import { COLOUR_SALARY, COLOUR_STUDY, COLOUR_RISK } from '../utils/constants';
 import { EVENTS, ACTIONS, STATUS } from 'react-joyride';
+import * as d3 from 'd3';
+
+function disableNext() {
+  const btnNext = document.querySelector(
+    `[data-test-id="button-primary"][aria-label="Next"]`,
+  );
+  btnNext && btnNext.classList && btnNext.classList.add('btnNextDisabled');
+}
+function enableNext() {
+  const btnNext = document.querySelector(
+    `[data-test-id="button-primary"][aria-label="Next"]`,
+  );
+  btnNext && btnNext.classList && btnNext.classList.remove('btnNextDisabled');
+}
 
 export const handleJoyrideCallback = ({ data, setRun, setStepIndex }) => {
-  const { action, index, type, status } = data;
+  const { action, index, type, status, step } = data;
+
+  console.log(step);
+
+  if (step.target === '.slidersDiv') {
+    // Disable btnNext until user uses the filter sliders
+    disableNext();
+
+    const MIN_FILTER_BEFORE_NEXT = 20;
+
+    d3.selectAll('[role="slider"]')
+      .on('mouseup', function() {
+        if (this.getAttribute('aria-valuenow') > MIN_FILTER_BEFORE_NEXT) {
+          enableNext();
+        }
+      })
+      .on('touchend', function() {
+        if (this.getAttribute('aria-valuenow') > MIN_FILTER_BEFORE_NEXT) {
+          enableNext();
+        }
+      });
+  }
 
   if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
     // Need to set our running state to false, so we can restart if we click start again.
@@ -14,12 +49,7 @@ export const handleJoyrideCallback = ({ data, setRun, setStepIndex }) => {
   } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
     const stepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
 
-    if (index === 0) {
-      setStepIndex(stepIndex);
-      setTimeout(() => {
-        setRun(true);
-      }, 0);
-    } else if (index === 1) {
+    if (index === 1) {
       setRun(false);
       setStepIndex(stepIndex);
       setTimeout(() => {
