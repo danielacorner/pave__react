@@ -76,7 +76,7 @@ const NavBarStyles = styled.div`
   }
 `;
 
-export const NavBar = () => {
+export const NavBar = ({ setStepIndex, setRun, run }) => {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   return (
@@ -104,15 +104,16 @@ export const NavBar = () => {
               Feedback <MessageIcon />
             </Button>
             <Button
-              disabled={true}
+              disabled={run}
               size={isTabletOrLarger ? 'medium' : 'small'}
               variant="outlined"
               onClick={() => {
-                return;
+                setStepIndex(0);
+                setRun(true);
               }}
               className={`btnHelp ${isTabletOrLarger ? 'large' : 'small'}`}
             >
-              Help <InfoIcon />
+              Tour <InfoIcon />
             </Button>
           </div>
           {isFeedbackOpen && (

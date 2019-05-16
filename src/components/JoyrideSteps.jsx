@@ -2,6 +2,50 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import React from 'react';
 import styled from 'styled-components';
 import { COLOUR_SALARY, COLOUR_STUDY, COLOUR_RISK } from '../utils/constants';
+import { EVENTS, ACTIONS, STATUS } from 'react-joyride';
+
+export const handleJoyrideCallback = ({ data, setRun, setStepIndex }) => {
+  const { action, index, type, status } = data;
+
+  if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
+    // Need to set our running state to false, so we can restart if we click start again.
+    setRun(false);
+    setStepIndex(0);
+  } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
+    const stepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
+
+    if (index === 0) {
+      setStepIndex(stepIndex);
+      setTimeout(() => {
+        setRun(true);
+      }, 0);
+    } else if (index === 1) {
+      setRun(false);
+      setStepIndex(stepIndex);
+      setTimeout(() => {
+        setRun(true);
+      }, 0);
+    } else if (index === 2 && action === ACTIONS.PREV) {
+      setRun(false);
+      setStepIndex(stepIndex);
+      setTimeout(() => {
+        setRun(true);
+      }, 0);
+    } else {
+      // Update state to advance the tour
+      setStepIndex(stepIndex);
+      setTimeout(() => {
+        setRun(true);
+      }, 0);
+    }
+  }
+
+  console.groupCollapsed(
+    type === EVENTS.TOUR_STATUS ? `${type}:${status}` : type,
+  );
+  console.log(data); //eslint-disable-line no-console
+  console.groupEnd();
+};
 
 const JoyrideTooltipStyles = styled.div`
   margin-bottom: -20px;

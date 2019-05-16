@@ -21,11 +21,12 @@ const FeedbackFormStyles = styled.div`
     margin: 0;
   }
   .formWrapper {
+    border-radius: 4px;
     background: white;
     position: relative;
     padding: 20px;
     .feedbackForm {
-      min-width: 320px;
+      min-width: 270px;
       min-height: 350px;
       display: grid;
       grid-template-rows: auto auto 1fr auto;

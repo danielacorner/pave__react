@@ -1,9 +1,9 @@
 import { Router } from '@reach/router';
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import AppLayout from './components/AppLayout';
 import Joyride from 'react-joyride';
-import { joyrideSteps } from './components/JoyrideSteps';
+import { joyrideSteps, handleJoyrideCallback } from './components/JoyrideSteps';
 import { NavBar } from './components/Nav/Navbar';
 import * as d3 from 'd3';
 // import styled, { keyframes } from 'styled-components';
@@ -31,8 +31,12 @@ import * as d3 from 'd3';
 // const HideBeacon = () => null;
 
 function AppWithContext() {
+  const [run, setRun] = useState(true);
+  const [stepIndex, setStepIndex] = useState(0);
   const joyrideProps = {
     spotlightClicks: true,
+    showSkipButton: true,
+    showProgress: true,
     steps: joyrideSteps,
     continuous: true,
     getHelpers: helpers => {
@@ -57,52 +61,52 @@ function AppWithContext() {
       };
       window.addEventListener('keydown', leftRightListener);
     },
-    callback: data => {
-      const btnNext = document.querySelector(
-        `[data-test-id="button-primary"][aria-label="Next"]`,
-      );
-      const disableNext = () => {
-        btnNext &&
-          btnNext.classList &&
-          btnNext.classList.add('btnNextDisabled');
-      };
-      const enableNext = () => {
-        btnNext &&
-          btnNext.classList &&
-          btnNext.classList.remove('btnNextDisabled');
-      };
+    callback: data => handleJoyrideCallback({ data, setRun, setStepIndex }),
+    run,
+    stepIndex,
+    // callback: data => {
+    //   const btnNext = document.querySelector(
+    //     `[data-test-id="button-primary"][aria-label="Next"]`,
+    //   );
+    //   const disableNext = () => {
+    //     btnNext &&
+    //       btnNext.classList &&
+    //       btnNext.classList.add('btnNextDisabled');
+    //   };
+    //   const enableNext = () => {
+    //     btnNext &&
+    //       btnNext.classList &&
+    //       btnNext.classList.remove('btnNextDisabled');
+    //   };
 
-      // disable btnNext until user uses the filter sliders
-      if (data.step.target === '.slidersDiv') {
-        disableNext();
+    //   // disable btnNext until user uses the filter sliders
+    //   if (data.step.target === '.slidersDiv') {
+    //     disableNext();
 
-        const MIN_FILTER_BEFORE_NEXT = 20;
-        d3.selectAll('[role="slider"]')
-          .on('mouseup', function() {
-            if (this.getAttribute('aria-valuenow') > MIN_FILTER_BEFORE_NEXT) {
-              enableNext();
-            }
-          })
-          .on('touchend', function() {
-            if (this.getAttribute('aria-valuenow') > MIN_FILTER_BEFORE_NEXT) {
-              enableNext();
-            }
-          });
-      } else {
-        enableNext();
-      }
-    },
+    //     const MIN_FILTER_BEFORE_NEXT = 20;
+    //     d3.selectAll('[role="slider"]')
+    //       .on('mouseup', function() {
+    //         if (this.getAttribute('aria-valuenow') > MIN_FILTER_BEFORE_NEXT) {
+    //           enableNext();
+    //         }
+    //       })
+    //       .on('touchend', function() {
+    //         if (this.getAttribute('aria-valuenow') > MIN_FILTER_BEFORE_NEXT) {
+    //           enableNext();
+    //         }
+    //       });
+    //   } else {
+    //     enableNext();
+    //   }
+    // },
+
     // beaconComponent: tourStarted ? null : HideBeacon,
   };
 
   return (
     <React.Fragment>
-      <Joyride
-        {...joyrideProps}
-        // showSkipButton={true}
-        // showProgress={true}
-      />
-      <NavBar />
+      <Joyride {...joyrideProps} />
+      <NavBar setStepIndex={setStepIndex} setRun={setRun} run={run} />
       <Router>
         <AppLayout path="/" />
         <AppLayout path="/:filtersQuery" />
