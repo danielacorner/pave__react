@@ -76,7 +76,12 @@ const NavBarStyles = styled.div`
   }
 `;
 
-export const NavBar = ({ setStepIndex, setRun, run }) => {
+export const NavBar = ({
+  isJoyrideEnabled,
+  setIsJoyrideEnabled,
+  setRun,
+  setStepIndex,
+}) => {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   return (
@@ -104,10 +109,11 @@ export const NavBar = ({ setStepIndex, setRun, run }) => {
               Feedback <MessageIcon />
             </Button>
             <Button
-              disabled={run}
+              disabled={isJoyrideEnabled}
               size={isTabletOrLarger ? 'medium' : 'small'}
               variant="outlined"
               onClick={() => {
+                setIsJoyrideEnabled(true);
                 setStepIndex(0);
                 setRun(true);
               }}
