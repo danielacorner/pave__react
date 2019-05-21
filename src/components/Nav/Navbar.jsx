@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import MediaQuery from 'react-responsive';
 import { MOBILE_MIN_WIDTH, TABLET_MIN_WIDTH } from '../../utils/constants';
 import { FeedbackForm } from '../FeedbackForm';
-export const NAV_HEIGHT = 64;
+export const NAV_HEIGHT = 68;
 const NAV_PADDING_TOP = 12;
 const NavBarStyles = styled.div`
   height: ${NAV_HEIGHT - NAV_PADDING_TOP}px;

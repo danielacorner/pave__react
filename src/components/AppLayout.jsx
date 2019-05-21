@@ -24,7 +24,7 @@ const AppLayoutStyles = styled.div`
   /* Mobile */
   grid-template-rows: auto auto 1fr auto;
   height: calc(100vh - ${NAV_HEIGHT}px);
-  min-height: 890px;
+  min-height: 740px;
   @media (min-width: 340px) {
     min-height: 750px;
   }

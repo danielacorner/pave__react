@@ -97,9 +97,7 @@ const SortButtonsStyles = styled.div`
     @media (max-width: 399px) {
       grid-gap: 0px;
       margin-top: -10px;
-      margin-bottom: 10px;
       .formControl {
-        height: 36px;
         border: none;
       }
     }
@@ -124,7 +122,6 @@ const SortButtonsStyles = styled.div`
     text-transform: none;
     background: white;
     max-height: 60px;
-    padding: 2px 16px 0 16px;
     justify-self: end;
     align-self: center;
     span {
@@ -339,7 +336,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
         }
         variant="outlined"
       >
-        <RestoreIcon /> Reset Filters
+        <RestoreIcon /> Reset
       </Button>
     </SortButtonsStyles>
   );
