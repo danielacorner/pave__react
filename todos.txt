@@ -1,11 +1,9 @@
 TODOS:
 
 todo:
--
-- controlled tutorial, control "next" with performing actions (from grey same size to multicolor multisized)
 - start with grey?
 - debug why can't touch-drag through tour spotlight
-
+- save favourites to localstorage
 - remove the most bottom circle legend
 - legend for colours (study/salary/risk)
 - find dataset for NLP

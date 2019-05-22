@@ -4,8 +4,12 @@ import React, { Component, createRef } from 'react';
 import { findDOMNode } from 'react-dom';
 import styled from 'styled-components';
 import FORCE from '../FORCE';
+const MAX_LINE_LENGTH = 10;
+const MAX_TEXT_LENGTH = 30;
+const TEXT_LINE_HEIGHT = 6;
 
 const NodeGroupStyles = styled.g`
+  overflow: hidden;
   circle {
     &:hover {
       cursor: pointer;
@@ -13,14 +17,11 @@ const NodeGroupStyles = styled.g`
       stroke-width: 2;
     }
   }
-  .text-label {
-    fill: honeydew;
+  .text-label text {
+    fill: black;
     font-weight: 600;
-    text-transform: uppercase;
     text-anchor: middle;
-    alignment-baseline: middle;
-    font-size: 10px;
-    font-family: cursive;
+    font-size: ${TEXT_LINE_HEIGHT}px;
   }
 `;
 
@@ -65,13 +66,33 @@ class Node extends Component {
   }
   shouldComponentUpdate(nextProps, nextState) {
     //TODO: determine when component should update
-    if (nextProps.isActive !== this.props.isActive) {
+    if (
+      nextProps.isActive !== this.props.isActive ||
+      nextProps.isNodeTextVisible !== this.props.isNodeTextVisible
+    ) {
       return true;
     } else {
       return false;
     }
   }
+
+  getTextContent = ({ name, isAboveMax }) => {
+    let remainingName = name;
+    let tspans = [];
+    const ellipse = isAboveMax ? '...' : '';
+    while (remainingName.length > MAX_LINE_LENGTH) {
+      tspans.push(
+        remainingName.slice(0, 9) + (remainingName[8] === ' ' ? '' : '-'),
+      );
+      console.log({ rem9: remainingName[9] });
+      remainingName = remainingName.slice(9);
+    }
+    tspans.push(remainingName + ellipse);
+    return tspans;
+  };
+
   render() {
+    const { isNodeTextVisible } = this.props;
     // console.count('node rendering!');
     return (
       <NodeGroupStyles
@@ -86,7 +107,25 @@ class Node extends Component {
           /* onClick={this.props.addLink} */
           filter={this.props.isActive ? 'url(#virtual_light)' : null}
         />
-        <text>{this.props.data.name}</text>
+        {isNodeTextVisible && (
+          <g className="text-label">
+            {this.getTextContent({
+              name: this.props.data.name.slice(0, MAX_TEXT_LENGTH),
+              isAboveMax: this.props.data.name.length > MAX_TEXT_LENGTH,
+            }).map((text, idx) => (
+              <text
+                dy={
+                  idx * TEXT_LINE_HEIGHT -
+                  (this.props.data.name.length / MAX_LINE_LENGTH) *
+                    (TEXT_LINE_HEIGHT / 4)
+                }
+                key={text}
+              >
+                {text}
+              </text>
+            ))}
+          </g>
+        )}
       </NodeGroupStyles>
     );
   }

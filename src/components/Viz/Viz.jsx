@@ -67,9 +67,10 @@ class Viz extends Component {
       onClick,
       colouredByValue,
       isTabletOrLarger,
-      // summaryBarsActive,
     } = this.props;
-    // const { summaryStatistics, totalNodes } = this.state;
+
+    const MAX_NODES_WITH_TEXT_VISIBLE = 50;
+    const isNodeTextVisible = nodes.length < MAX_NODES_WITH_TEXT_VISIBLE;
 
     return (
       <React.Fragment>
@@ -94,18 +95,11 @@ class Viz extends Component {
                     data={node}
                     name={node.name}
                     isActive={this.state.activeNodeId === node.id}
+                    isNodeTextVisible={isNodeTextVisible}
                   />
                 );
               })}
             </g>
-
-            {/* {totalNodes > nodes.length && summaryBarsActive && (
-              <SummaryStatistics
-                summaryStatistics={summaryStatistics}
-                nodes={nodes}
-              />
-            )} */}
-
             <SVG3dEffect />
           </svg>
         </VizStyles>

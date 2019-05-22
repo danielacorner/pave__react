@@ -435,14 +435,6 @@ const FORCE = function(nsp) {
               return color(d.cluster);
           }
         });
-
-      // text labels
-      selection
-        .select('text')
-        .attr('id', d => `text_${d.id}`)
-        .attr('class', 'text-label')
-        // todo: display text labels when appropriate
-        .style('display', 'none');
     },
     updateNode = selection => {
       selection
