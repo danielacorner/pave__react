@@ -87,7 +87,6 @@ class Node extends Component {
       tspans.push(
         remainingName.slice(0, 9) + (remainingName[8] === ' ' ? '' : '-'),
       );
-      console.log({ rem9: remainingName[9] });
       remainingName = remainingName.slice(9);
     }
     tspans.push(remainingName + ellipse);
