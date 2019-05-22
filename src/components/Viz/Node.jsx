@@ -116,7 +116,8 @@ class Node extends Component {
               <text
                 dy={
                   idx * TEXT_LINE_HEIGHT -
-                  (this.props.data.name.length / MAX_LINE_LENGTH) *
+                  (Math.min(this.props.data.name.length, MAX_TEXT_LENGTH) /
+                    MAX_LINE_LENGTH) *
                     (TEXT_LINE_HEIGHT / 4)
                 }
                 key={text}
