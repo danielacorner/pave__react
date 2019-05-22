@@ -109,7 +109,7 @@ class ContextProvider extends Component {
     return this.state.nodes !== nextState.nodes;
   }
 
-  translate = () => {
+  getTranslate = () => {
     const { width, height } = $('#graphContainer').getBoundingClientRect();
 
     const nodesRect = $('#nodesG').getBoundingClientRect();
@@ -117,7 +117,8 @@ class ContextProvider extends Component {
       nodesRect.left < 0 && this.state.sortedType ? -nodesRect.left : 0;
     return `${+width / 2 + +offsetLeft}px,${+height / 2}px`;
   };
-  scale = () => {
+
+  getScale = () => {
     // resize the graph container to fit the screen
     const { width, height } = $('#graphContainer').getBoundingClientRect();
 
@@ -145,7 +146,7 @@ class ContextProvider extends Component {
   };
 
   handleResize = debounce(() => {
-    const newScale = this.scale();
+    const newScale = this.getScale();
     const svgBBox = $('#graphContainer').getBoundingClientRect();
     this.setState({
       svgBBox,
@@ -162,7 +163,7 @@ class ContextProvider extends Component {
     // translate the nodes group into the middle and scale to fit
     $(
       '#nodesG',
-    ).style.transform = `translate(${this.translate()}) scale(${newScale})`;
+    ).style.transform = `translate(${this.getTranslate()}) scale(${newScale})`;
   }, 150);
 
   filteredNodes = () => {
@@ -198,6 +199,7 @@ class ContextProvider extends Component {
       nodes: this.filteredNodes(),
     });
   };
+
   restartSimulation = () => {
     this.setState({
       nodes: this.filteredNodes(),

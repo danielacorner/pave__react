@@ -23,13 +23,13 @@ const AppLayoutStyles = styled.div`
   grid-gap: 8px;
   /* Mobile */
   grid-template-rows: auto auto 1fr auto;
-  height: calc(100vh - ${NAV_HEIGHT}px);
   min-height: 740px;
   @media (min-width: 340px) {
     min-height: 750px;
   }
   /* Tablet and up */
   @media (min-width: 400px) {
+    height: calc(100vh - ${NAV_HEIGHT}px);
     overflow: hidden;
     grid-gap: 16px;
   }

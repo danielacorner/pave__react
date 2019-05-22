@@ -60,16 +60,6 @@ const handleJoyrideCallback = ({
   } else if (step.target === '.sortByType') {
     window.scroll(0, 600);
   } else if (step.target === '.slidersDiv') {
-    window.scroll(0, 70);
-  } else if (step.target === '.btnReset') {
-    window.scroll(0, 100);
-  } else if (step.target === '.btnLegendWrapper') {
-    window.scroll(0, document.body.scrollHeight);
-  } else if (step.target === '.btnFeedback') {
-    window.scroll(0, 0);
-  }
-
-  if (step.target === '.slidersDiv') {
     // Disable btnNext until user uses the filter sliders
     disableNext();
 
@@ -86,6 +76,18 @@ const handleJoyrideCallback = ({
           enableNext();
         }
       });
+    window.scroll(0, 70);
+  } else if (step.target === '.btnReset') {
+    window.scroll(0, 100);
+    // Disable btnNext until user clicks reset
+    disableNext();
+    d3.select('.btnReset').on('mouseup', function() {
+      enableNext();
+    });
+  } else if (step.target === '.btnLegendWrapper button') {
+    window.scroll(0, document.body.scrollHeight);
+  } else if (step.target === '.btnFeedback') {
+    window.scroll(0, 0);
   }
 
   if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
@@ -117,11 +119,10 @@ const handleJoyrideCallback = ({
   }
 
   if (data.type === 'tour:end') {
-    console.log('tour end!');
     setIsJoyrideEnabled(false);
   }
 
-  console.log(data);
+  // console.log(data);
 };
 
 const JoyrideTooltipStyles = styled.div`
@@ -146,7 +147,7 @@ const JoyrideTooltipStyles = styled.div`
   }
   svg {
     margin-bottom: -6px;
-    transform: scale(1.2);
+    transform: scale(1.6);
   }
 `;
 
@@ -206,6 +207,24 @@ const joyrideSteps = [
       </JoyrideTooltipStyles>
     ),
   },
+  {
+    target: '.btnLegendWrapper button',
+    placement: 'top-end',
+    isFixed: true,
+    content: (
+      <JoyrideTooltipStyles>
+        <p>
+          Here's where you'll find what the sizes and current colours represent.
+        </p>
+        <p>
+          Legendary!{' '}
+          <span role="img" aria-label="sunglasses-smiley">
+            😎
+          </span>
+        </p>
+      </JoyrideTooltipStyles>
+    ),
+  },
   // TODO: add step for tooltip
   {
     target: '.slidersDiv',
@@ -226,8 +245,9 @@ const joyrideSteps = [
       <JoyrideTooltipStyles>
         <p>
           If you want to get <span className="italic">really</span> specific,
-          click on the <ExpandMoreIcon /> button to see a total of fifteen
-          sub-skills that make up each of the top-level skill categories.
+          click on the <ExpandMoreIcon /> button to see a total of
+          <span className="bold"> fifteen sub-skills </span>
+          that make up each of the skill categories.
         </p>
       </JoyrideTooltipStyles>
     ),
@@ -239,8 +259,8 @@ const joyrideSteps = [
     content: (
       <JoyrideTooltipStyles>
         <p>
-          Jobs are grouped into 10 "industries". It's easier to change jobs
-          within these groups.
+          Jobs are grouped into 10 "industries" — it's easier to change jobs
+          within one.
         </p>
         <p>Switch this toggle now to see the industries.</p>
       </JoyrideTooltipStyles>
@@ -272,40 +292,14 @@ const joyrideSteps = [
       </JoyrideTooltipStyles>
     ),
   },
-  {
-    target: '.btnLegendWrapper',
-    placement: 'top-end',
-    isFixed: true,
-    content: (
-      <JoyrideTooltipStyles>
-        <p>
-          Here{`'`}s where you{`'`}ll find out what exactly you{`'`}re looking
-          at in the visualization above -- it also changes with the
-          visualization.
-        </p>
-        <p>
-          Legendary!{' '}
-          <span role="img" aria-label="sunglasses-smiley">
-            😎
-          </span>
-        </p>
-      </JoyrideTooltipStyles>
-    ),
-  },
+
   {
     target: '.colourByValue',
     placement: 'bottom-start',
     content: (
       <JoyrideTooltipStyles>
         <p>
-          We highly recommend{' '}
-          <span role="img" aria-label="hand-point-up">
-            👆
-          </span>{' '}
-          this one here.
-        </p>
-        <p>
-          You can use it to colour-code the jobs by{' '}
+          You can use this switch to colour-code the jobs by{' '}
           <span className="salary bold">salary per year</span>,{' '}
           <span className="study bold">years of study</span>, or{' '}
           <span className="risk bold">
@@ -328,7 +322,7 @@ const joyrideSteps = [
         </p>
         <p>
           Goodjob is a work in progress, and we{`'`}d love to hear what you
-          think -- comments, suggestions, and feature requests are all welcome.
+          think — comments, suggestions, and feature requests are all welcome.
         </p>
         <p>
           Thanks for visiting, and check back often for updates!{' '}

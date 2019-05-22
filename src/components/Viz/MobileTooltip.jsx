@@ -14,7 +14,7 @@ const getMobileTooltipStyles = ({
   educationPercent,
 }) => styled.div`
   position: relative;
-  .btnLegendWrapper {
+  .btnMoreInfoWrapper {
     width: 100%;
     display: grid;
     justify-items: end;
@@ -179,7 +179,7 @@ const MobileTooltipContents = ({ data }) => {
           being replaced by machines
         </div>
       </div>
-      <div className="btnLegendWrapper">
+      <div className="btnMoreInfoWrapper">
         <Button variant="outlined" className="btnMoreInfo" disabled={true}>
           Learn More <OpenInNewIcon />
         </Button>
