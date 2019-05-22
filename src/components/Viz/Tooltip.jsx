@@ -5,6 +5,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
 import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
+import { getCircleColour } from '../FORCE';
 const TOOLTIP_TRANSITION = (type, time) =>
   `${type} ${time}s cubic-bezier(0.165, 0.84, 0.44, 1)`;
 
@@ -180,8 +181,10 @@ const Tooltip = ({ data, left, bottom, width }) => {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
-  const { state } = useContext(ControlsContext);
+  const { state, colouredByValue } = useContext(ControlsContext);
   const { zScale } = state;
+  const circleColour = getCircleColour({ d: data, colouredByValue });
+
   const getLeft = () =>
     left + TOOLTIP_WIDTH + TOOLTIP_HZ_OFFSET > window.innerWidth
       ? left - TOOLTIP_WIDTH - 2 * TOOLTIP_HZ_OFFSET
@@ -209,7 +212,7 @@ const Tooltip = ({ data, left, bottom, width }) => {
           <div className="industry textAlignLeft">
             <div
               className="industryColour"
-              style={{ background: zScale(industry) }}
+              style={{ background: circleColour }}
             />
             {industry}
           </div>

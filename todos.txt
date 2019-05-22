@@ -1,7 +1,8 @@
 TODOS:
 
 todo:
-- start with grey?
+- start with grey
+- force user to turn on colours
 - debug why can't touch-drag through tour spotlight
 - save favourites to localstorage
 - remove the most bottom circle legend

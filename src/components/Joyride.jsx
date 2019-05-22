@@ -55,6 +55,8 @@ const handleJoyrideCallback = ({
     setStepIndex(1);
   }
 
+  // TODO: only disable if moving forward not backward
+
   if (step.target === '#node_292') {
     window.scroll(0, 100);
   } else if (step.target === '.sortByType') {
@@ -84,6 +86,17 @@ const handleJoyrideCallback = ({
     d3.select('.btnReset').on('mouseup', function() {
       enableNext();
     });
+  } else if (step.target === '.colourByValue') {
+    window.scroll(0, 200);
+    // Disable btnNext until user clicks reset
+    disableNext();
+    d3.select('.colourByValue').on('mouseup', function() {
+      d3.select('.react-joyride__tooltip').style('opacity', '0.1');
+      setTimeout(() => {
+        d3.select('.react-joyride__tooltip').style('opacity', '1');
+        enableNext();
+      }, 1750);
+    });
   } else if (step.target === '.btnLegendWrapper button') {
     window.scroll(0, document.body.scrollHeight);
   } else if (step.target === '.btnFeedback') {
@@ -98,6 +111,7 @@ const handleJoyrideCallback = ({
     const stepIndex = index + (action === ACTIONS.PREV ? -1 : 1);
 
     if (index === 1) {
+      // skip from the first to the second step
       setRun(false);
       setStepIndex(stepIndex);
       setTimeout(() => {
@@ -120,9 +134,10 @@ const handleJoyrideCallback = ({
 
   if (data.type === 'tour:end') {
     setIsJoyrideEnabled(false);
+    // TODO: clean up all listeners created above
   }
 
-  // console.log(data);
+  console.log(data);
 };
 
 const JoyrideTooltipStyles = styled.div`
@@ -195,6 +210,7 @@ const joyrideSteps = [
   },
   {
     target: '#node_292',
+    styles: { spotlight: { borderRadius: '100%' } },
     content: (
       <JoyrideTooltipStyles>
         <p>This is the job "Retail salespersons".</p>
@@ -213,9 +229,7 @@ const joyrideSteps = [
     isFixed: true,
     content: (
       <JoyrideTooltipStyles>
-        <p>
-          Here's where you'll find what the sizes and current colours represent.
-        </p>
+        <p>Here's where you'll find what the current sizes and colours mean.</p>
         <p>
           Legendary!{' '}
           <span role="img" aria-label="sunglasses-smiley">
@@ -252,20 +266,7 @@ const joyrideSteps = [
       </JoyrideTooltipStyles>
     ),
   },
-  // TODO: switch sort by type to colour by type
-  // TODO: set timeout to see the grouping after sorting into industries
-  {
-    target: '.sortByType',
-    content: (
-      <JoyrideTooltipStyles>
-        <p>
-          Jobs are grouped into 10 "industries" — it's easier to change jobs
-          within one.
-        </p>
-        <p>Switch this toggle now to see the industries.</p>
-      </JoyrideTooltipStyles>
-    ),
-  },
+
   {
     target: '.btnReset',
     placement: 'bottom-end',
@@ -292,20 +293,30 @@ const joyrideSteps = [
       </JoyrideTooltipStyles>
     ),
   },
-
+  // TODO: change this tooltip based on current state? or simply reset state when tour starts
   {
     target: '.colourByValue',
-    placement: 'bottom-start',
     content: (
       <JoyrideTooltipStyles>
         <p>
-          You can use this switch to colour-code the jobs by{' '}
-          <span className="salary bold">salary per year</span>,{' '}
+          Jobs are grouped into 10 "industries" — it's easier to change jobs
+          within one.
+        </p>
+        <p>Switch this toggle now to see the industries.</p>
+      </JoyrideTooltipStyles>
+    ),
+  },
+  {
+    target: '.select',
+    // placement: 'bottom-start',
+    content: (
+      <JoyrideTooltipStyles>
+        <p>
+          You can colour-code the jobs by <span className="bold">industry</span>
+          , <span className="salary bold">salary</span>,{' '}
           <span className="study bold">years of study</span>, or{' '}
-          <span className="risk bold">
-            risk of tasks being replaced by machines
-          </span>
-          .
+          <span className="risk bold">risk of being replaced by machines</span>,
+          whatever interests you most.
         </p>
       </JoyrideTooltipStyles>
     ),

@@ -170,7 +170,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
   };
 
   const [sortedParams, setSortedParams] = useState([]);
-  const [valueToColourBy, setValueToColourBy] = useState('automationRisk');
+  const [valueToColourBy, setValueToColourBy] = useState('industry');
 
   const context = useContext(ControlsContext);
   return (
@@ -207,7 +207,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
             } by Size`}
           />
         </Tooltip>
-        <Tooltip
+        {/* <Tooltip
           title={
             <div>
               <div>Sort by job industry.</div>
@@ -239,7 +239,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
               sortedParams && sortedParams.includes('category') ? 'ed' : ''
             } by Type`}
           />
-        </Tooltip>
+        </Tooltip> */}
         <Tooltip title={getColourByValueText(valueToColourBy)}>
           <FormControlLabel
             classes={{ root: 'formControlRoot' }}
@@ -289,6 +289,16 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                     }
                   }}
                 >
+                  <MenuItem value="industry">
+                    <Tooltip
+                      placement="right"
+                      title={
+                        'Job industry, jobs that are related to each other'
+                      }
+                    >
+                      <div>Type</div>
+                    </Tooltip>
+                  </MenuItem>
                   <MenuItem value="automationRisk">
                     <Tooltip
                       placement="right"

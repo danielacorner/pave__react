@@ -1,6 +1,24 @@
 import * as d3 from 'd3';
 import ReactDOM from 'react-dom';
 import { $ } from './Context/ContextProvider';
+
+const lightGrey = 'hsl(0,0%,80%)';
+const color = d3.scaleOrdinal(d3.schemeCategory10);
+export const getCircleColour = ({ d, colouredByValue }) => {
+  switch (colouredByValue) {
+    case 'automationRisk':
+      return d3.interpolateRdYlGn(1 - d.automationRisk);
+    case 'salary':
+      return d3.interpolateGreens(d.salaryMed / 60);
+    case 'study':
+      return d3.interpolateBlues(d.yearsStudy / 5);
+    case 'industry':
+      return color(d.cluster);
+    default:
+      return lightGrey;
+  }
+};
+
 const FORCE = function(nsp) {
   let paused,
     updatePositionsInterval,
@@ -27,7 +45,6 @@ const FORCE = function(nsp) {
     START_FRICTION = 0.01,
     END_SPEED = 0,
     // color scale
-    color = d3.scaleOrdinal(d3.schemeCategory10),
     // cluster force implementation
     cluster = (nodes, radiusScale, radiusSelector, clusterCenters) => {
       // default strength if unspecified
@@ -359,23 +376,14 @@ const FORCE = function(nsp) {
         d3.selectAll('g.node circle')
           .transition()
           .delay((d, i) => i * 0.5)
-          .style('fill', d => {
-            switch (variable) {
-              case 'automationRisk':
-                return d3.interpolateRdYlGn(1 - d.automationRisk);
-              case 'salary':
-                return d3.interpolateGreens(d.salaryMed / 60);
-              case 'study':
-                return d3.interpolateBlues(d.yearsStudy / 5);
-              default:
-                break;
-            }
-          });
+          .style('fill', d =>
+            getCircleColour({ d, colouredByValue: variable }),
+          );
       } else {
         d3.selectAll('g.node circle')
           .transition()
           .delay((d, i) => i * 0.5)
-          .style('fill', d => color(d.cluster));
+          .style('fill', () => lightGrey);
       }
     },
     startSimulation = (
@@ -431,8 +439,10 @@ const FORCE = function(nsp) {
               return d3.interpolateGreens(d.salaryMed / 60);
             case 'study':
               return d3.interpolateBlues(d.yearsStudy / 5);
-            default:
+            case 'industry':
               return color(d.cluster);
+            default:
+              return lightGrey;
           }
         });
     },

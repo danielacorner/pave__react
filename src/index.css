@@ -6,6 +6,10 @@ span {
   -webkit-font-smoothing: antialiased;
   text-shadow: rgba(0, 0, 0, 0.3) 1px 1px 1px;
 }
+
+.react-joyride__tooltip {
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
 /*
 .form-addSystem {
   display: grid;
