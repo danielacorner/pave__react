@@ -170,6 +170,7 @@ const JoyrideTooltipStyles = styled.div`
 const joyrideSteps = [
   {
     target: '.btnHelp',
+    content: <div />,
   },
   {
     target: '.titleWrapper',

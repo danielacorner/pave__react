@@ -73,6 +73,8 @@ const MinMax = ({ visible, title }) => (
   </div>
 );
 
+const MAX_SUBSKILL_VALUE = 10;
+
 const SubskillFilters = ({ filterVar, onMouseUp }) => {
   const subskillFilters = SUBSKILL_FILTER_TITLES(filterVar);
   const context = useContext(ControlsContext);
@@ -87,7 +89,10 @@ const SubskillFilters = ({ filterVar, onMouseUp }) => {
             className="slider subskillSlider"
             value={context.state.filters[subskill.dataLabel]}
             min={FILTER_RANGE(subskill.dataLabel)[0]}
-            max={FILTER_RANGE(subskill.dataLabel)[1]}
+            max={Math.min(
+              FILTER_RANGE(subskill.dataLabel)[1],
+              MAX_SUBSKILL_VALUE,
+            )}
             step={1}
             onChange={(event, value) => {
               context.handleFilterChange(subskill.dataLabel, value);

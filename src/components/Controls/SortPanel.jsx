@@ -36,9 +36,7 @@ const getColourByValueText = valueToColourBy => {
   } else if (valueToColourBy === 'salary') {
     return (
       <div>
-        <div>
-          Colour the circles how much money is made by the average worker.
-        </div>
+        <div>Colour by how much money is made by the average worker.</div>
         <div>
           Once coloured, look for{' '}
           <span style={{ color: 'rgb(170, 213, 107)' }}>
@@ -52,9 +50,8 @@ const getColourByValueText = valueToColourBy => {
     return (
       <div>
         <div>
-          Colour the circles how many years of study after high school for the
-          average person working this job (not necessarily how many are required
-          for the job).
+          Colour by years of study after high school for the average person
+          working this job (not necessarily how many are required for the job).
         </div>
         <div>
           Once coloured, look for{' '}
@@ -62,6 +59,16 @@ const getColourByValueText = valueToColourBy => {
           to find jobs which require more study, or{' '}
           <span style={{ color: 'hsl(203,85%,85%)' }}>light blue circles</span>{' '}
           for jobs which require less study.
+        </div>
+      </div>
+    );
+  } else if (valueToColourBy === 'industry') {
+    return (
+      <div>
+        <div>Colour by job industry, or groups of related jobs.</div>
+        <div>
+          Once you've worked in an industry, it's easier to find another job in
+          the same industry.
         </div>
       </div>
     );
