@@ -17,6 +17,9 @@ const NodeGroupStyles = styled.g`
       stroke-width: 2;
     }
   }
+  .text-label {
+    pointer-events: none;
+  }
   .text-label text {
     fill: black;
     font-weight: 600;
