@@ -1,9 +1,9 @@
 TODOS:
 
 todo:
-- start with grey
-- force user to turn on colours
-- debug why can't touch-drag through tour spotlight
+- legend button disappears?
+- customize legend based on settingsContext
+
 - save favourites to localstorage
 - remove the most bottom circle legend
 - legend for colours (study/salary/risk)
