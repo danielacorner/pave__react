@@ -119,7 +119,7 @@ const MobileTooltipStyles = styled.div`
 `;
 
 const MobileTooltipContents = ({ data }) => {
-  const { job, industry, salaryMed, color, automationRisk, yearsStudy } = data;
+  const { job, industry, salaryMed, automationRisk, yearsStudy } = data;
   // TODO: find reasonable salarymed?
   // TODO: add "10%, 100%" and "25k, 75k" annotation line to tooltip
   const salaryMedPercent = salaryMed / 75;
