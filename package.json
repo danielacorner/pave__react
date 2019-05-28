@@ -29,7 +29,7 @@
     "react-dom": "^16.5.2",
     "react-joyride": "^2.0.5",
     "react-responsive": "^6.1.1",
-    "react-scripts": "1.1.5",
+    "react-scripts": "2.0.3",
     "recharts": "^1.5.0",
     "styled-components": "^3.4.9",
     "terser": "^3.17.0"
@@ -45,9 +45,14 @@
   "homepage": "http://dcorn068.github.io/pave__react",
   "devDependencies": {
     "babel-plugin-styled-components": "^1.10.0",
-    "eslint": "^5.14.1",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^1.0.2",
     "react-app-rewired": "^2.1.1"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
