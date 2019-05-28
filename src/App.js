@@ -6,6 +6,7 @@ import './App.css';
 import ContextProvider from './components/Context/ContextProvider';
 import AppWithContext from './AppWithContext';
 import { Button } from '@material-ui/core';
+import { PictogramClipPathsDefs } from './components/Viz/MobileTooltip';
 // import styled, { keyframes } from 'styled-components';
 
 const theme = createMuiTheme({
@@ -52,6 +53,7 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <ContextProvider>
+        <PictogramClipPathsDefs />
         <AppWithContext />
         {deferredPrompt && (
           <AddToHomeScreenBanner

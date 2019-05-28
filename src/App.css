@@ -42,3 +42,9 @@ body {
   opacity: 0.3;
   background-color: tomato !important;
 }
+[role='presentation'] {
+  pointer-events: none !important;
+}
+[role='document'] {
+  pointer-events: auto;
+}

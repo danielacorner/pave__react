@@ -128,7 +128,7 @@ const AppLayout = ({ location }) => {
   return (
     <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
       {isTabletOrLarger => (
-        <React.Fragment>
+        <>
           <AppLayoutStyles
             onClick={
               isTabletOrLarger
@@ -203,7 +203,6 @@ const AppLayout = ({ location }) => {
               onClick={datum => {
                 const mobileTooltipProps = {
                   data: datum,
-                  setMobileTooltipProps,
                 };
                 setMobileTooltipProps(mobileTooltipProps);
               }}
@@ -222,8 +221,11 @@ const AppLayout = ({ location }) => {
           </AppLayoutStyles>
 
           {isTooltipActive && isTabletOrLarger && <Tooltip {...tooltipProps} />}
-          <MobileTooltip {...mobileTooltipProps} />
-        </React.Fragment>
+          <MobileTooltip
+            {...mobileTooltipProps}
+            setMobileTooltipProps={setMobileTooltipProps}
+          />
+        </>
       )}
     </MediaQuery>
   );
