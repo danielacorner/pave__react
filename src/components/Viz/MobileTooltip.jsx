@@ -41,7 +41,8 @@ const MobileTooltipStyles = styled.div`
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
   line-height: 14pt;
   .title {
-    transition: max-height 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+    /* max-height: 1.2em; */
+    transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
     font-size: 1.8em;
     margin: 0 0 6pt 0;
     line-height: 1.2em;
@@ -125,17 +126,23 @@ const MobileTooltipContents = ({ data }) => {
   const salaryMedPercent = salaryMed / 75;
   // TODO: years of study (min, max?)
   const educationPercent = yearsStudy / 7;
-  const AVG_CHAR_PER_ROW = 21;
+  const AVG_CHAR_PER_ROW = 25;
   const LINE_HEIGHT_EMS = 1.2;
+  const maxHeight =
+    (job.length > AVG_CHAR_PER_ROW - 4
+      ? LINE_HEIGHT_EMS * Math.ceil(job.length / (AVG_CHAR_PER_ROW - 4))
+      : LINE_HEIGHT_EMS) + 'em';
+  const minHeight =
+    (job.length > AVG_CHAR_PER_ROW + 4
+      ? LINE_HEIGHT_EMS * Math.ceil(job.length / (AVG_CHAR_PER_ROW + 4))
+      : LINE_HEIGHT_EMS) + 'em';
   return (
     <MobileTooltipStyles>
       <h3
         className="title textAlignLeft"
         style={{
-          maxHeight:
-            (job.length > AVG_CHAR_PER_ROW
-              ? LINE_HEIGHT_EMS * Math.ceil(job.length / AVG_CHAR_PER_ROW)
-              : LINE_HEIGHT_EMS) + 'em',
+          maxHeight,
+          minHeight,
         }}
       >
         {job}
