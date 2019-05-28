@@ -1,6 +1,13 @@
 {
-  "main.css": "static/css/main.9dc4ebe3.css",
-  "main.css.map": "static/css/main.9dc4ebe3.css.map",
-  "main.js": "static/js/main.ee681a1f.js",
-  "main.js.map": "static/js/main.ee681a1f.js.map"
+  "main.css": "/pave__react/static/css/main.81a17ee8.chunk.css",
+  "main.js": "/pave__react/static/js/main.91b64eef.chunk.js",
+  "main.js.map": "/pave__react/static/js/main.91b64eef.chunk.js.map",
+  "static/js/1.8077ac39.chunk.js": "/pave__react/static/js/1.8077ac39.chunk.js",
+  "static/js/1.8077ac39.chunk.js.map": "/pave__react/static/js/1.8077ac39.chunk.js.map",
+  "runtime~main.js": "/pave__react/static/js/runtime~main.d3842440.js",
+  "runtime~main.js.map": "/pave__react/static/js/runtime~main.d3842440.js.map",
+  "static/css/main.81a17ee8.chunk.css.map": "/pave__react/static/css/main.81a17ee8.chunk.css.map",
+  "index.html": "/pave__react/index.html",
+  "precache-manifest.6b4d399e6c2d1c2c9d7eb6e80c38698b.js": "/pave__react/precache-manifest.6b4d399e6c2d1c2c9d7eb6e80c38698b.js",
+  "service-worker.js": "/pave__react/service-worker.js"
 }
