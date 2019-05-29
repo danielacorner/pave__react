@@ -25,7 +25,11 @@ const AppLayoutStyles = styled.div`
   grid-template-rows: auto auto 1fr auto;
   min-height: 740px;
   @media (min-width: 340px) {
-    min-height: 750px;
+    min-height: 695px;
+    /* TODO: expand vertically when sorted vertically by something... */
+    &.sorted {
+      min-height: 800px;
+    }
   }
   /* Tablet and up */
   @media (min-width: 400px) {
@@ -33,15 +37,12 @@ const AppLayoutStyles = styled.div`
     overflow: hidden;
     grid-gap: 16px;
   }
-  /* @media (min-width: ${TABLET_MIN_WIDTH}px) {
-    grid-template-rows: auto auto 1fr auto;
-  } */
   padding: 10px 10px 0 10px;
   @media (min-width: 400px) {
     padding: 10px 20px 0 20px;
   }
   box-sizing: border-box;
-  `;
+`;
 
 const filterVariables = [
   'skillsLang',

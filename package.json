@@ -42,7 +42,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "http://dcorn068.github.io/pave__react",
+  "homepage": "https://dcorn068.github.io/pave__react",
   "devDependencies": {
     "babel-plugin-styled-components": "^1.10.0",
     "eslint-plugin-react": "^7.12.4",
