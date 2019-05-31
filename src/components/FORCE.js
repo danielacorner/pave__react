@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import ReactDOM from 'react-dom';
 import { $ } from './Context/ContextProvider';
-import { WORKERS, INDUSTRY } from './Controls/SortPanel';
+import { WORKERS, INDUSTRY, AUTOMATION_RISK } from './Controls/SortPanel';
 
 const lightGrey = 'hsl(0,0%,80%)';
 const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -240,54 +240,6 @@ const FORCE = function(nsp) {
           .alpha(START_SPEED)
           .alphaDecay(START_FRICTION)
           .alphaTarget(END_SPEED);
-        // } else if (sortByValue.includes('type') && sortByValue.includes('size')) {
-        //   const SORT_BOTH_SPEED = 0.01;
-        //   const SORT_BOTH_FRICTION = 0.007;
-
-        //   sortedTypeX = d3.forceX(positionX).strength(CENTER_GRAVITY * 25);
-        //   sortedTypeY = d3.forceY(positionY).strength(CENTER_GRAVITY * 33);
-        //   nsp.force
-        //     .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 15))
-        //     .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -14.2))
-        //     .force('sortedTypeX', sortedTypeX)
-        //     .force('sortedTypeY', sortedTypeY)
-        //     .force(
-        //       'charge',
-        //       d3.forceManyBody().strength(d => {
-        //         return -Math.pow(radiusScale(d[radiusSelector]), 2.9) - 1500;
-        //       }),
-        //     )
-        //     .force(
-        //       'sortedSizeY',
-        //       d3
-        //         .forceY(d => {
-        //           const radius = radiusScale(d[radiusSelector]);
-        //           const normalizedRadius = (radius - min) / (max - min);
-        //           const yPosition = (0.5 - normalizedRadius) * (minLength * 0.5);
-        //           return yPosition;
-        //         })
-        //         .strength(CENTER_GRAVITY * 28),
-        //     )
-        //     .alpha(SORT_BOTH_SPEED)
-        //     .alphaDecay(SORT_BOTH_FRICTION);
-        // } else if (sortByValue === 'type') {
-        //   const SORT_TYPE_SPEED = 0.5;
-        //   const SORT_TYPE_FRICTION = 0.025;
-
-        //   nsp.force
-        //     .force('sortedTypeX', sortedTypeX)
-        //     .force('sortedTypeY', sortedTypeY)
-        //     .force(
-        //       'charge',
-        //       d3.forceManyBody().strength(d => {
-        //         return -Math.pow(radiusScale(d[radiusSelector]), 2.13) - 0;
-        //       }),
-        //     )
-        //     .force('tempSizeX', null)
-        //     .force('tempSizeY', null)
-        //     .force('sortedSizeY', null)
-        //     .alpha(SORT_TYPE_SPEED)
-        //     .alphaDecay(SORT_TYPE_FRICTION);
       } else if (sortByValue) {
         if (sortByValue === WORKERS) {
           const SORT_SIZE_SPEED = 0.045;
@@ -302,7 +254,7 @@ const FORCE = function(nsp) {
               'sortedSizeY',
               d3
                 .forceY(d => {
-                  const radius = radiusScale(d[radiusSelector]);
+                  const radius = radiusScale(d[WORKERS]);
                   const normalizedRadius = (radius - min) / (max - min);
                   const yPosition =
                     (0.5 - normalizedRadius) * (minLength * 0.5);
@@ -313,7 +265,36 @@ const FORCE = function(nsp) {
             .force(
               'charge',
               d3.forceManyBody().strength(d => {
-                return -Math.pow(radiusScale(d[radiusSelector]), 2.16) - 150;
+                return -Math.pow(radiusScale(d[WORKERS]), 2.16) - 150;
+              }),
+            )
+            .alpha(SORT_SIZE_SPEED)
+            .alphaDecay(SORT_SIZE_FRICTION)
+            .alphaTarget(END_SPEED);
+        } else if (sortByValue === AUTOMATION_RISK) {
+          const SORT_SIZE_SPEED = 0.045;
+          const SORT_SIZE_FRICTION = 0.015;
+
+          const DY = 235;
+
+          nsp.force
+            .force('sortedTypeX', null)
+            .force('sortedTypeY', null)
+            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 1.8))
+            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -16.6))
+            .force(
+              'sortedSizeY',
+              d3
+                .forceY(d => {
+                  const yPosition = (d[AUTOMATION_RISK] - 0.5) * DY;
+                  return yPosition;
+                })
+                .strength(CENTER_GRAVITY * 28),
+            )
+            .force(
+              'charge',
+              d3.forceManyBody().strength(d => {
+                return -Math.pow(radiusScale(d[WORKERS]), 2.16) - 150;
               }),
             )
             .alpha(SORT_SIZE_SPEED)
@@ -355,14 +336,13 @@ const FORCE = function(nsp) {
       };
       return { positionX, positionY };
     },
-    colourByValue = ({ doColour, variable }) => {
+    colourByValue = ({ doColour, value }) => {
+      console.log({ doColour, value });
       if (doColour) {
         d3.selectAll('g.node circle')
           .transition()
           .delay((d, i) => i * 0.5)
-          .style('fill', d =>
-            getCircleColour({ d, colouredByValue: variable }),
-          );
+          .style('fill', d => getCircleColour({ d, colouredByValue: value }));
       } else {
         d3.selectAll('g.node circle')
           .transition()

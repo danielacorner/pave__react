@@ -249,31 +249,28 @@ class ContextProvider extends Component {
       },
     );
   };
-  sortByValue = value => {
-    const { radiusSelector, getRadiusScale, uniqueClusterValues } = this.state;
-    if (!this.state.sortedByValue) {
-      this.setState({ sortedByValue: value });
-    } else {
-      this.setState({ sortedByValue: false, radiusSelector, getRadiusScale });
-    }
+  sortByValue = (value, doSort = false) => {
+    const { radiusSelector, getRadiusScale } = this.state;
+    const newSortedValue = this.state.sortedByValue && !doSort ? false : value;
+    this.setState({ sortedByValue: newSortedValue });
     FORCE.applySortForces({
-      sortByValue: value,
+      sortByValue: newSortedValue,
       getRadiusScale,
       radiusSelector,
-      // numClusters: uniqueClusterValues.length,
     });
     setTimeout(this.handleResize, 2000);
   };
-  setCurrentColor = variable => {
-    this.setState({ colouredByValue: variable });
+
+  setCurrentColor = value => {
+    this.setState({ colouredByValue: value });
   };
-  colourByValue = variable => {
+  colourByValue = value => {
     if (!this.state.colouredByValue) {
-      this.setState({ colouredByValue: variable });
-      FORCE.colourByValue({ doColour: true, variable });
+      this.setState({ colouredByValue: value });
+      FORCE.colourByValue({ doColour: true, value });
     } else {
       this.setState({ colouredByValue: false });
-      FORCE.colourByValue({ doColour: false, variable: null });
+      FORCE.colourByValue({ doColour: false, value: null });
     }
   };
   toggleSummaryBars = () => {

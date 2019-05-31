@@ -209,21 +209,12 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
     context,
   }) => {
     if (toggleActivated === SORT_BY_VALUE) {
-      if (valueToSortBy === WORKERS) {
-        context.sortByValue(WORKERS);
-      }
+      context.sortByValue(valueToSortBy);
+
       if (!activeSwitches.includes(SORT_BY_VALUE)) {
         setActiveSwitches([...activeSwitches, SORT_BY_VALUE]);
       } else {
         setActiveSwitches(activeSwitches.filter(d => d !== SORT_BY_VALUE));
-      }
-    }
-    if (toggleActivated === 'category') {
-      context.sortType();
-      if (!activeSwitches.includes('category')) {
-        setActiveSwitches([...activeSwitches, 'category']);
-      } else {
-        setActiveSwitches(activeSwitches.filter(d => d !== 'category'));
       }
     }
     if (toggleActivated === COLOUR_BY_VALUE) {
@@ -282,11 +273,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                   onChange={event => {
                     setValueToSortBy(event.target.value);
                     if (activeSwitches.includes(SORT_BY_VALUE)) {
-                      // FORCE.sortByValue({
-                      //   doSort: true,
-                      //   variable: event.target.value,
-                      // });
-                      context.setCurrentSort(event.target.value);
+                      context.sortByValue(event.target.value, true);
                     }
                   }}
                 >
@@ -298,7 +285,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                       <div>Workers</div>
                     </Tooltip>
                   </MenuItem>
-                  {/* <MenuItem value={AUTOMATION_RISK}>
+                  <MenuItem value={AUTOMATION_RISK}>
                     <Tooltip
                       placement="right"
                       title={'Risk that tasks will be replaced by machine work'}
@@ -323,7 +310,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                     >
                       <div>Study</div>
                     </Tooltip>
-                  </MenuItem> */}
+                  </MenuItem>
                 </Select>
               </div>
             }
@@ -368,11 +355,14 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                     event.preventDefault();
                   }}
                   onChange={event => {
+                    console.log(event.target.value);
                     setValueToColourBy(event.target.value);
                     if (activeSwitches.includes(COLOUR_BY_VALUE)) {
+                      console.log(event);
+                      console.log('colouring by', event.target.value);
                       FORCE.colourByValue({
                         doColour: true,
-                        variable: event.target.value,
+                        value: event.target.value,
                       });
                       context.setCurrentColor(event.target.value);
                     }
