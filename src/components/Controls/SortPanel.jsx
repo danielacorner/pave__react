@@ -13,59 +13,105 @@ const white = 'rgba(255,255,255,0.98)';
 const inactive2 = 'hsl(160, 50%, 50%)';
 const hover2 = 'hsl(160, 50%, 45%)';
 
-const getColourByValueText = valueToColourBy => {
-  if (valueToColourBy === 'automationRisk') {
+const getTooltipText = (value, type) => {
+  if (value === 'workers') {
+    // not available for type === 'colourByValue'
+    return (
+      <div>
+        <div>Sort the circles by number of people working in each job.</div>
+        <div>
+          Since people come and go, it may be easier to find a job in larger
+          circles.
+        </div>
+      </div>
+    );
+  } else if (value === 'automationRisk') {
     return (
       <div>
         <div>
-          Colour the circles by risk that the job will be replaced by machine
-          work.
+          {type === 'colourByValue' ? 'Colour' : 'Sort'} the circles by risk
+          that the job will be replaced by machine work.
         </div>
-        <div>
-          Once coloured, look for{' '}
-          <span style={{ color: 'rgb(180, 223, 117)' }}>green circles</span> to
-          find jobs which won{"'"}t be taken over by machines for a long time.
-          Darker green means lower risk.
+        {type === 'colourByValue' ? (
           <div>
-            Avoid high-risk{' '}
-            <span style={{ color: 'rgb(253, 193, 114)' }}>red circles</span>.
+            Once coloured, look for{' '}
+            <span style={{ color: 'rgb(180, 223, 117)' }}>green circles</span>{' '}
+            to find jobs which won{"'"}t be taken over by machines for a long
+            time. Darker green means lower risk.
+            <div>
+              Avoid high-risk{' '}
+              <span style={{ color: 'rgb(253, 193, 114)' }}>red circles</span>.
+            </div>
           </div>
-        </div>
+        ) : (
+          <div>
+            Once sorted, look{' '}
+            <span style={{ fontWeight: 'bold' }}>higher up</span> to find jobs
+            which won{"'"}t be taken over by machines for a long time. Avoid
+            jobs lower down, which are at increased risk.
+          </div>
+        )}
       </div>
     );
-  } else if (valueToColourBy === 'salary') {
-    return (
-      <div>
-        <div>Colour by how much money is made by the average worker.</div>
-        <div>
-          Once coloured, look for{' '}
-          <span style={{ color: 'rgb(170, 213, 107)' }}>
-            dark green circles
-          </span>{' '}
-          to find jobs which make more money.
-        </div>
-      </div>
-    );
-  } else if (valueToColourBy === 'study') {
+  } else if (value === 'salary') {
     return (
       <div>
         <div>
-          Colour by years of study after high school for the average person
-          working this job (not necessarily how many are required for the job).
+          {type === 'colourByValue' ? 'Colour' : 'Sort'} by how much money is
+          made by the average worker.
         </div>
-        <div>
-          Once coloured, look for{' '}
-          <span style={{ color: 'hsl(203,70%,70%)' }}>dark blue circles</span>{' '}
-          to find jobs which require more study, or{' '}
-          <span style={{ color: 'hsl(203,85%,85%)' }}>light blue circles</span>{' '}
-          for jobs which require less study.
-        </div>
+        {type === 'colourByValue' ? (
+          <div>
+            Once coloured, look for{' '}
+            <span style={{ color: 'rgb(170, 213, 107)' }}>
+              dark green circles
+            </span>{' '}
+            to find jobs which make more money.
+          </div>
+        ) : (
+          <div>
+            Once sorted, look{' '}
+            <span style={{ fontWeight: 'bold' }}>higher up</span> to find jobs
+            with higher salaries.
+          </div>
+        )}
       </div>
     );
-  } else if (valueToColourBy === 'industry') {
+  } else if (value === 'study') {
     return (
       <div>
-        <div>Colour by job industry, or groups of related jobs.</div>
+        <div>
+          {type === 'colourByValue' ? 'Colour' : 'Sort'} by years of study after
+          high school for the average person working this job (not necessarily
+          how many are required for the job).
+        </div>
+        {type === 'colourByValue' ? (
+          <div>
+            Once coloured, look for{' '}
+            <span style={{ color: 'hsl(203,70%,70%)' }}>dark blue circles</span>{' '}
+            to find jobs which require more study, or{' '}
+            <span style={{ color: 'hsl(203,85%,85%)' }}>
+              light blue circles
+            </span>{' '}
+            for jobs which require less study.
+          </div>
+        ) : (
+          <div>
+            Once sorted, looking{' '}
+            <span style={{ fontWeight: 'bold' }}>higher up</span> you'll find
+            jobs that take a little longer to prepare for.
+          </div>
+        )}
+      </div>
+    );
+  } else if (value === 'industry') {
+    // not available for type === 'sortByValue'
+    return (
+      <div>
+        <div>
+          {type === 'colourByValue' ? 'Colour' : 'Sort'} by job industry, or
+          groups of related jobs.
+        </div>
         <div>
           Once you've worked in an industry, it's easier to find another job in
           the same industry.
@@ -186,17 +232,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
   return (
     <SortButtonsStyles>
       <div className="sortBtnGroup">
-        <Tooltip
-          title={
-            <div>
-              <div>Sort by workers in each job.</div>
-              <div>
-                More workers means more people are needed right now -- but it
-                doesn{"'"}t guarantee this type of job will be around forever.
-              </div>
-            </div>
-          }
-        >
+        <Tooltip title={getTooltipText(valueToSortBy, 'sortByValue')}>
           <FormControlLabel
             className="formControl sortByValue"
             control={
@@ -283,7 +319,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
             }
           />
         </Tooltip>
-        <Tooltip title={getColourByValueText(valueToColourBy)}>
+        <Tooltip title={getTooltipText(valueToColourBy, 'colourByValue')}>
           <FormControlLabel
             classes={{ root: 'formControlRoot' }}
             className="formControl colourByValue"
