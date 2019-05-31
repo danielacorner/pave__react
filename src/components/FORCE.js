@@ -6,6 +6,7 @@ import {
   INDUSTRY,
   AUTOMATION_RISK,
   SALARY,
+  STUDY,
 } from './Controls/SortPanel';
 
 const lightGrey = 'hsl(0,0%,80%)';
@@ -314,6 +315,39 @@ const FORCE = function(nsp) {
                     Math.log2(
                       (d['salaryMed'] + 1.2 * SALARY_AVG - SALARY_MIN) /
                         (SALARY_MAX - SALARY_MIN),
+                    ) * DY;
+                  return -yPosition;
+                })
+                .strength(CENTER_GRAVITY * 28),
+            )
+            .force(
+              'charge',
+              d3.forceManyBody().strength(d => {
+                return -Math.pow(radiusScale(d[WORKERS]), 2.16) - 150;
+              }),
+            )
+            .alpha(SORT_SPEED)
+            .alphaDecay(SORT_FRICTION)
+            .alphaTarget(END_SPEED);
+        } else if (sortByValue === STUDY) {
+          const DY = 260;
+          // TODO: values?
+          const STUDY_MAX = 6;
+          const STUDY_MIN = 0.5;
+          const STUDY_AVG = (STUDY_MAX - STUDY_MIN) / 2;
+          nsp.force
+            .force('sortedTypeX', null)
+            .force('sortedTypeY', null)
+            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 1.8))
+            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -16.6))
+            .force(
+              'sortedSizeY',
+              d3
+                .forceY(d => {
+                  const yPosition =
+                    Math.log2(
+                      (d['yearsStudy'] + 1.2 * STUDY_AVG - STUDY_MIN) /
+                        (STUDY_MAX - STUDY_MIN),
                     ) * DY;
                   return -yPosition;
                 })
