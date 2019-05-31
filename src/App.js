@@ -5,14 +5,14 @@ import React, { useState } from 'react';
 import './App.css';
 import ContextProvider from './components/Context/ContextProvider';
 import AppWithContext from './AppWithContext';
-import { Button } from '@material-ui/core';
 import { PictogramClipPathsDefs } from './components/Viz/MobileTooltip';
-// import styled, { keyframes } from 'styled-components';
+import { AddToHomeScreenBanner } from './components/AddToHomeScreenBanner';
 
+export const brightGreen = '#49ac52';
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#49ac52',
+      main: brightGreen,
       contrastText: '#fff',
     },
     secondary: { main: '#64b5f6' },
@@ -22,24 +22,6 @@ const theme = createMuiTheme({
     useNextVariants: true,
   },
 });
-
-const AddToHomeScreenBanner = ({ deferredPrompt, setDeferredPrompt }) => (
-  <Button
-    onClick={() => {
-      deferredPrompt.prompt();
-      deferredPrompt.userChocie.then(choiceResult => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User accepted the A2HS prompt');
-        } else {
-          console.log('User dismissed the A2HS prompt');
-        }
-        setDeferredPrompt(null);
-      });
-    }}
-  >
-    Hello!
-  </Button>
-);
 
 function App() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -55,12 +37,10 @@ function App() {
       <ContextProvider>
         <PictogramClipPathsDefs />
         <AppWithContext />
-        {deferredPrompt && (
-          <AddToHomeScreenBanner
-            deferredPrompt={deferredPrompt}
-            setDeferredPrompt={setDeferredPrompt}
-          />
-        )}
+        <AddToHomeScreenBanner
+          deferredPrompt={deferredPrompt}
+          setDeferredPrompt={setDeferredPrompt}
+        />
       </ContextProvider>
     </MuiThemeProvider>
   );
