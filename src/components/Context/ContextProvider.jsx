@@ -56,7 +56,7 @@ class ContextProvider extends Component {
       clusterCenters: [],
       snapshots: [],
       sortedType: false,
-      sortedSize: false,
+      sortedByValue: false,
       colouredByValue: false,
       svgBBox: 0,
       summaryBarsActive: true,
@@ -204,8 +204,8 @@ class ContextProvider extends Component {
     this.setState({
       nodes: this.filteredNodes(),
     });
-    const isStrongForce = this.state.sortedSize && this.state.sortedType;
-    const isMediumForce = this.state.sortedSize;
+    const isStrongForce = this.state.sortedByValue && this.state.sortedType;
+    const isMediumForce = this.state.sortedByValue;
     setTimeout(() => {
       FORCE.restartSimulation(this.state.nodes, isStrongForce, isMediumForce);
     }, 200);
@@ -248,73 +248,20 @@ class ContextProvider extends Component {
       },
     );
   };
-  sortSize = () => {
-    const {
-      radiusSelector,
-      getRadiusScale,
-      sortedType,
-      uniqueClusterValues,
-    } = this.state;
-    const sortBy = [];
-    if (!this.state.sortedSize) {
-      this.setState({ sortedSize: true });
-      sortBy.push('size');
+  sortByValue = value => {
+    const { radiusSelector, getRadiusScale, uniqueClusterValues } = this.state;
+    if (!this.state.sortedByValue) {
+      this.setState({ sortedByValue: value });
     } else {
-      this.setState({ sortedSize: false, radiusSelector, getRadiusScale });
-    }
-    if (sortedType) {
-      sortBy.push('type');
+      this.setState({ sortedByValue: false, radiusSelector, getRadiusScale });
     }
     FORCE.applySortForces({
-      sortBy,
+      value,
       getRadiusScale,
       radiusSelector,
       numClusters: uniqueClusterValues.length,
     });
     setTimeout(this.handleResize, 2000);
-  };
-  sortType = () => {
-    const {
-      nodes,
-      uniqueClusterValues,
-      clusterSelector,
-      sortedSize,
-      sortedType,
-      getRadiusScale,
-      radiusSelector,
-    } = this.state;
-    const sortBy = [];
-    if (!sortedType) {
-      this.setState({ sortedType: true });
-      sortBy.push('type');
-      setTimeout(() => {
-        FORCE.toggleClusterTags(
-          true,
-          nodes,
-          uniqueClusterValues,
-          clusterSelector,
-        );
-        this.handleResize();
-      }, 500);
-    } else if (sortedType) {
-      FORCE.toggleClusterTags(
-        false,
-        nodes,
-        uniqueClusterValues,
-        clusterSelector,
-      );
-      this.setState({ sortedType: false });
-      setTimeout(this.handleResize, 1500);
-    }
-    if (sortedSize) {
-      sortBy.push('size');
-    }
-    FORCE.applySortForces({
-      sortBy,
-      getRadiusScale,
-      radiusSelector,
-      numClusters: uniqueClusterValues.length,
-    });
   };
   setCurrentColor = variable => {
     this.setState({ colouredByValue: variable });
@@ -345,8 +292,8 @@ class ContextProvider extends Component {
           restartSimulation: this.restartSimulation,
           handleFilterMouseup: this.handleFilterMouseup,
           setNodes: nodes => this.setState({ nodes: nodes }),
-          sortSize: this.sortSize,
-          sortType: this.sortType,
+          sortByValue: this.sortByValue,
+          // sortType: this.sortType,
           colourByValue: this.colourByValue,
           setCurrentColor: this.setCurrentColor,
           toggleSummaryBars: this.toggleSummaryBars,

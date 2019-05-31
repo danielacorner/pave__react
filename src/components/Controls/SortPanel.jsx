@@ -9,13 +9,21 @@ import { ControlsContext } from '../Context/ContextProvider';
 import { MenuItem, Select } from '@material-ui/core';
 import FORCE from '../FORCE';
 
+export const WORKERS = 'workers';
+export const AUTOMATION_RISK = 'automationRisk';
+export const COLOUR_BY_VALUE = 'colourByValue';
+export const SORT_BY_VALUE = 'sortByValue';
+export const SALARY = 'salary';
+export const STUDY = 'study';
+export const INDUSTRY = 'industry';
+
 const white = 'rgba(255,255,255,0.98)';
 const inactive2 = 'hsl(160, 50%, 50%)';
 const hover2 = 'hsl(160, 50%, 45%)';
 
 const getTooltipText = (value, type) => {
-  if (value === 'workers') {
-    // not available for type === 'colourByValue'
+  if (value === WORKERS) {
+    // not available for type === COLOUR_BY_VALUE
     return (
       <div>
         <div>Sort the circles by number of people working in each job.</div>
@@ -25,14 +33,14 @@ const getTooltipText = (value, type) => {
         </div>
       </div>
     );
-  } else if (value === 'automationRisk') {
+  } else if (value === AUTOMATION_RISK) {
     return (
       <div>
         <div>
-          {type === 'colourByValue' ? 'Colour' : 'Sort'} the circles by risk
+          {type === COLOUR_BY_VALUE ? 'Colour' : 'Sort'} the circles by risk
           that the job will be replaced by machine work.
         </div>
-        {type === 'colourByValue' ? (
+        {type === COLOUR_BY_VALUE ? (
           <div>
             Once coloured, look for{' '}
             <span style={{ color: 'rgb(180, 223, 117)' }}>green circles</span>{' '}
@@ -53,14 +61,14 @@ const getTooltipText = (value, type) => {
         )}
       </div>
     );
-  } else if (value === 'salary') {
+  } else if (value === SALARY) {
     return (
       <div>
         <div>
-          {type === 'colourByValue' ? 'Colour' : 'Sort'} by how much money is
+          {type === COLOUR_BY_VALUE ? 'Colour' : 'Sort'} by how much money is
           made by the average worker.
         </div>
-        {type === 'colourByValue' ? (
+        {type === COLOUR_BY_VALUE ? (
           <div>
             Once coloured, look for{' '}
             <span style={{ color: 'rgb(170, 213, 107)' }}>
@@ -77,15 +85,15 @@ const getTooltipText = (value, type) => {
         )}
       </div>
     );
-  } else if (value === 'study') {
+  } else if (value === STUDY) {
     return (
       <div>
         <div>
-          {type === 'colourByValue' ? 'Colour' : 'Sort'} by years of study after
+          {type === COLOUR_BY_VALUE ? 'Colour' : 'Sort'} by years of study after
           high school for the average person working this job (not necessarily
           how many are required for the job).
         </div>
-        {type === 'colourByValue' ? (
+        {type === COLOUR_BY_VALUE ? (
           <div>
             Once coloured, look for{' '}
             <span style={{ color: 'hsl(203,70%,70%)' }}>dark blue circles</span>{' '}
@@ -104,12 +112,12 @@ const getTooltipText = (value, type) => {
         )}
       </div>
     );
-  } else if (value === 'industry') {
-    // not available for type === 'sortByValue'
+  } else if (value === INDUSTRY) {
+    // not available for type === SORT_BY_VALUE
     return (
       <div>
         <div>
-          {type === 'colourByValue' ? 'Colour' : 'Sort'} by job industry, or
+          {type === COLOUR_BY_VALUE ? 'Colour' : 'Sort'} by job industry, or
           groups of related jobs.
         </div>
         <div>
@@ -190,18 +198,24 @@ const SortButtonsStyles = styled.div`
 `;
 
 const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
+  const [activeSwitches, setActiveSwitches] = useState([]);
+  const [valueToColourBy, setValueToColourBy] = useState(INDUSTRY);
+  const [valueToSortBy, setValueToSortBy] = useState(WORKERS);
+
   const handleSort = ({
     toggleActivated,
     activeSwitches,
     setActiveSwitches,
     context,
   }) => {
-    if (toggleActivated === 'sortByValue') {
-      context.sortSize();
-      if (!activeSwitches.includes('sortByValue')) {
-        setActiveSwitches([...activeSwitches, 'sortByValue']);
+    if (toggleActivated === SORT_BY_VALUE) {
+      if (valueToSortBy === WORKERS) {
+        context.sortByValue(WORKERS);
+      }
+      if (!activeSwitches.includes(SORT_BY_VALUE)) {
+        setActiveSwitches([...activeSwitches, SORT_BY_VALUE]);
       } else {
-        setActiveSwitches(activeSwitches.filter(d => d !== 'sortByValue'));
+        setActiveSwitches(activeSwitches.filter(d => d !== SORT_BY_VALUE));
       }
     }
     if (toggleActivated === 'category') {
@@ -212,47 +226,43 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
         setActiveSwitches(activeSwitches.filter(d => d !== 'category'));
       }
     }
-    if (toggleActivated === 'colourByValue') {
+    if (toggleActivated === COLOUR_BY_VALUE) {
       context.colourByValue(valueToColourBy);
-      if (!activeSwitches.includes('colourByValue')) {
+      if (!activeSwitches.includes(COLOUR_BY_VALUE)) {
         setLegendVisible(false);
-        setActiveSwitches([...activeSwitches, 'colourByValue']);
+        setActiveSwitches([...activeSwitches, COLOUR_BY_VALUE]);
       } else {
         setLegendVisible(true);
-        setActiveSwitches(activeSwitches.filter(d => d !== 'colourByValue'));
+        setActiveSwitches(activeSwitches.filter(d => d !== COLOUR_BY_VALUE));
       }
     }
   };
-
-  const [activeSwitches, setActiveSwitches] = useState([]);
-  const [valueToColourBy, setValueToColourBy] = useState('industry');
-  const [valueToSortBy, setValueToSortBy] = useState('workers');
 
   const context = useContext(ControlsContext);
   return (
     <SortButtonsStyles>
       <div className="sortBtnGroup">
-        <Tooltip title={getTooltipText(valueToSortBy, 'sortByValue')}>
+        <Tooltip title={getTooltipText(valueToSortBy, SORT_BY_VALUE)}>
           <FormControlLabel
             className="formControl sortByValue"
             control={
               <Switch
                 onChange={() => {
                   handleSort({
-                    toggleActivated: 'sortByValue',
+                    toggleActivated: SORT_BY_VALUE,
                     activeSwitches,
                     context,
                     setActiveSwitches,
                   });
                 }}
-                checked={activeSwitches.includes('sortByValue')}
+                checked={activeSwitches.includes(SORT_BY_VALUE)}
               />
             }
             label={
               <div className="labelAndSelect">
                 <div>
                   Sort
-                  {activeSwitches && activeSwitches.includes('sortByValue')
+                  {activeSwitches && activeSwitches.includes(SORT_BY_VALUE)
                     ? 'ed'
                     : ''}{' '}
                   by{' '}
@@ -271,11 +281,11 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                   }}
                   onChange={event => {
                     setValueToSortBy(event.target.value);
-                    if (activeSwitches.includes('sortByValue')) {
-                      FORCE.sortByValue({
-                        doColour: true,
-                        variable: event.target.value,
-                      });
+                    if (activeSwitches.includes(SORT_BY_VALUE)) {
+                      // FORCE.sortByValue({
+                      //   doSort: true,
+                      //   variable: event.target.value,
+                      // });
                       context.setCurrentSort(event.target.value);
                     }
                   }}
@@ -288,7 +298,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                       <div>Workers</div>
                     </Tooltip>
                   </MenuItem>
-                  {/* <MenuItem value="automationRisk">
+                  {/* <MenuItem value={AUTOMATION_RISK}>
                     <Tooltip
                       placement="right"
                       title={'Risk that tasks will be replaced by machine work'}
@@ -319,7 +329,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
             }
           />
         </Tooltip>
-        <Tooltip title={getTooltipText(valueToColourBy, 'colourByValue')}>
+        <Tooltip title={getTooltipText(valueToColourBy, COLOUR_BY_VALUE)}>
           <FormControlLabel
             classes={{ root: 'formControlRoot' }}
             className="formControl colourByValue"
@@ -327,20 +337,20 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
               <Switch
                 onChange={() =>
                   handleSort({
-                    toggleActivated: 'colourByValue',
+                    toggleActivated: COLOUR_BY_VALUE,
                     activeSwitches,
                     context,
                     setActiveSwitches,
                   })
                 }
-                checked={activeSwitches.includes('colourByValue')}
+                checked={activeSwitches.includes(COLOUR_BY_VALUE)}
               />
             }
             label={
               <div className="labelAndSelect">
                 <div>
                   Colour
-                  {activeSwitches && activeSwitches.includes('colourByValue')
+                  {activeSwitches && activeSwitches.includes(COLOUR_BY_VALUE)
                     ? 'ed'
                     : ''}{' '}
                   by{' '}
@@ -359,7 +369,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                   }}
                   onChange={event => {
                     setValueToColourBy(event.target.value);
-                    if (activeSwitches.includes('colourByValue')) {
+                    if (activeSwitches.includes(COLOUR_BY_VALUE)) {
                       FORCE.colourByValue({
                         doColour: true,
                         variable: event.target.value,
@@ -368,7 +378,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                     }
                   }}
                 >
-                  <MenuItem value="industry">
+                  <MenuItem value={INDUSTRY}>
                     <Tooltip
                       placement="right"
                       title={
@@ -378,7 +388,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                       <div>Type</div>
                     </Tooltip>
                   </MenuItem>
-                  <MenuItem value="automationRisk">
+                  <MenuItem value={AUTOMATION_RISK}>
                     <Tooltip
                       placement="right"
                       title={'Risk that tasks will be replaced by machine work'}
@@ -394,7 +404,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                       <div>Salary</div>
                     </Tooltip>
                   </MenuItem>
-                  <MenuItem value="study">
+                  <MenuItem value={STUDY}>
                     <Tooltip
                       placement="right"
                       title={

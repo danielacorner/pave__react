@@ -1,6 +1,8 @@
 TODOS:
 
 todo:
+- add typescript
+npm install --save typescript @types/node @types/react @types/react-dom @types/jest
 - legend button disappears?
 - customize legend based on settingsContext
 
