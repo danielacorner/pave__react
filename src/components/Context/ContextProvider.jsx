@@ -3,6 +3,7 @@ import debounce from 'lodash.debounce';
 import React, { Component } from 'react';
 import NOCData from '../../assets/NOC-data';
 import FORCE from '../FORCE';
+import { INDUSTRY, WORKERS } from '../Controls/SortPanel';
 const NOCDataProcessed = NOCData.map(d => {
   d.name = d.job;
   return d;
@@ -40,8 +41,8 @@ class ContextProvider extends Component {
         s14Writing: 0,
         s15CriticalThinking: 0,
       },
-      radiusSelector: 'workers',
-      clusterSelector: 'industry',
+      radiusSelector: WORKERS,
+      clusterSelector: INDUSTRY,
       getRadiusScale: () => {
         const radii = NOCData.map(d => d[this.state.radiusSelector]);
         const radiusRange = [5, 50];
@@ -50,7 +51,7 @@ class ContextProvider extends Component {
           .domain([d3.min(radii), d3.max(radii)])
           .range(radiusRange);
       },
-      uniqueClusterValues: NOCData.map(d => d['industry']).filter(
+      uniqueClusterValues: NOCData.map(d => d[INDUSTRY]).filter(
         (value, index, self) => self.indexOf(value) === index,
       ),
       clusterCenters: [],
@@ -256,10 +257,10 @@ class ContextProvider extends Component {
       this.setState({ sortedByValue: false, radiusSelector, getRadiusScale });
     }
     FORCE.applySortForces({
-      value,
+      sortByValue: value,
       getRadiusScale,
       radiusSelector,
-      numClusters: uniqueClusterValues.length,
+      // numClusters: uniqueClusterValues.length,
     });
     setTimeout(this.handleResize, 2000);
   };

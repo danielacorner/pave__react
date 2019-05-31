@@ -12,6 +12,10 @@
     "@material-ui/icons": "^3.0.1",
     "@material-ui/lab": "^3.0.0-alpha.17",
     "@reach/router": "^1.2.1",
+    "@types/jest": "^24.0.13",
+    "@types/node": "^12.0.4",
+    "@types/react": "^16.8.19",
+    "@types/react-dom": "^16.8.4",
     "@vx/axis": "^0.0.179",
     "@vx/event": "^0.0.179",
     "@vx/scale": "^0.0.179",
@@ -32,7 +36,8 @@
     "react-scripts": "2.0.3",
     "recharts": "^1.5.0",
     "styled-components": "^3.4.9",
-    "terser": "^3.17.0"
+    "terser": "^3.17.0",
+    "typescript": "^3.5.1"
   },
   "scripts": {
     "start": "react-app-rewired start",
