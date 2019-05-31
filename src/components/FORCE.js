@@ -9,7 +9,7 @@ import {
   STUDY,
 } from './Controls/SortPanel';
 
-const lightGrey = 'hsl(0,0%,80%)';
+export const lightGrey = 'hsl(0,0%,80%)';
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 export const getCircleColour = ({ d, colouredByValue }) => {
   switch (colouredByValue) {

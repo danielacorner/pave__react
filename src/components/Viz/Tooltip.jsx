@@ -5,7 +5,8 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
 import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
-import { getCircleColour } from '../FORCE';
+import { getCircleColour, lightGrey } from '../FORCE';
+import { INDUSTRY } from '../Controls/SortPanel';
 const TOOLTIP_TRANSITION = (type, time) =>
   `${type} ${time}s cubic-bezier(0.165, 0.84, 0.44, 1)`;
 
@@ -183,7 +184,7 @@ const Tooltip = ({ data, left, bottom, width }) => {
   }
   const { state, colouredByValue } = useContext(ControlsContext);
   const { zScale } = state;
-  const circleColour = getCircleColour({ d: data, colouredByValue });
+  const circleColour = getCircleColour({ d: data, colouredByValue: INDUSTRY });
 
   const getLeft = () =>
     left + TOOLTIP_WIDTH + TOOLTIP_HZ_OFFSET > window.innerWidth
@@ -192,7 +193,7 @@ const Tooltip = ({ data, left, bottom, width }) => {
 
   const floatingCircleProps = {
     width,
-    background: zScale(industry),
+    background: lightGrey,
     right: -width / 2,
     bottom: 175 - width / 2,
   };
