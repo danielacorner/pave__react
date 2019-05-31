@@ -86,20 +86,17 @@ const SortButtonsStyles = styled.div`
   .sortBtnGroup {
     display: grid;
     width: 100%;
-    grid-template-columns: repeat(auto-fit, 180px);
+    grid-template-columns: repeat(auto-fit, 220px);
     grid-gap: 6px;
     justify-items: start;
     .formControl {
+      width: 100%;
       background: white;
-      width: 180px;
       border: 1px solid rgba(0, 0, 0, 0.26);
       border-radius: 4px;
       display: grid;
       justify-items: start;
       grid-template-columns: auto 1fr;
-      &:last-child {
-        width: 215px;
-      }
     }
     @media (max-width: 399px) {
       grid-gap: 0px;
@@ -147,37 +144,43 @@ const SortButtonsStyles = styled.div`
 `;
 
 const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
-  const handleSort = ({ sortBy, sortedParams, setSortedParams, context }) => {
-    if (sortBy === 'size') {
+  const handleSort = ({
+    toggleActivated,
+    activeSwitches,
+    setActiveSwitches,
+    context,
+  }) => {
+    if (toggleActivated === 'sortByValue') {
       context.sortSize();
-      if (!sortedParams.includes('size')) {
-        setSortedParams([...sortedParams, 'size']);
+      if (!activeSwitches.includes('sortByValue')) {
+        setActiveSwitches([...activeSwitches, 'sortByValue']);
       } else {
-        setSortedParams(sortedParams.filter(d => d !== 'size'));
+        setActiveSwitches(activeSwitches.filter(d => d !== 'sortByValue'));
       }
     }
-    if (sortBy === 'category') {
+    if (toggleActivated === 'category') {
       context.sortType();
-      if (!sortedParams.includes('category')) {
-        setSortedParams([...sortedParams, 'category']);
+      if (!activeSwitches.includes('category')) {
+        setActiveSwitches([...activeSwitches, 'category']);
       } else {
-        setSortedParams(sortedParams.filter(d => d !== 'category'));
+        setActiveSwitches(activeSwitches.filter(d => d !== 'category'));
       }
     }
-    if (sortBy === 'colourByValue') {
+    if (toggleActivated === 'colourByValue') {
       context.colourByValue(valueToColourBy);
-      if (!sortedParams.includes('colourByValue')) {
+      if (!activeSwitches.includes('colourByValue')) {
         setLegendVisible(false);
-        setSortedParams([...sortedParams, 'colourByValue']);
+        setActiveSwitches([...activeSwitches, 'colourByValue']);
       } else {
         setLegendVisible(true);
-        setSortedParams(sortedParams.filter(d => d !== 'colourByValue'));
+        setActiveSwitches(activeSwitches.filter(d => d !== 'colourByValue'));
       }
     }
   };
 
-  const [sortedParams, setSortedParams] = useState([]);
+  const [activeSwitches, setActiveSwitches] = useState([]);
   const [valueToColourBy, setValueToColourBy] = useState('industry');
+  const [valueToSortBy, setValueToSortBy] = useState('workers');
 
   const context = useContext(ControlsContext);
   return (
@@ -195,58 +198,91 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
           }
         >
           <FormControlLabel
-            className="formControl sortBySize"
+            className="formControl sortByValue"
             control={
               <Switch
                 onChange={() => {
                   handleSort({
-                    sortBy: 'size',
-                    sortedParams,
+                    toggleActivated: 'sortByValue',
+                    activeSwitches,
                     context,
-                    setSortedParams,
+                    setActiveSwitches,
                   });
                 }}
-                checked={sortedParams.includes('size')}
+                checked={activeSwitches.includes('sortByValue')}
               />
             }
-            label={`Sort${
-              sortedParams && sortedParams.includes('size') ? 'ed' : ''
-            } by Size`}
+            label={
+              <div className="labelAndSelect">
+                <div>
+                  Sort
+                  {activeSwitches && activeSwitches.includes('sortByValue')
+                    ? 'ed'
+                    : ''}{' '}
+                  by{' '}
+                </div>
+                <Select
+                  classes={{ root: 'select' }}
+                  value={valueToSortBy}
+                  onClick={event => event.preventDefault()}
+                  onMouseOver={event => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                  }}
+                  onTouchStart={event => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                  }}
+                  onChange={event => {
+                    setValueToSortBy(event.target.value);
+                    if (activeSwitches.includes('sortByValue')) {
+                      FORCE.sortByValue({
+                        doColour: true,
+                        variable: event.target.value,
+                      });
+                      context.setCurrentSort(event.target.value);
+                    }
+                  }}
+                >
+                  <MenuItem value="workers">
+                    <Tooltip
+                      placement="right"
+                      title={'Number of people working in this job'}
+                    >
+                      <div>Workers</div>
+                    </Tooltip>
+                  </MenuItem>
+                  {/* <MenuItem value="automationRisk">
+                    <Tooltip
+                      placement="right"
+                      title={'Risk that tasks will be replaced by machine work'}
+                    >
+                      <div>Risk</div>
+                    </Tooltip>
+                  </MenuItem>
+                  <MenuItem value="salary">
+                    <Tooltip
+                      placement="right"
+                      title={'Average yearly income in $CAD'}
+                    >
+                      <div>Salary</div>
+                    </Tooltip>
+                  </MenuItem>
+                  <MenuItem value="study">
+                    <Tooltip
+                      placement="right"
+                      title={
+                        'Average years of study for people working in this job (not necessarily required for the job)'
+                      }
+                    >
+                      <div>Study</div>
+                    </Tooltip>
+                  </MenuItem> */}
+                </Select>
+              </div>
+            }
           />
         </Tooltip>
-        {/* <Tooltip
-          title={
-            <div>
-              <div>Sort by job industry.</div>
-              <div>
-                Spot the differences between the ten types of job. If you{"'"}re
-                not sure what kind of work you want to do, look within
-                industries with low Risk and high Salary.
-              </div>
-            </div>
-          }
-        >
-          <FormControlLabel
-            classes={{ root: 'formControlRoot' }}
-            className="formControl sortByType"
-            control={
-              <Switch
-                onChange={() =>
-                  handleSort({
-                    sortBy: 'category',
-                    sortedParams,
-                    context,
-                    setSortedParams,
-                  })
-                }
-                checked={sortedParams.includes('category')}
-              />
-            }
-            label={`Sort${
-              sortedParams && sortedParams.includes('category') ? 'ed' : ''
-            } by Type`}
-          />
-        </Tooltip> */}
         <Tooltip title={getColourByValueText(valueToColourBy)}>
           <FormControlLabel
             classes={{ root: 'formControlRoot' }}
@@ -255,20 +291,20 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
               <Switch
                 onChange={() =>
                   handleSort({
-                    sortBy: 'colourByValue',
-                    sortedParams,
+                    toggleActivated: 'colourByValue',
+                    activeSwitches,
                     context,
-                    setSortedParams,
+                    setActiveSwitches,
                   })
                 }
-                checked={sortedParams.includes('colourByValue')}
+                checked={activeSwitches.includes('colourByValue')}
               />
             }
             label={
               <div className="labelAndSelect">
                 <div>
                   Colour
-                  {sortedParams && sortedParams.includes('colourByValue')
+                  {activeSwitches && activeSwitches.includes('colourByValue')
                     ? 'ed'
                     : ''}{' '}
                   by{' '}
@@ -287,7 +323,7 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                   }}
                   onChange={event => {
                     setValueToColourBy(event.target.value);
-                    if (sortedParams.includes('colourByValue')) {
+                    if (activeSwitches.includes('colourByValue')) {
                       FORCE.colourByValue({
                         doColour: true,
                         variable: event.target.value,
