@@ -137,7 +137,7 @@ const handleJoyrideCallback = ({
     // TODO: clean up all listeners created above
   }
 
-  console.log(data);
+  // console.log(data);
 };
 
 const JoyrideTooltipStyles = styled.div`

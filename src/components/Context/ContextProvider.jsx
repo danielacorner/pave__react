@@ -65,7 +65,7 @@ class ContextProvider extends Component {
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     const {
       clusterCenters,
       radiusSelector,
@@ -98,7 +98,7 @@ class ContextProvider extends Component {
 
     $('#nodesG').style.transform = `translate(${+width / 2}px,${+height /
       2}px)`;
-  };
+  }
 
   componentWillUnmount = () => {
     window.removeEventListener('resize', this.handleResize);

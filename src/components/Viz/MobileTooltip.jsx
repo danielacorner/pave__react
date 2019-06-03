@@ -14,7 +14,17 @@ export const ICON_WIDTH = 32;
 export const ICON_SCALE = 1.5;
 export const ICON_DY = -2;
 
+export const MAX_TOOLTIP_LINES = 3;
 const MobileTooltipStyles = styled.div`
+  .giveMeEllipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: ${MAX_TOOLTIP_LINES}; /* number of lines to show */
+    line-height: 1.2em; /* fallback */
+    max-height: 1.2 * ${MAX_TOOLTIP_LINES}em; /* fallback */
+  }
   overflow-x: hidden;
   position: relative;
   .btnMoreInfoWrapper {
@@ -143,7 +153,7 @@ const MobileTooltipStyles = styled.div`
   }
 `;
 
-const MobileTooltipContents = ({ data, width }) => {
+const MobileTooltipContents = ({ data, width = 0 }) => {
   const {
     job,
     industry,
@@ -187,7 +197,7 @@ const MobileTooltipContents = ({ data, width }) => {
       <FloatingCircle {...floatingCircleProps} />
 
       <h3
-        className="title textAlignLeft"
+        className="title textAlignLeft giveMeEllipsis"
         style={{
           maxHeight,
           minHeight,

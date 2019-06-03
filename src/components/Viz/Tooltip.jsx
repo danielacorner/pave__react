@@ -1,13 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { ControlsContext } from '../Context/ContextProvider';
 import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
 import { getCircleColour, lightGrey } from '../FORCE';
 import { INDUSTRY } from '../Controls/SortPanel';
+import { MAX_TOOLTIP_LINES } from './MobileTooltip';
 export const TOOLTIP_TRANSITION = (type, time) =>
   `${type} ${time}s cubic-bezier(0.165, 0.84, 0.44, 1)`;
 
 const TooltipStyles = styled.div`
+  .giveMeEllipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: ${MAX_TOOLTIP_LINES}; /* number of lines to show */
+    line-height: 1.2em; /* fallback */
+    max-height: 1.2 * ${MAX_TOOLTIP_LINES}em; /* fallback */
+  }
   &.fadeOut {
     opacity: 0;
   }
@@ -116,7 +125,7 @@ export const FloatingCircleStyles = styled.div`
   position: absolute;
   .floatingCircle {
     opacity:0.4;
-    transition: ${TOOLTIP_TRANSITION('background', 0.4)};
+    transition: ${TOOLTIP_TRANSITION('all', 0.2)};
     position: relative;
     border-radius: 100%;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
@@ -144,7 +153,7 @@ export const FloatingCircleStyles = styled.div`
 `;
 export const FloatingCircle = ({ width, background, right, bottom }) => {
   return (
-    <FloatingCircleStyles style={{ right, bottom }}>
+    <FloatingCircleStyles style={{ right: right || 0, bottom: bottom || 300 }}>
       <div
         className="floatingCircle"
         style={{ width, height: width, background }}
@@ -177,8 +186,6 @@ const Tooltip = ({ data, left, bottom, width }) => {
   // TODO: years of study (min, max?)
   const educationPercent = yearsStudy / 7;
 
-  const { state, colouredByValue } = useContext(ControlsContext);
-  const { zScale } = state;
   const circleColour = getCircleColour({ d: data, colouredByValue: INDUSTRY });
 
   const getLeft = () =>
@@ -224,7 +231,7 @@ const Tooltip = ({ data, left, bottom, width }) => {
           maxHeight,
           minHeight,
         }}
-        className="title textAlignLeft"
+        className="title textAlignLeft giveMeEllipsis"
       >
         {job}
       </h3>
