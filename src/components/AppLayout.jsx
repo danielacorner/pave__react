@@ -69,7 +69,6 @@ const AppLayout = ({ location }) => {
     skillsComp: false,
   };
   const [expanded, setExpanded] = useState(initialExpandedState);
-  const [legendVisible, setLegendVisible] = useState(true);
   const {
     getRadiusScale,
     radiusSelector,
@@ -171,7 +170,6 @@ const AppLayout = ({ location }) => {
             <SortPanel
               initialExpandedState={initialExpandedState}
               setExpanded={setExpanded}
-              setLegendVisible={setLegendVisible}
             />
             <Viz
               isTabletOrLarger={isTabletOrLarger}
@@ -226,7 +224,7 @@ const AppLayout = ({ location }) => {
               summaryBarsActive={summaryBarsActive}
               zScale={zScale}
             />
-            {legendVisible && <Legend {...legendProps} />}
+            <Legend {...legendProps} />
           </AppLayoutStyles>
 
           {isTooltipActive && isTabletOrLarger ? (

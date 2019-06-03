@@ -197,16 +197,16 @@ const SortButtonsStyles = styled.div`
   }
 `;
 
-const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
+const SortPanel = ({ initialExpandedState, setExpanded }) => {
   const [activeSwitches, setActiveSwitches] = useState([]);
   const [valueToColourBy, setValueToColourBy] = useState(INDUSTRY);
   const [valueToSortBy, setValueToSortBy] = useState(WORKERS);
+  const context = useContext(ControlsContext);
 
   const handleSort = ({
     toggleActivated,
     activeSwitches,
     setActiveSwitches,
-    context,
   }) => {
     if (toggleActivated === SORT_BY_VALUE) {
       context.sortByValue(valueToSortBy);
@@ -219,17 +219,28 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
     }
     if (toggleActivated === COLOUR_BY_VALUE) {
       context.colourByValue(valueToColourBy);
+
       if (!activeSwitches.includes(COLOUR_BY_VALUE)) {
-        setLegendVisible(false);
         setActiveSwitches([...activeSwitches, COLOUR_BY_VALUE]);
       } else {
-        setLegendVisible(true);
         setActiveSwitches(activeSwitches.filter(d => d !== COLOUR_BY_VALUE));
       }
     }
   };
 
-  const context = useContext(ControlsContext);
+  const handleReset = () => {
+    if (activeSwitches.includes(SORT_BY_VALUE)) {
+      context.sortByValue(valueToSortBy);
+    }
+    if (activeSwitches.includes(COLOUR_BY_VALUE)) {
+      context.colourByValue(valueToColourBy);
+    }
+    context.resetFilters();
+    setExpanded(initialExpandedState);
+    setValueToSortBy(WORKERS);
+    setValueToColourBy(INDUSTRY);
+    setActiveSwitches([]);
+  };
   return (
     <SortButtonsStyles>
       <div className="sortBtnGroup">
@@ -242,7 +253,6 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                   handleSort({
                     toggleActivated: SORT_BY_VALUE,
                     activeSwitches,
-                    context,
                     setActiveSwitches,
                   });
                 }}
@@ -326,7 +336,6 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
                   handleSort({
                     toggleActivated: COLOUR_BY_VALUE,
                     activeSwitches,
-                    context,
                     setActiveSwitches,
                   })
                 }
@@ -412,16 +421,13 @@ const SortPanel = ({ initialExpandedState, setExpanded, setLegendVisible }) => {
       </div>
       <Button
         className="btnReset"
-        onClick={() => {
-          setExpanded(initialExpandedState);
-          context.resetFilters();
-        }}
+        onClick={handleReset}
         disabled={
           // Disable Reset button if all filters are at 0
           !Object.values(context.state.filters).reduce(
             (tot, curr) => tot + curr,
             0,
-          ) > 0
+          ) > 0 && activeSwitches.length === 0
         }
         variant="outlined"
       >
