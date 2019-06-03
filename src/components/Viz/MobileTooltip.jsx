@@ -1,15 +1,21 @@
 import Drawer from '@material-ui/core/Drawer';
-import Button from '@material-ui/core/Button';
-import OpenInNewIcon from '@material-ui/icons/OpenInNewRounded';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { TABLET_MIN_WIDTH } from '../../utils/constants';
+import {
+  numberWithCommas,
+  FloatingCircle,
+  TOOLTIP_TRANSITION,
+} from './Tooltip';
+import { getCircleColour, lightGrey } from '../FORCE';
+import { INDUSTRY } from '../Controls/SortPanel';
 
 const ICON_WIDTH = 32;
 const ICON_SCALE = 1.5;
 const ICON_DY = -2;
 
 const MobileTooltipStyles = styled.div`
+  overflow-x: hidden;
   position: relative;
   .btnMoreInfoWrapper {
     width: 100%;
@@ -68,6 +74,36 @@ const MobileTooltipStyles = styled.div`
       margin-bottom: 0;
     }
   }
+  .subtitle {
+    font-style: italic;
+    grid-column: 1 / -1;
+    font-size: 0.9em;
+    .industry {
+      margin-bottom: 3px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      grid-gap: 5px;
+      .industryColour {
+        width: 12px;
+        height: 12px;
+        border: 1px solid black;
+        border-radius: 100%;
+        transition: ${TOOLTIP_TRANSITION('all', 0.6)};
+      }
+    }
+  }
+  .workers {
+    width: 100%;
+    position: relative;
+  }
+  .workersPointer {
+    transition: ${TOOLTIP_TRANSITION('all', 0.4)};
+    position: absolute;
+    height: 1px;
+    top: 1.25ch;
+    background: rgba(0, 0, 0, 0.8);
+  }
   .data {
     font-size: 0.8em;
     margin-top: 3px;
@@ -119,8 +155,17 @@ const MobileTooltipStyles = styled.div`
   }
 `;
 
-const MobileTooltipContents = ({ data }) => {
-  const { job, industry, salaryMed, automationRisk, yearsStudy } = data;
+const MobileTooltipContents = ({ data, width }) => {
+  const {
+    job,
+    industry,
+    salaryMed,
+    automationRisk,
+    yearsStudy,
+    workers,
+  } = data;
+  const circleColour = getCircleColour({ d: data, colouredByValue: INDUSTRY });
+
   // TODO: find reasonable salarymed?
   // TODO: add "10%, 100%" and "25k, 75k" annotation line to tooltip
   const salaryMedPercent = salaryMed / 75;
@@ -136,8 +181,23 @@ const MobileTooltipContents = ({ data }) => {
     (job.length > AVG_CHAR_PER_ROW + 4
       ? LINE_HEIGHT_EMS * Math.ceil(job.length / (AVG_CHAR_PER_ROW + 4))
       : LINE_HEIGHT_EMS) + 'em';
+
+  const floatingCircleProps = {
+    width,
+    background: lightGrey,
+    right: -width / 2,
+    bottom: 221 - width / 2,
+  };
+
+  const roundToHundreds = x => 100 * Math.round(x / 100);
+  const workersDisplay = `${numberWithCommas(
+    roundToHundreds(workers.toFixed(0)),
+  )} workers`;
+
   return (
     <MobileTooltipStyles>
+      <FloatingCircle {...floatingCircleProps} />
+
       <h3
         className="title textAlignLeft"
         style={{
@@ -149,7 +209,25 @@ const MobileTooltipContents = ({ data }) => {
       </h3>
 
       <div className="grid">
-        <div className="data industry textAlignLeft">{industry}</div>
+        <div className="data subtitle textAlignLeft">
+          <div className="industry textAlignLeft">
+            <div
+              className="industryColour"
+              style={{ background: circleColour }}
+            />
+            {industry}
+          </div>
+          <div className="workers textAlignLeft">
+            {workersDisplay}
+            <div
+              className="workersPointer"
+              style={{
+                right: width / 2 - 19,
+                left: `${workersDisplay.length - 1}ch`,
+              }}
+            />
+          </div>
+        </div>
 
         <div className="heading">
           <div className="iconTitle">Salary:</div>
@@ -199,16 +277,11 @@ const MobileTooltipContents = ({ data }) => {
           replaced by machines
         </div>
       </div>
-      <div className="btnMoreInfoWrapper">
-        <Button variant="outlined" className="btnMoreInfo" disabled={true}>
-          Learn More <OpenInNewIcon />
-        </Button>
-      </div>
     </MobileTooltipStyles>
   );
 };
 
-const MobileTooltip = ({ data }) => {
+const MobileTooltip = ({ data, width }) => {
   // preserve data so mobile tooltip can close smoothly
   const [prevData, setPrevData] = useState(null);
   const [open, setOpen] = useState(false);
@@ -224,11 +297,12 @@ const MobileTooltip = ({ data }) => {
   return (
     <Drawer anchor={'top'} open={open} transitionDuration={200}>
       <div tabIndex={0} role="button">
-        <MobileTooltipContents data={data ? data : prevData} />
+        <MobileTooltipContents data={data ? data : prevData} width={width} />
       </div>
     </Drawer>
   );
 };
+export default MobileTooltip;
 
 export const PictogramClipPathsDefs = () => (
   <svg width="0" height="0">
@@ -382,5 +456,3 @@ export const PictogramClipPathsDefs = () => (
     </defs>
   </svg>
 );
-
-export default MobileTooltip;

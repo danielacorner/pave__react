@@ -1,6 +1,7 @@
 TODOS:
 
 todo:
+- y axis
 - add typescript
 npm install --save typescript @types/node @types/react @types/react-dom @types/jest
 - legend button disappears?

@@ -201,12 +201,20 @@ const AppLayout = ({ location }) => {
                     }
                   : () => {}
               }
-              onClick={datum => {
-                const mobileTooltipProps = {
-                  data: datum,
-                };
-                setMobileTooltipProps(mobileTooltipProps);
-              }}
+              onClick={
+                !isTabletOrLarger
+                  ? (event, datum) => {
+                      const { width } = event.target.getBoundingClientRect();
+                      console.log({ width });
+                      const mobileTooltipProps = {
+                        data: datum,
+                        width,
+                      };
+                      console.log({ mobileTooltipProps });
+                      setMobileTooltipProps(mobileTooltipProps);
+                    }
+                  : () => {}
+              }
               onMouseOut={isTabletOrLarger ? stopTooltipActive : () => {}}
               filtersQuery={location.search}
               onLoadFromSnapshot={ssUrl => handleLoadFromSnapshot(ssUrl)}
@@ -221,11 +229,11 @@ const AppLayout = ({ location }) => {
             {legendVisible && <Legend {...legendProps} />}
           </AppLayoutStyles>
 
-          {isTooltipActive && isTabletOrLarger && <Tooltip {...tooltipProps} />}
-          <MobileTooltip
-            {...mobileTooltipProps}
-            setMobileTooltipProps={setMobileTooltipProps}
-          />
+          {isTooltipActive && isTabletOrLarger ? (
+            <Tooltip {...tooltipProps} />
+          ) : (
+            <MobileTooltip {...mobileTooltipProps} />
+          )}
         </>
       )}
     </MediaQuery>

@@ -87,7 +87,7 @@ class Viz extends Component {
                     onClick={(event, datum) => {
                       this.handleClick(node.id);
                       if (!isTabletOrLarger) {
-                        onClick(node);
+                        onClick(event, node);
                       }
                     }}
                     radiusSelector={radiusSelector}

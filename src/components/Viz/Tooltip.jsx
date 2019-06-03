@@ -7,7 +7,7 @@ import { ControlsContext } from '../Context/ContextProvider';
 import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
 import { getCircleColour, lightGrey } from '../FORCE';
 import { INDUSTRY } from '../Controls/SortPanel';
-const TOOLTIP_TRANSITION = (type, time) =>
+export const TOOLTIP_TRANSITION = (type, time) =>
   `${type} ${time}s cubic-bezier(0.165, 0.84, 0.44, 1)`;
 
 const TooltipStyles = styled.div`
@@ -119,7 +119,7 @@ const TooltipStyles = styled.div`
   }
 `;
 
-const FloatingCircleStyles = styled.div`
+export const FloatingCircleStyles = styled.div`
   position: absolute;
   .floatingCircle {
     opacity:0.4;
@@ -149,7 +149,7 @@ const FloatingCircleStyles = styled.div`
     }
   }
 `;
-const FloatingCircle = ({ width, background, right, bottom }) => {
+export const FloatingCircle = ({ width, background, right, bottom }) => {
   return (
     <FloatingCircleStyles style={{ right, bottom }}>
       <div
@@ -162,6 +162,10 @@ const FloatingCircle = ({ width, background, right, bottom }) => {
       </div>
     </FloatingCircleStyles>
   );
+};
+
+export const numberWithCommas = x => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
 const Tooltip = ({ data, left, bottom, width }) => {
@@ -179,9 +183,7 @@ const Tooltip = ({ data, left, bottom, width }) => {
   const salaryMedPercent = salaryMed / 75;
   // TODO: years of study (min, max?)
   const educationPercent = yearsStudy / 7;
-  function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  }
+
   const { state, colouredByValue } = useContext(ControlsContext);
   const { zScale } = state;
   const circleColour = getCircleColour({ d: data, colouredByValue: INDUSTRY });

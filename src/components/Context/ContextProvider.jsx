@@ -225,6 +225,7 @@ class ContextProvider extends Component {
   };
   handleFilterMouseup = () => {
     setTimeout(() => {
+      // TODO: instead of actually moving the filters, could set the background fill instead?
       // set all filters to new minima on mouseup
       // let newMinima = {};
       // Object.keys(this.state.filters).forEach(filter => {
