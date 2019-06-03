@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "xyz.appmaker.lduynx",
+      "sha256_cert_fingerprints": ["C4:35:72:CC:66:3D:B4:C6:BB:D7:21:1B:99:0C:C0:C1:2E:C2:75:46:7B:B6:9F:06:3A:13:93:16:81:8D:10:CC"]
+    }
+  }
+]
