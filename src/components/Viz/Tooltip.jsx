@@ -1,6 +1,3 @@
-import MoneyIcon from '@material-ui/icons/MonetizationOnOutlined';
-import SchoolIcon from '@material-ui/icons/SchoolRounded';
-import WarningIcon from '@material-ui/icons/WarningRounded';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
@@ -23,13 +20,14 @@ const TooltipStyles = styled.div`
   border: 1px solid black;
   background: white;
   margin: 0;
-  padding: 6pt 12pt;
+  padding: 6pt 12pt 24pt 12pt;
   font-size: 12pt;
   border-radius: 4px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
   line-height: 14pt;
   overflow: hidden;
   .title {
+    transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
     margin: 0 0 8pt 0;
     line-height: 1.2em;
     font-size: 1.4em;
@@ -38,13 +36,22 @@ const TooltipStyles = styled.div`
     font-weight: bold;
     display: grid;
     grid-gap: 2px;
-    place-items: center start;
+    place-items: center flex-end;
+  }
+  .grid {
+    position: relative;
+    display: grid;
+    align-items: start;
+    grid-template-columns: 1fr ${5 * 32}px;
+    grid-gap: 15px 12px;
   }
   .subtitle {
     font-style: italic;
     grid-column: 1 / -1;
     font-size: 0.9em;
     .industry {
+      font-style: italic;
+      grid-column: 1 / -1;
       margin-bottom: 3px;
       display: grid;
       grid-template-columns: auto 1fr;
@@ -59,53 +66,6 @@ const TooltipStyles = styled.div`
       }
     }
   }
-  .grid {
-    display: grid;
-    align-items: start;
-    grid-template-columns: 1fr 2.7fr;
-    grid-gap: 15px;
-  }
-  .data {
-    margin-top: 3px;
-  }
-  .center {
-    text-align: center;
-  }
-  .textAlignRight {
-    text-align: right;
-  }
-  .textAlignLeft {
-    text-align: left;
-  }
-  .iconTitle {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-gap: 4px;
-    place-items: center start;
-  }
-  .bar {
-    transition: ${TOOLTIP_TRANSITION('all', 0.6)};
-    align-self: center;
-    height: 10px;
-    &.salaryBar {
-      background: lime;
-    }
-    &.riskBar {
-      background: tomato;
-    }
-    &.educationBar {
-      background: cornflowerblue;
-    }
-    &:not(.emptyBar) {
-      margin: -1px 0 0 -1px;
-    }
-    &.emptyBar {
-      width: 75px;
-      height: calc(100% - 1px);
-      box-sizing: border-box;
-      border: 1px solid black;
-    }
-  }
   .workers {
     width: 100%;
     position: relative;
@@ -116,6 +76,39 @@ const TooltipStyles = styled.div`
     height: 1px;
     top: 1.25ch;
     background: rgba(0, 0, 0, 0.8);
+  }
+  .data {
+    margin-top: 3px;
+    font-size: 0.8em;
+  }
+  .iconTitle {
+    justify-self: start;
+    font-weight: bold;
+  }
+  .bar {
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    /* TODO: import ICON_WIDTH not working? */
+    height: ${32}px;
+    align-self: center;
+    &.salaryBar {
+      background: lime;
+      clip-path: url(#moneyClip);
+    }
+    &.riskBar {
+      background: tomato;
+      clip-path: url(#riskClip);
+    }
+    &.educationBar {
+      background: cornflowerblue;
+      clip-path: url(#studyClip);
+    }
+  }
+  .extraText {
+    position: absolute;
+    left: calc(5px + 5ch);
+    &.extraText1 {
+      bottom: -14px;
+    }
   }
 `;
 
@@ -193,12 +186,29 @@ const Tooltip = ({ data, left, bottom, width }) => {
       ? left - TOOLTIP_WIDTH - 2 * TOOLTIP_HZ_OFFSET
       : left + TOOLTIP_HZ_OFFSET;
 
+  const AVG_CHAR_PER_ROW = 25;
+  const LINE_HEIGHT_EMS = 1.2;
+  const maxHeight =
+    (job.length > AVG_CHAR_PER_ROW - 4
+      ? LINE_HEIGHT_EMS * Math.ceil(job.length / (AVG_CHAR_PER_ROW - 4))
+      : LINE_HEIGHT_EMS) + 'em';
+  const minHeight =
+    (job.length > AVG_CHAR_PER_ROW + 4
+      ? LINE_HEIGHT_EMS * Math.ceil(job.length / (AVG_CHAR_PER_ROW + 4))
+      : LINE_HEIGHT_EMS) + 'em';
+
   const floatingCircleProps = {
     width,
     background: lightGrey,
     right: -width / 2,
-    bottom: 175 - width / 2,
+    bottom: 210 - width / 2,
   };
+
+  const roundToHundreds = x => 100 * Math.round(x / 100);
+  const workersDisplay = `${numberWithCommas(
+    roundToHundreds(workers.toFixed(0)),
+  )} workers`;
+
   return (
     <TooltipStyles
       className="mouseoverTooltip"
@@ -209,7 +219,16 @@ const Tooltip = ({ data, left, bottom, width }) => {
       }}
     >
       <FloatingCircle {...floatingCircleProps} />
-      <h3 className="title textAlignLeft">{job}</h3>
+      <h3
+        style={{
+          maxHeight,
+          minHeight,
+        }}
+        className="title textAlignLeft"
+      >
+        {job}
+      </h3>
+
       <div className="grid">
         <div className="data subtitle textAlignLeft">
           <div className="industry textAlignLeft">
@@ -220,67 +239,60 @@ const Tooltip = ({ data, left, bottom, width }) => {
             {industry}
           </div>
           <div className="workers textAlignLeft">
-            {numberWithCommas(workers.toFixed(0))} workers
+            {workersDisplay}
             <div
               className="workersPointer"
               style={{
                 right: width / 2 - 10,
-                left: `${`${numberWithCommas(workers.toFixed(0))} workers`
-                  .length - 1}ch`,
+                left: `${workersDisplay.length - 1}ch`,
               }}
             />
           </div>
         </div>
 
         <div className="heading">
-          <div className="iconTitle">
-            <MoneyIcon />
-            Salary:
+          <div className="iconTitle">Salary:</div>
+          <div className="data textAlignRight salary">
+            <strong>${salaryMed.toFixed(0)}K</strong> per year
           </div>
-          <div className="bar emptyBar">
-            <div
-              className="bar salaryBar"
-              style={{ width: `${salaryMedPercent * 100}%` }}
-            />
-          </div>
-        </div>
-        <div className="data textAlignLeft">
-          <strong>${salaryMed.toFixed(0)}K</strong> per year
         </div>
 
+        <div
+          className="bar salaryBar"
+          style={{
+            width: salaryMedPercent * 100 + '%',
+          }}
+        />
+
         <div className="heading">
-          <div className="iconTitle">
-            <SchoolIcon />
-            Study:
-          </div>
-          <div className="bar emptyBar">
-            <div
-              className="bar educationBar"
-              style={{ width: `${educationPercent * 100}%` }}
-            />
-          </div>
-        </div>
-        <div>
-          <div className="data textAlignLeft">
+          <div className="iconTitle">Study:</div>
+          <div className="data textAlignRight study">
             ~ <strong>{yearsStudy.toFixed(1)} years</strong>
           </div>
         </div>
 
+        <div
+          className="bar educationBar"
+          style={{
+            width: educationPercent * 100 + '%',
+          }}
+        />
+
         <div className="heading">
-          <div className="iconTitle">
-            <WarningIcon />
-            Risk:
-          </div>
-          <div className="bar emptyBar">
-            <div
-              className="bar riskBar"
-              style={{ width: `${automationRisk * 100}%` }}
-            />
+          <div className="iconTitle">Risk:</div>
+          <div className="data textAlignRight automation">
+            <strong>{(automationRisk * 100).toFixed(0)}%</strong> chance
           </div>
         </div>
-        <div className="data textAlignLeft">
-          <strong>{(automationRisk * 100).toFixed(0)}%</strong> chance of tasks
-          being replaced by machines
+
+        <div
+          className="bar riskBar"
+          style={{
+            width: automationRisk * 100 + '%',
+          }}
+        />
+        <div className="data textAlignLeft extraText extraText1">
+          of tasks being replaced by machines
         </div>
       </div>
     </TooltipStyles>

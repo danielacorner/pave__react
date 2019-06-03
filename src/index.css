@@ -10,6 +10,15 @@ span {
 .react-joyride__tooltip {
   transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 }
+.center {
+  text-align: center;
+}
+.textAlignRight {
+  text-align: right;
+}
+.textAlignLeft {
+  text-align: left;
+}
 /*
 .form-addSystem {
   display: grid;

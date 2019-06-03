@@ -10,9 +10,9 @@ import {
 import { getCircleColour, lightGrey } from '../FORCE';
 import { INDUSTRY } from '../Controls/SortPanel';
 
-const ICON_WIDTH = 32;
-const ICON_SCALE = 1.5;
-const ICON_DY = -2;
+export const ICON_WIDTH = 32;
+export const ICON_SCALE = 1.5;
+export const ICON_DY = -2;
 
 const MobileTooltipStyles = styled.div`
   overflow-x: hidden;
@@ -47,7 +47,6 @@ const MobileTooltipStyles = styled.div`
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
   line-height: 14pt;
   .title {
-    /* max-height: 1.2em; */
     transition: all 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
     font-size: 1.8em;
     margin: 0 0 6pt 0;
@@ -58,10 +57,6 @@ const MobileTooltipStyles = styled.div`
     display: grid;
     grid-gap: 2px;
     place-items: center flex-end;
-  }
-  .industry {
-    font-style: italic;
-    grid-column: 1 / -1;
   }
   .grid {
     position: relative;
@@ -79,6 +74,8 @@ const MobileTooltipStyles = styled.div`
     grid-column: 1 / -1;
     font-size: 0.9em;
     .industry {
+      font-style: italic;
+      grid-column: 1 / -1;
       margin-bottom: 3px;
       display: grid;
       grid-template-columns: auto 1fr;
@@ -107,15 +104,6 @@ const MobileTooltipStyles = styled.div`
   .data {
     font-size: 0.8em;
     margin-top: 3px;
-  }
-  .center {
-    text-align: center;
-  }
-  .textAlignRight {
-    text-align: right;
-  }
-  .textAlignLeft {
-    text-align: left;
   }
   .iconTitle {
     font-weight: bold;
