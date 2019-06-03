@@ -5,8 +5,8 @@ import React, { useState } from 'react';
 import './App.css';
 import ContextProvider from './components/Context/ContextProvider';
 import AppWithContext from './AppWithContext';
-import { PictogramClipPathsDefs } from './components/Viz/MobileTooltip';
 import { AddToHomeScreenBanner } from './components/AddToHomeScreenBanner';
+import { PictogramClipPathsDefs } from './components/Viz/PictogramClipPathsDefs';
 
 export const brightGreen = '#49ac52';
 const theme = createMuiTheme({

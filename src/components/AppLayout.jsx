@@ -23,7 +23,7 @@ const AppLayoutStyles = styled.div`
   grid-gap: 8px;
   /* Mobile */
   grid-template-rows: auto auto 1fr auto;
-  min-height: 740px;
+  min-height: 620px;
   @media (min-width: 340px) {
     min-height: 695px;
     /* TODO: expand vertically when sorted vertically by something... */
