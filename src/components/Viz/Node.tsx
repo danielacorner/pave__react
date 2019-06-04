@@ -84,7 +84,7 @@ const Node = React.memo(
             }),
           );
       }
-    }, [radiusScale, radiusSelector, colouredByValue]);
+    }, [radiusScale, radiusSelector, colouredByValue, data]);
 
     useEffect(() => {
       if (d3Node.current) {
