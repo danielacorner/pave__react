@@ -49,7 +49,7 @@ class Viz extends Component<VizProps, VizState> {
   state = {
     activeNodeId: null,
   };
-  componentDidMount() {
+  componentDidMount = () => {
     const { nodes, radiusScale, clusterCenters, radiusSelector } = this.props;
 
     // initialize the force simulation
@@ -59,7 +59,7 @@ class Viz extends Component<VizProps, VizState> {
     );
 
     // if applying a snapshot, handle in ContextProvider
-  }
+  };
   handleClick = (nodeId: string) => {
     // apply 3d effect to clicked node
     this.setState({ activeNodeId: nodeId });

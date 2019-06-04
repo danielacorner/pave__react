@@ -160,7 +160,7 @@ const AppLayout = ({ path }: AppLayoutProps) => {
   );
 
   return (
-    <>
+    <React.Fragment>
       <AppLayoutStyles
         onClick={
           isTabletOrLarger
@@ -256,7 +256,7 @@ const AppLayout = ({ path }: AppLayoutProps) => {
       ) : (
         <MobileTooltip {...mobileTooltipProps || emptyMobileTooltipProps} />
       )}
-    </>
+    </React.Fragment>
   );
 };
 
