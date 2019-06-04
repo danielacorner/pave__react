@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import FORCE from '../FORCE';
 import { Selection } from 'd3';
 import { ControlsContext } from '../Context/ContextProvider';
+import { useSpring, animated } from 'react-spring';
 
 const MAX_LINE_LENGTH = 10;
 const MAX_TEXT_LENGTH = 30;
@@ -68,6 +69,12 @@ const Node = React.memo(
     const { state } = useContext(ControlsContext);
     const { colouredByValue, radiusSelector } = state;
 
+    const fadeIn = useSpring({
+      opacity: 1,
+      from: { opacity: 0 },
+      config: { friction: 13 },
+    });
+
     useEffect(() => {
       d3Node.current = d3
         .select(findDOMNode(node.current) as any)
@@ -116,7 +123,8 @@ const Node = React.memo(
     // console.count('node rendering!');
     return (
       <NodeGroupStyles ref={node} className="node" id={`node_${data.id}`}>
-        <circle
+        <animated.circle
+          style={fadeIn}
           onMouseMove={event => onMouseMove(event, data)}
           onMouseOut={onMouseOut}
           onClick={onClick}
