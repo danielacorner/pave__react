@@ -24,13 +24,13 @@ const theme = createMuiTheme({
 });
 
 function App() {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [deferredPrompt, setDeferredPrompt] = useState(null as null | Event);
 
-  window.addEventListener('beforeinstallprompt', e => {
+  window.addEventListener('beforeinstallprompt', event => {
     // Prevent Chrome 67 and earlier from automatically showing the prompt
-    e.preventDefault();
+    event.preventDefault();
     // Stash the event so it can be triggered later.
-    setDeferredPrompt(e);
+    setDeferredPrompt(event);
   });
   return (
     <MuiThemeProvider theme={theme}>

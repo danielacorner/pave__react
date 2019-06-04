@@ -14,15 +14,21 @@ export const TOOLTIP_WIDTH = 266;
 export const TOOLTIP_HZ_OFFSET = 40;
 export const SLIDER_WIDTH_LG = 200;
 export const SLIDER_WIDTH_MD = 125;
-export const FILTER_TITLE = filterVar => {
+
+export const SKILLS_LANG = 'skillsLang';
+export const SKILLS_LOGI = 'skillsLogi';
+export const SKILLS_MATH = 'skillsMath';
+export const SKILLS_COMP = 'skillsComp';
+
+export const FILTER_TITLE = (filterVar: string) => {
   switch (filterVar) {
-    case 'skillsLang':
+    case SKILLS_LANG:
       return 'Language & Communication Skills';
-    case 'skillsLogi':
+    case SKILLS_LOGI:
       return 'Logic & Reasoning Skills';
-    case 'skillsMath':
+    case SKILLS_MATH:
       return 'Math & Spatial Skills';
-    case 'skillsComp':
+    case SKILLS_COMP:
       return 'Computer & Information Skills';
     default:
       return;
@@ -36,10 +42,9 @@ const SliderTooltipStyles = styled.div`
     }
   }
 `;
-export const SLIDER_TOOLTIP_TEXT = filterVar => {
+export const SLIDER_TOOLTIP_TEXT = (filterVar: string) => {
   switch (filterVar) {
-    // TODO:
-    case 'skillsLang':
+    case SKILLS_LANG:
       return (
         <SliderTooltipStyles>
           <div className="sliderTooltip">
@@ -54,7 +59,7 @@ export const SLIDER_TOOLTIP_TEXT = filterVar => {
           </div>
         </SliderTooltipStyles>
       );
-    case 'skillsLogi':
+    case SKILLS_LOGI:
       return (
         <SliderTooltipStyles>
           <div className="sliderTooltip">
@@ -75,7 +80,7 @@ export const SLIDER_TOOLTIP_TEXT = filterVar => {
           </div>
         </SliderTooltipStyles>
       );
-    case 'skillsMath':
+    case SKILLS_MATH:
       return (
         <SliderTooltipStyles>
           <div className="sliderTooltip">
@@ -98,7 +103,7 @@ export const SLIDER_TOOLTIP_TEXT = filterVar => {
           </div>
         </SliderTooltipStyles>
       );
-    case 'skillsComp':
+    case SKILLS_COMP:
       return (
         <SliderTooltipStyles>
           <div className="sliderTooltip">
@@ -124,15 +129,15 @@ export const SLIDER_TOOLTIP_TEXT = filterVar => {
       return;
   }
 };
-export const FILTER_RANGE = filterVar => {
+export const FILTER_RANGE = (filterVar: string) => {
   switch (filterVar) {
-    case 'skillsLang':
+    case SKILLS_LANG:
       return [0, 65];
-    case 'skillsLogi':
+    case SKILLS_LOGI:
       return [0, 55];
-    case 'skillsMath':
+    case SKILLS_MATH:
       return [0, 35];
-    case 'skillsComp':
+    case SKILLS_COMP:
       return [0, 60];
 
     case 's1DataAnalysis':
@@ -156,15 +161,15 @@ export const FILTER_RANGE = filterVar => {
   }
 };
 
-export const SUBSKILL_FILTER_TITLES = filterVar => {
+export const SUBSKILL_FILTER_TITLES = (filterVar: string) => {
   switch (filterVar) {
-    case 'skillsLang':
+    case SKILLS_LANG:
       return [
         { title: 'Oral Communication', dataLabel: 's8OralCommunication' },
         { title: 'Reading', dataLabel: 's10Reading' },
         { title: 'Writing', dataLabel: 's14Writing' },
       ];
-    case 'skillsLogi':
+    case SKILLS_LOGI:
       return [
         { title: 'Decision-Making', dataLabel: 's2DecisionMaking' },
         {
@@ -174,7 +179,7 @@ export const SUBSKILL_FILTER_TITLES = filterVar => {
         { title: 'Problem Solving', dataLabel: 's9ProblemSolving' },
         { title: 'Critical Thinking', dataLabel: 's15CriticalThinking' },
       ];
-    case 'skillsMath':
+    case SKILLS_MATH:
       return [
         {
           title: 'Measurement & Calculation',
@@ -187,7 +192,7 @@ export const SUBSKILL_FILTER_TITLES = filterVar => {
           dataLabel: 's11SchedulingorBudgetingandAccounting',
         },
       ];
-    case 'skillsComp':
+    case SKILLS_COMP:
       return [
         { title: 'Finding Information', dataLabel: 's3FindingInformation' },
         { title: 'Document Use', dataLabel: 's13DocumentUse' },
