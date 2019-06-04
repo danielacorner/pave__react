@@ -13,6 +13,13 @@ export const ControlsContext = React.createContext();
 
 export const $ = element => document.querySelector(element); // jQuerify
 
+const getGraphContainerDims = () => {
+  const graphContainer = $('#graphContainer');
+  return graphContainer
+    ? graphContainer.getBoundingClientRect()
+    : { width: window.innerWidth, height: window.innerHeight * 0.8 };
+};
+
 // TODO: switch to hooks
 class ContextProvider extends Component {
   constructor(props) {
@@ -94,15 +101,16 @@ class ContextProvider extends Component {
     setTimeout(this.handleResize, 1500);
 
     // tranlate nodes to center
-    const { width, height } = $('#graphContainer').getBoundingClientRect();
+
+    const { width, height } = getGraphContainerDims();
 
     $('#nodesG').style.transform = `translate(${+width / 2}px,${+height /
       2}px)`;
   }
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
-  };
+  }
 
   // componentDidUpdate(nextProps, nextState) {}
 
@@ -110,18 +118,18 @@ class ContextProvider extends Component {
     return this.state.nodes !== nextState.nodes;
   }
 
-  getTranslate = () => {
-    const { width, height } = $('#graphContainer').getBoundingClientRect();
+  getTranslate() {
+    const { width, height } = getGraphContainerDims();
 
     const nodesRect = $('#nodesG').getBoundingClientRect();
     const offsetLeft =
       nodesRect.left < 0 && this.state.sortedType ? -nodesRect.left : 0;
     return `${+width / 2 + +offsetLeft}px,${+height / 2}px`;
-  };
+  }
 
-  getScale = () => {
+  getScale() {
     // resize the graph container to fit the screen
-    const { width, height } = $('#graphContainer').getBoundingClientRect();
+    const { width, height } = getGraphContainerDims();
 
     // zoom in until you hit the edge of...
     const windowConstrainingLength = this.state.sortedType
@@ -144,11 +152,14 @@ class ContextProvider extends Component {
 
     const scaleRatio = windowConstrainingLength / nodesConstrainedLength;
     return scaleRatio * 0.95; // zoom out a little extra
-  };
+  }
 
   handleResize = debounce(() => {
     const newScale = this.getScale();
-    const svgBBox = $('#graphContainer').getBoundingClientRect();
+    const graphContainer = $('#graphContainer');
+    const svgBBox = graphContainer
+      ? graphContainer.getBoundingClientRect()
+      : { height: window.innerHeight * 0.8 };
     this.setState({
       svgBBox,
     });
