@@ -4,6 +4,7 @@ import React, { Component, createRef } from 'react';
 import { findDOMNode } from 'react-dom';
 import styled from 'styled-components';
 import FORCE from '../FORCE';
+import { Selection } from 'd3';
 const MAX_LINE_LENGTH = 10;
 const MAX_TEXT_LENGTH = 30;
 const TEXT_LINE_HEIGHT = 6;
@@ -27,19 +28,33 @@ const NodeGroupStyles = styled.g`
     font-size: ${TEXT_LINE_HEIGHT}px;
   }
 `;
+interface NodeProps {
+  isNodeTextVisible: boolean;
+  data: any;
+  radiusScale: any;
+  radiusSelector: string;
+  colouredByValue: string | null;
+  onMouseMove(event: any, data: any): void;
+  onMouseOut(event: any): void;
+  onClick(event?: any, datum?: any): void;
+  isActive: boolean;
+  name: string;
+}
+class Node extends Component<NodeProps> {
+  node = null as any;
+  d3Node = null as any;
 
-class Node extends Component {
-  constructor(props) {
+  constructor(props: NodeProps) {
     super(props);
     this.node = createRef();
   }
   componentDidMount() {
     const { radiusScale, radiusSelector, colouredByValue } = this.props;
     this.d3Node = d3
-      .select(findDOMNode(this))
+      .select(findDOMNode(this) as SVGGElement)
       .datum(this.props.data)
-      .call(d =>
-        FORCE.enterNode({
+      .call((d: Selection<SVGGElement, any, null, undefined>) =>
+        (FORCE as any).enterNode({
           selection: d,
           radiusScale,
           radiusSelector,
@@ -49,7 +64,7 @@ class Node extends Component {
   }
 
   componentDidUpdate() {
-    this.d3Node.datum(this.props.data).call(FORCE.updateNode);
+    this.d3Node.datum(this.props.data).call((FORCE as any).updateNode);
   }
 
   componentWillUnmount() {
@@ -67,7 +82,7 @@ class Node extends Component {
     //   .$(`#node_${this.props.data.id}`)
     //   .replaceWith(window.$(`#node_${this.props.data.id}`).clone());
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: NodeProps) {
     //TODO: determine when component should update
     if (
       nextProps.isActive !== this.props.isActive ||
@@ -79,7 +94,7 @@ class Node extends Component {
     }
   }
 
-  getTextContent = ({ name, isAboveMax }) => {
+  getTextContent = (name: string, isAboveMax: boolean) => {
     let remainingName = name;
     let tspans = [];
     const ellipse = isAboveMax ? '...' : '';
@@ -98,7 +113,7 @@ class Node extends Component {
     // console.count('node rendering!');
     return (
       <NodeGroupStyles
-        ref={node => (this.node = node)}
+        ref={(node: any) => (this.node = node)}
         className="node"
         id={`node_${this.props.data.id}`}
       >
@@ -107,14 +122,14 @@ class Node extends Component {
           onMouseOut={this.props.onMouseOut}
           onClick={this.props.onClick}
           /* onClick={this.props.addLink} */
-          filter={this.props.isActive ? 'url(#virtual_light)' : null}
+          filter={this.props.isActive ? 'url(#virtual_light)' : ''}
         />
         {isNodeTextVisible && (
           <g className="text-label">
-            {this.getTextContent({
-              name: this.props.data.name.slice(0, MAX_TEXT_LENGTH),
-              isAboveMax: this.props.data.name.length > MAX_TEXT_LENGTH,
-            }).map((text, idx) => (
+            {this.getTextContent(
+              this.props.data.name.slice(0, MAX_TEXT_LENGTH),
+              this.props.data.name.length > MAX_TEXT_LENGTH,
+            ).map((text, idx) => (
               <text
                 dy={
                   idx * TEXT_LINE_HEIGHT -

@@ -28,7 +28,6 @@ const VizStyles = styled.div`
   }
 `;
 
-// TODO: switch to hooks
 const MAX_NODES_WITH_TEXT_VISIBLE = 50;
 
 interface VizProps {
@@ -38,8 +37,8 @@ interface VizProps {
   clusterSelector: string;
   radiusSelector: string;
   onMouseMove(event: Event, datum: any): void;
-  onMouseOut(event: Event, datum: any): void;
-  onClick(event: Event, node: any): void;
+  onMouseOut(event: any): void;
+  onClick(event?: any, datum?: any): void;
   colouredByValue: string | null;
   isTabletOrLarger: boolean;
   zScale: any;
