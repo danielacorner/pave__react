@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import FORCE from '../FORCE';
 import Node from './Node';
-// import SummaryStatistics from './SummaryStatistics';
 import SVG3dEffect from './SVG3dEffect';
 
 const VizStyles = styled.div`
@@ -30,30 +29,38 @@ const VizStyles = styled.div`
 `;
 
 // TODO: switch to hooks
-class Viz extends Component {
+interface VizProps {
+  nodes: any[];
+  radiusScale: any;
+  clusterCenters: any[];
+  clusterSelector: string;
+  radiusSelector: string;
+  onMouseMove(event: Event, datum: any): void;
+  onMouseOut(event: Event, datum: any): void;
+  onClick(event: Event, node: any): void;
+  colouredByValue: string | null;
+  isTabletOrLarger: boolean;
+  zScale: any;
+}
+interface VizState {
+  activeNodeId: string | null;
+}
+class Viz extends Component<VizProps, VizState> {
   state = {
     activeNodeId: null,
   };
   componentDidMount() {
-    const {
-      nodes,
-      radiusScale,
-      clusterCenters,
-      radiusSelector,
-      filterQuery,
-      onLoadFromSnapshot,
-    } = this.props;
+    const { nodes, radiusScale, clusterCenters, radiusSelector } = this.props;
 
     // initialize the force simulation
-    FORCE.startSimulation(
+    (FORCE as any).startSimulation(
       { nodes, radiusScale, clusterCenters, radiusSelector },
       this,
     );
 
     // if applying a snapshot, handle in ContextProvider
-    filterQuery && onLoadFromSnapshot(filterQuery);
   }
-  handleClick = nodeId => {
+  handleClick = (nodeId: string) => {
     // apply 3d effect to clicked node
     this.setState({ activeNodeId: nodeId });
   };
@@ -84,7 +91,7 @@ class Viz extends Component {
                     key={`vizNode_${node.noc}`}
                     onMouseMove={onMouseMove}
                     onMouseOut={onMouseOut}
-                    onClick={(event, datum) => {
+                    onClick={(event: Event, datum: any) => {
                       this.handleClick(node.id);
                       if (!isTabletOrLarger) {
                         onClick(event, node);

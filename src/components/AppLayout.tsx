@@ -104,7 +104,6 @@ const AppLayout = ({ path }: AppLayoutProps) => {
     clusterSelector,
     clusterCenters,
     nodes,
-    summaryBarsActive,
     zScale,
     colouredByValue,
     uniqueClusterValues,
@@ -250,7 +249,6 @@ const AppLayout = ({ path }: AppLayoutProps) => {
           clusterSelector={clusterSelector}
           clusterCenters={clusterCenters}
           nodes={nodes}
-          summaryBarsActive={summaryBarsActive}
           zScale={zScale}
         />
         <Legend {...legendProps} />
