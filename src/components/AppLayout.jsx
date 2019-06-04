@@ -1,5 +1,4 @@
 // import queryString from 'query-string'
-// import { localPoint } from '@vx/event';
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import MediaQuery from 'react-responsive';
 import styled from 'styled-components';
