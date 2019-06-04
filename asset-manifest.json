@@ -1,13 +1,15 @@
 {
-  "main.css": "/pave__react/static/css/main.4a2e6a32.chunk.css",
-  "main.js": "/pave__react/static/js/main.8bc82bf7.chunk.js",
-  "main.js.map": "/pave__react/static/js/main.8bc82bf7.chunk.js.map",
-  "static/js/1.2047c29d.chunk.js": "/pave__react/static/js/1.2047c29d.chunk.js",
-  "static/js/1.2047c29d.chunk.js.map": "/pave__react/static/js/1.2047c29d.chunk.js.map",
-  "runtime~main.js": "/pave__react/static/js/runtime~main.d3842440.js",
-  "runtime~main.js.map": "/pave__react/static/js/runtime~main.d3842440.js.map",
-  "static/css/main.4a2e6a32.chunk.css.map": "/pave__react/static/css/main.4a2e6a32.chunk.css.map",
-  "index.html": "/pave__react/index.html",
-  "precache-manifest.d6034b4141c3ec95cf78ad79f8497fbf.js": "/pave__react/precache-manifest.d6034b4141c3ec95cf78ad79f8497fbf.js",
-  "service-worker.js": "/pave__react/service-worker.js"
+  "files": {
+    "main.css": "/pave__react/static/css/main.563a2a4b.chunk.css",
+    "main.js": "/pave__react/static/js/main.9d33ff0f.chunk.js",
+    "main.js.map": "/pave__react/static/js/main.9d33ff0f.chunk.js.map",
+    "runtime~main.js": "/pave__react/static/js/runtime~main.3d9fa7ce.js",
+    "runtime~main.js.map": "/pave__react/static/js/runtime~main.3d9fa7ce.js.map",
+    "static/js/2.1c8e37ef.chunk.js": "/pave__react/static/js/2.1c8e37ef.chunk.js",
+    "static/js/2.1c8e37ef.chunk.js.map": "/pave__react/static/js/2.1c8e37ef.chunk.js.map",
+    "index.html": "/pave__react/index.html",
+    "precache-manifest.bd7233f6241c6ac1c9fee896c55ebda9.js": "/pave__react/precache-manifest.bd7233f6241c6ac1c9fee896c55ebda9.js",
+    "service-worker.js": "/pave__react/service-worker.js",
+    "static/css/main.563a2a4b.chunk.css.map": "/pave__react/static/css/main.563a2a4b.chunk.css.map"
+  }
 }
