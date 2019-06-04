@@ -25,7 +25,7 @@ const BannerStyles = styled.div`
   }
   .btnAddToHome {
     margin-right: 4px;
-    padding: 0px 12px;
+    padding: 3px 12px;
     svg {
       width: 20px;
       height: 20px;

@@ -1,4 +1,3 @@
-import { Router } from '@reach/router';
 import React, { useState } from 'react';
 import './App.css';
 import AppLayout from './components/AppLayout';
@@ -21,9 +20,7 @@ function AppWithContext() {
     <React.Fragment>
       {isJoyrideEnabled && <JoyrideWithSteps {...joyRideProps} />}
       <NavBar {...joyRideProps} />
-      <Router>
-        <AppLayout path="/" />
-      </Router>
+      <AppLayout />
     </React.Fragment>
   );
 }
