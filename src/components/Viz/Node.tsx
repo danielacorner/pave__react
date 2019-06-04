@@ -28,6 +28,20 @@ const NodeGroupStyles = styled.g`
     font-size: ${TEXT_LINE_HEIGHT}px;
   }
 `;
+const getTextContent = (name: string, isAboveMax: boolean) => {
+  let remainingName = name;
+  let tspans = [];
+  const ellipse = isAboveMax ? '...' : '';
+  while (remainingName.length > MAX_LINE_LENGTH) {
+    tspans.push(
+      remainingName.slice(0, 9) + (remainingName[8] === ' ' ? '' : '-'),
+    );
+    remainingName = remainingName.slice(9);
+  }
+  tspans.push(remainingName + ellipse);
+  return tspans;
+};
+
 interface NodeProps {
   isNodeTextVisible: boolean;
   data: any;
@@ -94,20 +108,6 @@ class Node extends Component<NodeProps> {
     }
   }
 
-  getTextContent = (name: string, isAboveMax: boolean) => {
-    let remainingName = name;
-    let tspans = [];
-    const ellipse = isAboveMax ? '...' : '';
-    while (remainingName.length > MAX_LINE_LENGTH) {
-      tspans.push(
-        remainingName.slice(0, 9) + (remainingName[8] === ' ' ? '' : '-'),
-      );
-      remainingName = remainingName.slice(9);
-    }
-    tspans.push(remainingName + ellipse);
-    return tspans;
-  };
-
   render() {
     const { isNodeTextVisible } = this.props;
     // console.count('node rendering!');
@@ -126,7 +126,7 @@ class Node extends Component<NodeProps> {
         />
         {isNodeTextVisible && (
           <g className="text-label">
-            {this.getTextContent(
+            {getTextContent(
               this.props.data.name.slice(0, MAX_TEXT_LENGTH),
               this.props.data.name.length > MAX_TEXT_LENGTH,
             ).map((text, idx) => (
