@@ -7,6 +7,7 @@ import ContextProvider from './components/Context/ContextProvider';
 import AppWithContext from './AppWithContext';
 import { AddToHomeScreenBanner } from './components/AddToHomeScreenBanner';
 import { PictogramClipPathsDefs } from './components/Viz/PictogramClipPathsDefs';
+import { BeforeInstallPromptEvent } from './types';
 
 export const brightGreen = '#49ac52';
 const theme = createMuiTheme({
@@ -24,9 +25,11 @@ const theme = createMuiTheme({
 });
 
 function App() {
-  const [deferredPrompt, setDeferredPrompt] = useState(null as null | Event);
+  const [deferredPrompt, setDeferredPrompt] = useState(
+    null as null | BeforeInstallPromptEvent,
+  );
 
-  window.addEventListener('beforeinstallprompt', event => {
+  window.addEventListener('beforeinstallprompt', (event: any) => {
     // Prevent Chrome 67 and earlier from automatically showing the prompt
     event.preventDefault();
     // Stash the event so it can be triggered later.

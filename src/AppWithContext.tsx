@@ -23,7 +23,6 @@ function AppWithContext() {
       <NavBar {...joyRideProps} />
       <Router>
         <AppLayout path="/" />
-        <AppLayout path="/:filtersQuery" />
       </Router>
     </React.Fragment>
   );

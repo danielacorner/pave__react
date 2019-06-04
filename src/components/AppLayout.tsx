@@ -53,7 +53,7 @@ const AppLayoutStyles = styled.div`
 const filterVariables = [SKILLS_LANG, SKILLS_LOGI, SKILLS_MATH, SKILLS_COMP];
 
 interface AppLayoutProps {
-  location: string;
+  path: string;
 }
 interface TooltipProps {
   data: any;
@@ -76,7 +76,8 @@ const emptyMobileTooltipProps = {
   width: 0,
 };
 
-const AppLayout = ({ location }: AppLayoutProps) => {
+const AppLayout = ({ path }: AppLayoutProps) => {
+  console.log({ path });
   const { innerHeight } = useWindowSize();
   const [tooltipProps, setTooltipProps] = useState(
     emptyTooltipProps as TooltipProps | null,
@@ -244,7 +245,6 @@ const AppLayout = ({ location }: AppLayoutProps) => {
               : () => {}
           }
           onMouseOut={isTabletOrLarger ? stopTooltipActive : () => {}}
-          filtersQuery={location.search}
           radiusScale={getRadiusScale()}
           radiusSelector={radiusSelector}
           clusterSelector={clusterSelector}

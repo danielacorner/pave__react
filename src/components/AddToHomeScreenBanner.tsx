@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import BalloonIcon from '../assets/BalloonIcon';
 import { brightGreen } from '../App';
 import { Button } from '@material-ui/core';
+import { BeforeInstallPromptEvent } from '../types';
 
 const BannerStyles = styled.div`
   display: flex;
@@ -41,10 +42,16 @@ const BannerStyles = styled.div`
     padding: 0;
   }
 `;
+
+interface AddToHomeScreenBannerProps {
+  deferredPrompt: null | BeforeInstallPromptEvent;
+  setDeferredPrompt(event: null | BeforeInstallPromptEvent): void;
+}
+
 export const AddToHomeScreenBanner = ({
   deferredPrompt,
   setDeferredPrompt,
-}) => (
+}: AddToHomeScreenBannerProps) => (
   <BannerStyles className={deferredPrompt ? 'toastUp' : ''}>
     <Button
       className="btnAddToHome"
@@ -52,15 +59,17 @@ export const AddToHomeScreenBanner = ({
       variant="contained"
       size="small"
       onClick={() => {
-        deferredPrompt.prompt();
-        deferredPrompt.userChocie.then(choiceResult => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the A2HS prompt');
-          } else {
-            console.log('User dismissed the A2HS prompt');
-          }
-          setDeferredPrompt(null);
-        });
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then(choiceResult => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('User accepted the A2HS prompt');
+            } else {
+              console.log('User dismissed the A2HS prompt');
+            }
+            setDeferredPrompt(null);
+          });
+        }
       }}
     >
       <BalloonIcon />

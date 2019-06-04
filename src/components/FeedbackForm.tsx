@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, FormEvent } from 'react';
 import styled from 'styled-components';
 import { TextField, Button, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/CloseRounded';
@@ -53,15 +53,25 @@ const FeedbackFormStyles = styled.div`
     }
   }
 `;
-
-export const FeedbackForm = ({ setIsFeedbackOpen }) => {
-  const [sending, setSending] = useState(false);
+interface FeedbackFormProps {
+  setIsFeedbackOpen(bool: boolean): void;
+}
+interface SendFeedback {
+  senderEmail: string;
+  senderName: string;
+  feedback: string;
+  templateId: string | undefined;
+  receiverEmail: string | undefined;
+  userId: string | undefined;
+}
+export const FeedbackForm = ({ setIsFeedbackOpen }: FeedbackFormProps) => {
+  const [sending, setSending] = useState(false as boolean | string);
   const [feedback, setFeedback] = useState('');
   const [senderEmail, setSenderEmail] = useState('');
   const [senderName, setSenderName] = useState('');
 
   useEffect(() => {
-    const keydownListener = event => {
+    const keydownListener = (event: KeyboardEvent) => {
       const ESC_KEY = 27;
       if (event.keyCode === ESC_KEY) {
         setIsFeedbackOpen(false);
@@ -74,17 +84,17 @@ export const FeedbackForm = ({ setIsFeedbackOpen }) => {
   });
 
   const sendFeedback = ({
-    templateId,
     senderEmail,
     senderName,
-    receiverEmail,
     feedback,
+    templateId,
+    receiverEmail,
     userId,
-  }) => {
+  }: SendFeedback) => {
     emailjs
       .send(
         'gmail_for_goodjob',
-        templateId,
+        templateId || '',
         {
           senderEmail,
           senderName,
@@ -100,10 +110,12 @@ export const FeedbackForm = ({ setIsFeedbackOpen }) => {
         }, 2000);
       })
       // Handle errors here however you like, or use a React error boundary
-      .catch(err => console.error('Failed to send feedback. Error: ', err));
+      .catch((err: Error) =>
+        console.error('Failed to send feedback. Error: ', err),
+      );
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
 
     const {
@@ -113,11 +125,11 @@ export const FeedbackForm = ({ setIsFeedbackOpen }) => {
     } = process.env;
     setSending('sending');
     sendFeedback({
-      templateId,
       senderName,
       senderEmail,
-      receiverEmail,
       feedback,
+      templateId,
+      receiverEmail,
       userId,
     });
   };
