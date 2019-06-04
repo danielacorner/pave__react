@@ -77,7 +77,6 @@ const emptyMobileTooltipProps = {
 };
 
 const AppLayout = ({ path }: AppLayoutProps) => {
-  console.log({ path });
   const { innerHeight } = useWindowSize();
   const [tooltipProps, setTooltipProps] = useState(
     emptyTooltipProps as TooltipProps | null,
@@ -233,12 +232,10 @@ const AppLayout = ({ path }: AppLayoutProps) => {
                   const {
                     width,
                   } = (event.target as HTMLElement).getBoundingClientRect();
-                  console.log({ width });
                   const mobileTooltipProps = {
                     data: datum,
                     width,
                   };
-                  console.log({ mobileTooltipProps });
                   setMobileTooltipProps(mobileTooltipProps);
                 }
               : () => {}
