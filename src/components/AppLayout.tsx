@@ -102,6 +102,7 @@ const AppLayout = () => {
     nodes,
     zScale,
     uniqueClusterValues,
+    sortedByValue,
   } = state;
 
   useEffect(() => {
@@ -200,6 +201,7 @@ const AppLayout = () => {
         />
         <Viz
           isTabletOrLarger={isTabletOrLarger}
+          sortedByValue={sortedByValue}
           onMouseMove={
             isTabletOrLarger
               ? (event: Event, datum: any) => {

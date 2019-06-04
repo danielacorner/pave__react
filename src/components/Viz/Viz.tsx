@@ -40,6 +40,7 @@ interface VizProps {
   onClick(event: Event, node: any): void;
   isTabletOrLarger: boolean;
   zScale: any;
+  sortedByValue: string | null;
 }
 interface VizState {
   activeNodeId: string | null;
@@ -71,6 +72,7 @@ class Viz extends Component<VizProps, VizState> {
       onMouseOut,
       onClick,
       isTabletOrLarger,
+      sortedByValue,
     } = this.props;
 
     const MAX_NODES_WITH_TEXT_VISIBLE = 50;
@@ -100,6 +102,7 @@ class Viz extends Component<VizProps, VizState> {
               );
             })}
           </g>
+          {sortedByValue && <g className="yAxis">hi</g>}
           <SVG3dEffect />
         </svg>
       </VizStyles>

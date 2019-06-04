@@ -1,7 +1,6 @@
 TODOS:
 
 todo:
-- bug: memoized nodes need to update colours
 - y axis
 - add more typescript
 - customize legend based on settingsContext
