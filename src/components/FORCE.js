@@ -474,9 +474,9 @@ const FORCE = function(nsp) {
     },
     updateNode = selection => {
       selection
-        .attr('transform', d => nodeTransform(d))
-        .attr('cx', d => d.x)
-        .attr('cy', d => d.y);
+        .attr('transform', d => (d ? nodeTransform(d) : ''))
+        .attr('cx', d => (d ? d.x : 0))
+        .attr('cy', d => (d ? d.y : 0));
     },
     updateGraph = selection => {
       selection.selectAll('.node').call(updateNode);
