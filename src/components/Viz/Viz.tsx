@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import FORCE from '../FORCE';
 import Node from './Node';
@@ -28,8 +28,7 @@ const VizStyles = styled.div`
   }
 `;
 
-const MAX_NODES_WITH_TEXT_VISIBLE = 50;
-
+// TODO: switch to hooks
 interface VizProps {
   nodes: any[];
   radiusScale: any;
@@ -37,8 +36,8 @@ interface VizProps {
   clusterSelector: string;
   radiusSelector: string;
   onMouseMove(event: Event, datum: any): void;
-  onMouseOut(event: any): void;
-  onClick(event?: any, datum?: any): void;
+  onMouseOut(event: Event, datum: any): void;
+  onClick(event: Event, node: any): void;
   colouredByValue: string | null;
   isTabletOrLarger: boolean;
   zScale: any;
@@ -46,71 +45,74 @@ interface VizProps {
 interface VizState {
   activeNodeId: string | null;
 }
-const Viz = ({
-  nodes,
-  radiusScale,
-  clusterCenters,
-  radiusSelector,
-  onMouseMove,
-  onMouseOut,
-  onClick,
-  colouredByValue,
-  isTabletOrLarger,
-}: VizProps) => {
-  const [activeNodeId, setActiveNodeId] = useState(null as string | null);
-
-  const vizRef = useRef(null as any);
-
-  useEffect(
-    function() {
-      // initialize the force simulation
-      (FORCE as any).startSimulation(
-        { nodes, radiusScale, clusterCenters, radiusSelector },
-        vizRef.current,
-      );
-    },
-    [clusterCenters, nodes, radiusScale, radiusSelector],
-  );
-
-  // if applying a snapshot, handle in ContextProvider
-  const handleClick = (nodeId: string) => {
-    // apply 3d effect to clicked node
-    setActiveNodeId(nodeId);
+class Viz extends Component<VizProps, VizState> {
+  state = {
+    activeNodeId: null,
   };
+  componentDidMount() {
+    const { nodes, radiusScale, clusterCenters, radiusSelector } = this.props;
 
-  const isNodeTextVisible = nodes.length < MAX_NODES_WITH_TEXT_VISIBLE;
+    // initialize the force simulation
+    (FORCE as any).startSimulation(
+      { nodes, radiusScale, clusterCenters, radiusSelector },
+      this,
+    );
 
-  return (
-    <VizStyles ref={vizRef} id="graphContainer" style={{ overflow: 'visible' }}>
-      <svg id="svg">
-        <g id="nodesG">
-          {nodes.map(node => {
-            return (
-              <Node
-                colouredByValue={colouredByValue}
-                key={`vizNode_${node.noc}`}
-                onMouseMove={onMouseMove}
-                onMouseOut={onMouseOut}
-                onClick={(event: Event, datum: any) => {
-                  handleClick(node.id);
-                  if (!isTabletOrLarger) {
-                    onClick(event, node);
-                  }
-                }}
-                radiusSelector={radiusSelector}
-                radiusScale={radiusScale}
-                data={node}
-                name={node.name}
-                isActive={activeNodeId === node.id}
-                isNodeTextVisible={isNodeTextVisible}
-              />
-            );
-          })}
-        </g>
-        <SVG3dEffect />
-      </svg>
-    </VizStyles>
-  );
-};
+    // if applying a snapshot, handle in ContextProvider
+  }
+  handleClick = (nodeId: string) => {
+    // apply 3d effect to clicked node
+    this.setState({ activeNodeId: nodeId });
+  };
+  render() {
+    const {
+      radiusSelector,
+      radiusScale,
+      nodes,
+      onMouseMove,
+      onMouseOut,
+      onClick,
+      colouredByValue,
+      isTabletOrLarger,
+    } = this.props;
+
+    const MAX_NODES_WITH_TEXT_VISIBLE = 50;
+    const isNodeTextVisible = nodes.length < MAX_NODES_WITH_TEXT_VISIBLE;
+
+    return (
+      <React.Fragment>
+        <VizStyles id="graphContainer" style={{ overflow: 'visible' }}>
+          <svg id="svg">
+            <g id="nodesG">
+              {nodes.map(node => {
+                return (
+                  <Node
+                    colouredByValue={colouredByValue}
+                    key={`vizNode_${node.noc}`}
+                    onMouseMove={onMouseMove}
+                    onMouseOut={onMouseOut}
+                    onClick={(event: Event, datum: any) => {
+                      this.handleClick(node.id);
+                      if (!isTabletOrLarger) {
+                        onClick(event, node);
+                      }
+                    }}
+                    radiusSelector={radiusSelector}
+                    radiusScale={radiusScale}
+                    data={node}
+                    name={node.name}
+                    isActive={this.state.activeNodeId === node.id}
+                    isNodeTextVisible={isNodeTextVisible}
+                  />
+                );
+              })}
+            </g>
+            <SVG3dEffect />
+          </svg>
+        </VizStyles>
+      </React.Fragment>
+    );
+  }
+}
 
 export default Viz;
