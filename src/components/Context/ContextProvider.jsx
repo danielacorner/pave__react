@@ -104,8 +104,10 @@ class ContextProvider extends Component {
 
     const { width, height } = getGraphContainerDims();
 
-    $('#nodesG').style.transform = `translate(${+width / 2}px,${+height /
-      2}px)`;
+    const nodesG = $('#nodesG');
+    if (nodesG) {
+      nodesG.style.transform = `translate(${+width / 2}px,${+height / 2}px)`;
+    }
   }
 
   componentWillUnmount() {
@@ -121,7 +123,8 @@ class ContextProvider extends Component {
   getTranslate() {
     const { width, height } = getGraphContainerDims();
 
-    const nodesRect = $('#nodesG').getBoundingClientRect();
+    const nodesG = $('#nodesG');
+    const nodesRect = nodesG ? nodesG.getBoundingClientRect() : { left: 0 };
     const offsetLeft =
       nodesRect.left < 0 && this.state.sortedType ? -nodesRect.left : 0;
     return `${+width / 2 + +offsetLeft}px,${+height / 2}px`;
@@ -138,7 +141,10 @@ class ContextProvider extends Component {
       : // otherwise, constrain by the smaller length
         Math.min(width, height);
 
-    const nodesBB = $('#nodesG').getBBox();
+    const nodesG = $('#nodesG');
+    const nodesBB = nodesG
+      ? nodesG.getBBox()
+      : { width: window.innerWidth - 10, height: window.innerHeight * 0.8 };
     // constrain the maximum nodes length
     const nodesConstrainedLength = Math.max(nodesBB.width, nodesBB.height);
 

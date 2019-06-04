@@ -80,37 +80,35 @@ class Viz extends Component<VizProps, VizState> {
     const isNodeTextVisible = nodes.length < MAX_NODES_WITH_TEXT_VISIBLE;
 
     return (
-      <React.Fragment>
-        <VizStyles id="graphContainer" style={{ overflow: 'visible' }}>
-          <svg id="svg">
-            <g id="nodesG">
-              {nodes.map(node => {
-                return (
-                  <Node
-                    colouredByValue={colouredByValue}
-                    key={`vizNode_${node.noc}`}
-                    onMouseMove={onMouseMove}
-                    onMouseOut={onMouseOut}
-                    onClick={(event: Event, datum: any) => {
-                      this.handleClick(node.id);
-                      if (!isTabletOrLarger) {
-                        onClick(event, node);
-                      }
-                    }}
-                    radiusSelector={radiusSelector}
-                    radiusScale={radiusScale}
-                    data={node}
-                    name={node.name}
-                    isActive={this.state.activeNodeId === node.id}
-                    isNodeTextVisible={isNodeTextVisible}
-                  />
-                );
-              })}
-            </g>
-            <SVG3dEffect />
-          </svg>
-        </VizStyles>
-      </React.Fragment>
+      <VizStyles id="graphContainer" style={{ overflow: 'visible' }}>
+        <svg id="svg">
+          <g id="nodesG">
+            {nodes.map(node => {
+              return (
+                <Node
+                  colouredByValue={colouredByValue}
+                  key={`vizNode_${node.noc}`}
+                  onMouseMove={onMouseMove}
+                  onMouseOut={onMouseOut}
+                  onClick={(event: Event, datum: any) => {
+                    this.handleClick(node.id);
+                    if (!isTabletOrLarger) {
+                      onClick(event, node);
+                    }
+                  }}
+                  radiusSelector={radiusSelector}
+                  radiusScale={radiusScale}
+                  data={node}
+                  name={node.name}
+                  isActive={this.state.activeNodeId === node.id}
+                  isNodeTextVisible={isNodeTextVisible}
+                />
+              );
+            })}
+          </g>
+          <SVG3dEffect />
+        </svg>
+      </VizStyles>
     );
   }
 }
