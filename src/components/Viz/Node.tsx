@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import 'jquery/src/jquery';
-import React, { Component, createRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { findDOMNode } from 'react-dom';
 import styled from 'styled-components';
 import FORCE from '../FORCE';
@@ -54,86 +54,91 @@ interface NodeProps {
   isActive: boolean;
   name: string;
 }
-class Node extends Component<NodeProps> {
-  node = null as any;
-  d3Node = null as any;
+const Node = React.memo(
+  ({
+    isNodeTextVisible,
+    data,
+    radiusScale,
+    radiusSelector,
+    colouredByValue,
+    onMouseMove,
+    onMouseOut,
+    onClick,
+    isActive,
+    name,
+  }: NodeProps) => {
+    const node = useRef(null as any);
+    const d3Node = useRef(null as any);
 
-  constructor(props: NodeProps) {
-    super(props);
-    this.node = createRef();
-  }
-  componentDidMount() {
-    const { radiusScale, radiusSelector, colouredByValue } = this.props;
-    this.d3Node = d3
-      .select(findDOMNode(this) as SVGGElement)
-      .datum(this.props.data)
-      .call((d: Selection<SVGGElement, any, null, undefined>) =>
-        (FORCE as any).enterNode({
-          selection: d,
-          radiusScale,
-          radiusSelector,
-          colouredByValue,
-        }),
-      );
-  }
+    useEffect(() => {
+      if (node.current) {
+        d3Node.current = d3
+          .select(findDOMNode(node.current) as any)
+          .datum(data)
+          .call((d: Selection<SVGGElement, any, null, undefined>) =>
+            (FORCE as any).enterNode({
+              selection: d,
+              radiusScale,
+              radiusSelector,
+              colouredByValue,
+            }),
+          );
+      }
+    }, [radiusScale, radiusSelector, colouredByValue]);
 
-  componentDidUpdate() {
-    this.d3Node.datum(this.props.data).call((FORCE as any).updateNode);
-  }
+    useEffect(() => {
+      if (d3Node.current) {
+        d3Node.current.datum(data).call((FORCE as any).updateNode);
+      }
+    });
 
-  componentWillUnmount() {
-    // TODO: check for event listeners to garbage-collect
-    // FORCE.removeDrag();
-    // console.log('node unmounting!');
-    // document
-    //   .querySelector(`#node_${this.props.data.id} circle`)
-    //   .removeEventListener('click');
-    // console.log(`node_${this.props.data.id} unmounting!`);
-    // remove all event listeners
-    // window.$(`#node_${this.props.data.id}`).off();
-    // if that doesn't work, try
-    // window
-    //   .$(`#node_${this.props.data.id}`)
-    //   .replaceWith(window.$(`#node_${this.props.data.id}`).clone());
-  }
-  shouldComponentUpdate(nextProps: NodeProps) {
-    //TODO: determine when component should update
-    if (
-      nextProps.isActive !== this.props.isActive ||
-      nextProps.isNodeTextVisible !== this.props.isNodeTextVisible
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+    // componentWillUnmount() {
+    //   // TODO: check for event listeners to garbage-collect
+    //   // FORCE.removeDrag();
+    //   // console.log('node unmounting!');
+    //   // document
+    //   //   .querySelector(`#node_${data.id} circle`)
+    //   //   .removeEventListener('click');
+    //   // console.log(`node_${data.id} unmounting!`);
+    //   // remove all event listeners
+    //   // window.$(`#node_${data.id}`).off();
+    //   // if that doesn't work, try
+    //   // window
+    //   //   .$(`#node_${data.id}`)
+    //   //   .replaceWith(window.$(`#node_${data.id}`).clone());
+    // }
+    // shouldComponentUpdate(nextProps: NodeProps) {
+    //   //TODO: determine when component should update
+    //   if (
+    //     nextProps.isActive !== isActive ||
+    //     nextProps.isNodeTextVisible !== isNodeTextVisible
+    //   ) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // }
 
-  render() {
-    const { isNodeTextVisible } = this.props;
     // console.count('node rendering!');
     return (
-      <NodeGroupStyles
-        ref={(node: any) => (this.node = node)}
-        className="node"
-        id={`node_${this.props.data.id}`}
-      >
+      <NodeGroupStyles ref={node} className="node" id={`node_${data.id}`}>
         <circle
-          onMouseMove={event => this.props.onMouseMove(event, this.props.data)}
-          onMouseOut={this.props.onMouseOut}
-          onClick={this.props.onClick}
-          /* onClick={this.props.addLink} */
-          filter={this.props.isActive ? 'url(#virtual_light)' : ''}
+          onMouseMove={event => onMouseMove(event, data)}
+          onMouseOut={onMouseOut}
+          onClick={onClick}
+          /* onClick={addLink} */
+          filter={isActive ? 'url(#virtual_light)' : ''}
         />
         {isNodeTextVisible && (
           <g className="text-label">
             {getTextContent(
-              this.props.data.name.slice(0, MAX_TEXT_LENGTH),
-              this.props.data.name.length > MAX_TEXT_LENGTH,
+              data.name.slice(0, MAX_TEXT_LENGTH),
+              data.name.length > MAX_TEXT_LENGTH,
             ).map((text, idx) => (
               <text
                 dy={
                   idx * TEXT_LINE_HEIGHT -
-                  (Math.min(this.props.data.name.length, MAX_TEXT_LENGTH) /
+                  (Math.min(data.name.length, MAX_TEXT_LENGTH) /
                     MAX_LINE_LENGTH) *
                     (TEXT_LINE_HEIGHT / 4)
                 }
@@ -146,6 +151,6 @@ class Node extends Component<NodeProps> {
         )}
       </NodeGroupStyles>
     );
-  }
-}
+  },
+);
 export default Node;
