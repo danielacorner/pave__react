@@ -179,9 +179,10 @@ class ContextProvider extends Component {
     );
 
     // translate the nodes group into the middle and scale to fit
-    $(
-      '#nodesG',
-    ).style.transform = `translate(${this.getTranslate()}) scale(${newScale})`;
+    const nodesG = $('#nodesG');
+    if (nodesG) {
+      nodesG.style.transform = `translate(${this.getTranslate()}) scale(${newScale})`;
+    }
   }, 150);
 
   filteredNodes = () => {
