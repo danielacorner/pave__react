@@ -67,8 +67,8 @@ const Node = React.memo(
     isActive,
     name,
   }: NodeProps) => {
-    const node = useRef(null as any);
-    const d3Node = useRef(null as any);
+    const node = useRef(this as any);
+    const d3Node = useRef(this as any);
 
     useEffect(() => {
       d3Node.current = d3
