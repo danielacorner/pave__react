@@ -101,7 +101,6 @@ const AppLayout = () => {
     clusterCenters,
     nodes,
     zScale,
-    colouredByValue,
     uniqueClusterValues,
   } = state;
 
@@ -201,7 +200,6 @@ const AppLayout = () => {
         />
         <Viz
           isTabletOrLarger={isTabletOrLarger}
-          colouredByValue={colouredByValue}
           onMouseMove={
             isTabletOrLarger
               ? (event: Event, datum: any) => {

@@ -38,7 +38,6 @@ interface VizProps {
   onMouseMove(event: Event, datum: any): void;
   onMouseOut(event: any): void;
   onClick(event: Event, node: any): void;
-  colouredByValue: string | null;
   isTabletOrLarger: boolean;
   zScale: any;
 }
@@ -66,13 +65,11 @@ class Viz extends Component<VizProps, VizState> {
   };
   render() {
     const {
-      radiusSelector,
       radiusScale,
       nodes,
       onMouseMove,
       onMouseOut,
       onClick,
-      colouredByValue,
       isTabletOrLarger,
     } = this.props;
 
@@ -86,7 +83,7 @@ class Viz extends Component<VizProps, VizState> {
             {nodes.map(node => {
               return (
                 <Node
-                  colouredByValue={colouredByValue}
+                  radiusScale={radiusScale}
                   key={`vizNode_${node.noc}`}
                   onMouseMove={onMouseMove}
                   onMouseOut={onMouseOut}
@@ -96,10 +93,7 @@ class Viz extends Component<VizProps, VizState> {
                       onClick(event, node);
                     }
                   }}
-                  radiusSelector={radiusSelector}
-                  radiusScale={radiusScale}
                   data={node}
-                  name={node.name}
                   isActive={this.state.activeNodeId === node.id}
                   isNodeTextVisible={isNodeTextVisible}
                 />

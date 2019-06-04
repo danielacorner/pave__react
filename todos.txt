@@ -1,9 +1,9 @@
 TODOS:
 
 todo:
+- bug: memoized nodes need to update colours
 - y axis
-- add typescript
-npm install --save typescript @types/node @types/react @types/react-dom @types/jest
+- add more typescript
 - customize legend based on settingsContext
 
 - save favourites to localstorage

@@ -1,10 +1,12 @@
 import * as d3 from 'd3';
 import 'jquery/src/jquery';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { findDOMNode } from 'react-dom';
 import styled from 'styled-components';
 import FORCE from '../FORCE';
 import { Selection } from 'd3';
+import { ControlsContext } from '../Context/ContextProvider';
+
 const MAX_LINE_LENGTH = 10;
 const MAX_TEXT_LENGTH = 30;
 const TEXT_LINE_HEIGHT = 6;
@@ -46,29 +48,25 @@ interface NodeProps {
   isNodeTextVisible: boolean;
   data: any;
   radiusScale: any;
-  radiusSelector: string;
-  colouredByValue: string | null;
   onMouseMove(event: any, data: any): void;
   onMouseOut(event: any): void;
   onClick(event?: any, datum?: any): void;
   isActive: boolean;
-  name: string;
 }
 const Node = React.memo(
   ({
     isNodeTextVisible,
     data,
-    radiusScale,
-    radiusSelector,
-    colouredByValue,
     onMouseMove,
     onMouseOut,
     onClick,
     isActive,
-    name,
+    radiusScale,
   }: NodeProps) => {
     const node = useRef(null as any);
     const d3Node = useRef(null as any);
+    const { state } = useContext(ControlsContext);
+    const { colouredByValue, radiusSelector } = state;
 
     useEffect(() => {
       d3Node.current = d3
@@ -82,7 +80,7 @@ const Node = React.memo(
             colouredByValue,
           }),
         );
-    }, [radiusScale, radiusSelector, colouredByValue, data]);
+    }, []);
 
     useEffect(() => {
       d3Node.current.datum(data).call((FORCE as any).updateNode);

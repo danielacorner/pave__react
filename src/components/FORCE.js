@@ -10,7 +10,7 @@ import {
 } from './Controls/SortPanel';
 
 export const lightGrey = 'hsl(0,0%,80%)';
-const color = d3.scaleOrdinal(d3.schemeCategory10);
+export const color = d3.scaleOrdinal(d3.schemeCategory10);
 export const getCircleColour = ({ d, colouredByValue }) => {
   switch (colouredByValue) {
     case 'automationRisk':
