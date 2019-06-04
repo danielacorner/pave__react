@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import FORCE from '../FORCE';
 import Node from './Node';
@@ -45,69 +45,69 @@ interface VizProps {
 interface VizState {
   activeNodeId: string | null;
 }
-class Viz extends Component<VizProps, VizState> {
-  state = {
-    activeNodeId: null,
-  };
-  componentDidMount = () => {
-    const { nodes, radiusScale, clusterCenters, radiusSelector } = this.props;
+const Viz = ({
+  nodes,
+  radiusScale,
+  clusterCenters,
+  clusterSelector,
+  radiusSelector,
+  onMouseMove,
+  onMouseOut,
+  onClick,
+  isTabletOrLarger,
+  zScale,
+  sortedByValue,
+}: VizProps) => {
+  const [activeNodeId, setActiveNodeId] = useState(null as string | null);
+  const vizRef = useRef(null);
 
+  useEffect(() => {
     // initialize the force simulation
     (FORCE as any).startSimulation(
       { nodes, radiusScale, clusterCenters, radiusSelector },
-      this,
+      vizRef.current,
     );
 
     // if applying a snapshot, handle in ContextProvider
-  };
-  handleClick = (nodeId: string) => {
+  }, []);
+
+  const handleClick = (nodeId: string) => {
     // apply 3d effect to clicked node
-    this.setState({ activeNodeId: nodeId });
+    setActiveNodeId(nodeId);
   };
-  render() {
-    const {
-      radiusScale,
-      nodes,
-      onMouseMove,
-      onMouseOut,
-      onClick,
-      isTabletOrLarger,
-      sortedByValue,
-    } = this.props;
 
-    const MAX_NODES_WITH_TEXT_VISIBLE = 50;
-    const isNodeTextVisible = nodes.length < MAX_NODES_WITH_TEXT_VISIBLE;
+  const MAX_NODES_WITH_TEXT_VISIBLE = 50;
+  const isNodeTextVisible = nodes.length < MAX_NODES_WITH_TEXT_VISIBLE;
 
-    return (
-      <VizStyles id="graphContainer" style={{ overflow: 'visible' }}>
-        <svg id="svg">
-          <g id="nodesG">
-            {nodes.map(node => {
-              return (
-                <Node
-                  radiusScale={radiusScale}
-                  key={`vizNode_${node.noc}`}
-                  onMouseMove={onMouseMove}
-                  onMouseOut={onMouseOut}
-                  onClick={(event: Event, datum: any) => {
-                    this.handleClick(node.id);
-                    if (!isTabletOrLarger) {
-                      onClick(event, node);
-                    }
-                  }}
-                  data={node}
-                  isActive={this.state.activeNodeId === node.id}
-                  isNodeTextVisible={isNodeTextVisible}
-                />
-              );
-            })}
-          </g>
-          {sortedByValue && <g className="yAxis">hi</g>}
-          <SVG3dEffect />
-        </svg>
-      </VizStyles>
-    );
-  }
-}
+  return (
+    <VizStyles ref={vizRef} id="graphContainer" style={{ overflow: 'visible' }}>
+      <svg id="svg">
+        <g id="nodesG">
+          {nodes.map(node => {
+            return (
+              <Node
+                radiusScale={radiusScale}
+                key={`vizNode_${node.noc}`}
+                onMouseMove={onMouseMove}
+                onMouseOut={onMouseOut}
+                onClick={(event: Event, datum: any) => {
+                  handleClick(node.id);
+                  if (!isTabletOrLarger) {
+                    onClick(event, node);
+                  }
+                }}
+                data={node}
+                isActive={activeNodeId === node.id}
+                isNodeTextVisible={isNodeTextVisible}
+              />
+            );
+          })}
+        </g>
+        {sortedByValue && <g className="yAxis">hi</g>}
+        <SVG3dEffect />
+      </svg>
+    </VizStyles>
+  );
+};
 
 export default Viz;
