@@ -36,7 +36,7 @@ interface VizProps {
   clusterSelector: string;
   radiusSelector: string;
   onMouseMove(event: Event, datum: any): void;
-  onMouseOut(event: Event, datum: any): void;
+  onMouseOut(event: any): void;
   onClick(event: Event, node: any): void;
   colouredByValue: string | null;
   isTabletOrLarger: boolean;
