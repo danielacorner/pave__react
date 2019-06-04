@@ -71,25 +71,21 @@ const Node = React.memo(
     const d3Node = useRef(null as any);
 
     useEffect(() => {
-      if (node.current) {
-        d3Node.current = d3
-          .select(findDOMNode(node.current) as any)
-          .datum(data)
-          .call((d: Selection<SVGGElement, any, null, undefined>) =>
-            (FORCE as any).enterNode({
-              selection: d,
-              radiusScale,
-              radiusSelector,
-              colouredByValue,
-            }),
-          );
-      }
+      d3Node.current = d3
+        .select(findDOMNode(node.current) as any)
+        .datum(data)
+        .call((d: Selection<SVGGElement, any, null, undefined>) =>
+          (FORCE as any).enterNode({
+            selection: d,
+            radiusScale,
+            radiusSelector,
+            colouredByValue,
+          }),
+        );
     }, [radiusScale, radiusSelector, colouredByValue, data]);
 
     useEffect(() => {
-      if (d3Node.current) {
-        d3Node.current.datum(data).call((FORCE as any).updateNode);
-      }
+      d3Node.current.datum(data).call((FORCE as any).updateNode);
     });
 
     // componentWillUnmount() {
