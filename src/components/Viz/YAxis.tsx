@@ -14,8 +14,9 @@ const YAxisStyles = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transition: all 1.5s cubic-bezier(0.165, 0.84, 0.44, 1);
   .spacer {
-    transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.65s cubic-bezier(0.455, 0.03, 0.515, 0.955);
   }
   .tick {
     margin-left: 4px;
@@ -24,7 +25,8 @@ const YAxisStyles = styled.div`
     min-height: 3px;
     width: 10px;
     background: black;
-    transition: all 3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 1.5s cubic-bezier(0.165, 0.84, 0.44, 1),
+      opacity 3s cubic-bezier(0.165, 0.84, 0.44, 1);
     position: relative;
     font-family: system-ui;
     .label {
@@ -39,22 +41,9 @@ const YAxisStyles = styled.div`
         font-size: 0.8em;
       }
     }
-    /* margin: 200% 0; */
     &.hidden {
       opacity: 0;
     }
-    /* &.workers {
-      margin: 33% 0;
-    }
-    &.automationRisk {
-      margin: 40% 0;
-    }
-    &.study {
-      margin: 50% 0;
-    }
-    &.salary {
-      margin: 50% 0;
-    } */
   }
 `;
 const getLabel = (sortedByValue, idx) => {
@@ -87,15 +76,12 @@ const getLabel = (sortedByValue, idx) => {
     case STUDY:
       num = idx === 0 ? 5 : idx === 1 ? 3 : 1;
       return (
-        <div>
+        <>
           <div className="label-data">{num} </div>
-          <div
-            className="label-subtitle"
-            style={{ margin: '-1.4em 0 0 1.9em' }}
-          >
+          <div className="label-subtitle" style={{ margin: '-1.4em 0 0 1em' }}>
             year{num !== 1 ? 's' : ''} study
           </div>
-        </div>
+        </>
       );
 
     default:
@@ -112,16 +98,16 @@ export default () => {
   useEffect(() => {
     switch (sortedByValue) {
       case WORKERS:
-        setMarginPercent(0.11);
+        setMarginPercent(0.13);
         break;
       case SALARY:
         setMarginPercent(0.11);
         break;
       case AUTOMATION_RISK:
-        setMarginPercent(0.09);
+        setMarginPercent(0.11);
         break;
       case STUDY:
-        setMarginPercent(0.13);
+        setMarginPercent(0.14);
         break;
       default:
         setMarginPercent(0.5);

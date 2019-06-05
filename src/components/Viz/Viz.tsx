@@ -69,7 +69,7 @@ const Viz = ({
   const isNodeTextVisible = nodes.length < MAX_NODES_WITH_TEXT_VISIBLE;
 
   return (
-    <VizStyles ref={vizRef} id="graphContainer" style={{ overflow: 'visible' }}>
+    <VizStyles ref={vizRef} id="graphContainer">
       <svg id="svg">
         <g id="nodesG">
           {nodes.map(node => {

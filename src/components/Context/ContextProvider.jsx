@@ -181,6 +181,10 @@ class ContextProvider extends Component {
       `${Math.min(Math.max(newScale - 1, 0) * 40, svgBBox.height / 5)}px`,
     );
 
+    // scale up the spaces between the y axis ticks
+    d3.select('.yAxis').style('transform', `scaleY(${newScale})`);
+    d3.selectAll('.yAxis .tick').style('transform', `scaleY(${1 / newScale})`);
+
     // translate the nodes group into the middle and scale to fit
     const nodesG = $('#nodesG');
     if (nodesG) {
