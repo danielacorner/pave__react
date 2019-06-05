@@ -117,7 +117,10 @@ class ContextProvider extends Component {
   // componentDidUpdate(nextProps, nextState) {}
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.nodes !== nextState.nodes;
+    return (
+      this.state.nodes !== nextState.nodes ||
+      this.state.sortedByValue !== nextState.sortedByValue
+    );
   }
 
   getTranslate() {
@@ -272,6 +275,7 @@ class ContextProvider extends Component {
     const { radiusSelector, getRadiusScale } = this.state;
     const newSortedValue = this.state.sortedByValue && !doSort ? false : value;
     this.setState({ sortedByValue: newSortedValue });
+    // console.log(newSortedValue, this.state);
     FORCE.applySortForces({
       sortByValue: newSortedValue,
       getRadiusScale,
@@ -279,7 +283,6 @@ class ContextProvider extends Component {
     });
     setTimeout(this.handleResize, 2000);
   };
-
   setCurrentColor = value => {
     this.setState({ colouredByValue: value });
   };

@@ -1,7 +1,7 @@
 TODOS:
 
 todo:
-- y axis
+- y axis scale on handleResize
 - add more typescript
 - customize legend based on settingsContext
 

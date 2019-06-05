@@ -1,10 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import styled from 'styled-components';
 import FORCE from '../FORCE';
 import Node from './Node';
 import SVG3dEffect from './SVG3dEffect';
+import { ControlsContext } from '../Context/ContextProvider';
+import YAxis from './YAxis';
 
 const VizStyles = styled.div`
+  position: relative;
+  overflow: hidden;
   width: 100%;
   height: 100%;
   display: grid;
@@ -30,36 +34,23 @@ const VizStyles = styled.div`
 
 // TODO: switch to hooks
 interface VizProps {
-  nodes: any[];
-  radiusScale: any;
-  clusterCenters: any[];
-  clusterSelector: string;
-  radiusSelector: string;
   onMouseMove(event: Event, datum: any): void;
   onMouseOut(event: any): void;
   onClick(event: Event, node: any): void;
   isTabletOrLarger: boolean;
-  zScale: any;
-  sortedByValue: string | null;
-}
-interface VizState {
-  activeNodeId: string | null;
 }
 const Viz = ({
-  nodes,
-  radiusScale,
-  clusterCenters,
-  clusterSelector,
-  radiusSelector,
   onMouseMove,
   onMouseOut,
   onClick,
   isTabletOrLarger,
-  zScale,
-  sortedByValue,
 }: VizProps) => {
   const [activeNodeId, setActiveNodeId] = useState(null as string | null);
   const vizRef = useRef(null);
+
+  const { state } = useContext(ControlsContext);
+  const { getRadiusScale, radiusSelector, clusterCenters, nodes } = state;
+  const radiusScale = getRadiusScale();
 
   useEffect(() => {
     // initialize the force simulation
@@ -67,8 +58,6 @@ const Viz = ({
       { nodes, radiusScale, clusterCenters, radiusSelector },
       vizRef.current,
     );
-
-    // if applying a snapshot, handle in ContextProvider
   }, []);
 
   const handleClick = (nodeId: string) => {
@@ -103,9 +92,9 @@ const Viz = ({
             );
           })}
         </g>
-        {sortedByValue && <g className="yAxis">hi</g>}
         <SVG3dEffect />
       </svg>
+      <YAxis />
     </VizStyles>
   );
 };

@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { ControlsContext } from '../Context/ContextProvider';
 import { MenuItem, Select } from '@material-ui/core';
 import FORCE from '../FORCE';
+import { INITIAL_EXPANDED_STATE } from '../AppLayout';
 
 export const WORKERS = 'workers';
 export const AUTOMATION_RISK = 'automationRisk';
@@ -197,7 +198,7 @@ const SortButtonsStyles = styled.div`
   }
 `;
 
-const SortPanel = ({ initialExpandedState, setExpanded }) => {
+const SortPanel = ({ setExpanded }) => {
   const [activeSwitches, setActiveSwitches] = useState([]);
   const [valueToColourBy, setValueToColourBy] = useState(INDUSTRY);
   const [valueToSortBy, setValueToSortBy] = useState(WORKERS);
@@ -236,7 +237,7 @@ const SortPanel = ({ initialExpandedState, setExpanded }) => {
       context.colourByValue(valueToColourBy);
     }
     context.resetFilters();
-    setExpanded(initialExpandedState);
+    setExpanded(INITIAL_EXPANDED_STATE);
     setValueToSortBy(WORKERS);
     setValueToColourBy(INDUSTRY);
     setActiveSwitches([]);

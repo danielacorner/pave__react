@@ -49,7 +49,12 @@ const AppLayoutStyles = styled.div`
   }
   box-sizing: border-box;
 `;
-
+export const INITIAL_EXPANDED_STATE = {
+  skillsLang: false,
+  skillsLogi: false,
+  skillsMath: false,
+  skillsComp: false,
+};
 const filterVariables = [SKILLS_LANG, SKILLS_LOGI, SKILLS_MATH, SKILLS_COMP];
 
 interface TooltipProps {
@@ -87,23 +92,9 @@ const AppLayout = () => {
   const { state, handleResize, restartSimulation } = useContext(
     ControlsContext,
   );
-  const initialExpandedState = {
-    skillsLang: false,
-    skillsLogi: false,
-    skillsMath: false,
-    skillsComp: false,
-  };
-  const [expanded, setExpanded] = useState(initialExpandedState);
-  const {
-    getRadiusScale,
-    radiusSelector,
-    clusterSelector,
-    clusterCenters,
-    nodes,
-    zScale,
-    uniqueClusterValues,
-    sortedByValue,
-  } = state;
+
+  const [expanded, setExpanded] = useState(INITIAL_EXPANDED_STATE);
+  const { getRadiusScale, zScale, uniqueClusterValues } = state;
 
   useEffect(() => {
     window.addEventListener('mouseup', () => {
@@ -157,7 +148,7 @@ const AppLayout = () => {
   );
 
   return (
-    <React.Fragment>
+    <>
       <AppLayoutStyles
         onClick={
           isTabletOrLarger
@@ -170,7 +161,7 @@ const AppLayout = () => {
                   (event.target as HTMLElement).id === 'svg' ||
                   (event.target as HTMLElement).nodeName === 'circle'
                 ) {
-                  setExpanded(initialExpandedState);
+                  setExpanded(INITIAL_EXPANDED_STATE);
                 }
               }
             : event => {
@@ -182,7 +173,7 @@ const AppLayout = () => {
                   (event.target as HTMLElement).id === 'svg' ||
                   (event.target as HTMLElement).nodeName === 'circle'
                 ) {
-                  setExpanded(initialExpandedState);
+                  setExpanded(INITIAL_EXPANDED_STATE);
                 }
                 if ((event.target as HTMLElement).nodeName !== 'circle') {
                   setMobileTooltipProps(null);
@@ -195,13 +186,9 @@ const AppLayout = () => {
           expanded={expanded}
           setExpanded={setExpanded}
         />
-        <SortPanel
-          initialExpandedState={initialExpandedState}
-          setExpanded={setExpanded}
-        />
+        <SortPanel setExpanded={setExpanded} />
         <Viz
           isTabletOrLarger={isTabletOrLarger}
-          sortedByValue={sortedByValue}
           onMouseMove={
             isTabletOrLarger
               ? (event: Event, datum: any) => {
@@ -238,12 +225,6 @@ const AppLayout = () => {
               : () => {}
           }
           onMouseOut={isTabletOrLarger ? stopTooltipActive : () => {}}
-          radiusScale={getRadiusScale()}
-          radiusSelector={radiusSelector}
-          clusterSelector={clusterSelector}
-          clusterCenters={clusterCenters}
-          nodes={nodes}
-          zScale={zScale}
         />
         <Legend {...legendProps} />
       </AppLayoutStyles>
@@ -253,7 +234,7 @@ const AppLayout = () => {
       ) : (
         <MobileTooltip {...mobileTooltipProps || emptyMobileTooltipProps} />
       )}
-    </React.Fragment>
+    </>
   );
 };
 

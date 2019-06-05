@@ -26,6 +26,15 @@ export const getCircleColour = ({ d, colouredByValue }) => {
   }
 };
 
+// TODO: values?
+export const SALARY_MAX = 125;
+export const SALARY_MIN = 10;
+export const SALARY_AVG = (SALARY_MAX - SALARY_MIN) / 2;
+// TODO: values?
+export const STUDY_MAX = 6;
+export const STUDY_MIN = 0.5;
+export const STUDY_AVG = (STUDY_MAX - STUDY_MIN) / 2;
+
 const FORCE = function(nsp) {
   let paused,
     updatePositionsInterval,
@@ -40,7 +49,7 @@ const FORCE = function(nsp) {
       // const constrainedX = Math.min(Math.max(d.x, -minLength), minLength);
       // const constrainedY = Math.min(Math.max(d.y, -minLength), minLength);
       // return 'translate(' + constrainedX + ',' + constrainedY + ')';
-      return `translate(${d.x},${d.y})`;
+      return `translate(${d.x || 0},${d.y || 0})`;
     },
     // force parameters
     CLUSTER_PADDING = 30,
@@ -298,10 +307,7 @@ const FORCE = function(nsp) {
             .alphaTarget(END_SPEED);
         } else if (sortByValue === SALARY) {
           const DY = 200;
-          // TODO: values?
-          const SALARY_MAX = 125;
-          const SALARY_MIN = 10;
-          const SALARY_AVG = (SALARY_MAX - SALARY_MIN) / 2;
+
           nsp.force
             .force('sortedTypeX', null)
             .force('sortedTypeY', null)
@@ -331,10 +337,7 @@ const FORCE = function(nsp) {
             .alphaTarget(END_SPEED);
         } else if (sortByValue === STUDY) {
           const DY = 260;
-          // TODO: values?
-          const STUDY_MAX = 6;
-          const STUDY_MIN = 0.5;
-          const STUDY_AVG = (STUDY_MAX - STUDY_MIN) / 2;
+
           nsp.force
             .force('sortedTypeX', null)
             .force('sortedTypeY', null)
