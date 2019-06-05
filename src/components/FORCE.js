@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import ReactDOM from 'react-dom';
+import { findDOMNode } from 'react-dom';
 import { $ } from './Context/ContextProvider';
 import {
   WORKERS,
@@ -402,7 +402,6 @@ const FORCE = function(nsp) {
       return { positionX, positionY };
     },
     colourByValue = ({ doColour, value }) => {
-      console.log({ doColour, value });
       if (doColour) {
         d3.selectAll('g.node circle')
           .transition()
@@ -473,7 +472,8 @@ const FORCE = function(nsp) {
             default:
               return lightGrey;
           }
-        });
+        })
+        .style('transform', 'scale(1)');
     },
     updateNode = selection => {
       selection
@@ -515,7 +515,7 @@ const FORCE = function(nsp) {
           .on('end', null),
       ),
     tick = that => {
-      that.d3Graph = d3.select(ReactDOM.findDOMNode(that));
+      that.d3Graph = d3.select(findDOMNode(that));
       nsp.force.on('tick', () => {
         that.d3Graph.call(updateGraph);
       });

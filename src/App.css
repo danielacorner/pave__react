@@ -4,7 +4,10 @@ body {
   overflow-x: hidden;
   background: white;
 }
-
+.node circle {
+  transition: transform 0.5s cubic-bezier(0.39, 0.575, 0.565, 1);
+  transform: scale(0);
+}
 .clusterLabel {
   font-family: system-ui;
   position: absolute;
