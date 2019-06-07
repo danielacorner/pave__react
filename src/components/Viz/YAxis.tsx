@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { ControlsContext } from '../Context/ContextProvider';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { WORKERS, SALARY, AUTOMATION_RISK, STUDY } from '../Controls/SortPanel';
 import { numberWithCommas } from './Legend';
 import { useWindowSize } from '../useWindowSize';
@@ -10,7 +10,6 @@ const YAxisStyles = styled.div`
   left: 0;
   width: 2px;
   height: 100%;
-  border: 1px solid tomato;
   display: flex;
   flex-direction: column;
   justify-content: center;

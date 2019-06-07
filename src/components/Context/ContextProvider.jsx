@@ -62,13 +62,12 @@ class ContextProvider extends Component {
         (value, index, self) => self.indexOf(value) === index,
       ),
       clusterCenters: [],
-      snapshots: [],
-      sortedType: false,
       sortedByValue: false,
       colouredByValue: false,
       svgBBox: 0,
-      summaryBarsActive: true,
       zScale: d3.scaleOrdinal(d3.schemeCategory10),
+      isOffsetTop: false,
+      offsetTop: 0,
     };
   }
 
@@ -123,14 +122,30 @@ class ContextProvider extends Component {
     );
   }
 
+  getOffsetTop() {
+    const graph = $('#graphContainer');
+    const graphRect = graph && graph.getBoundingClientRect();
+    const nodesG = $('#nodesG');
+    const nodesRect = nodesG && nodesG.getBoundingClientRect();
+
+    console.log({ nodesRect, graphRect });
+
+    const newOffsetTop =
+      this.state.sortedByValue && nodesRect.bottom > 0.975 * graphRect.bottom
+        ? -(nodesRect.bottom - 0.975 * graphRect.bottom)
+        : 0;
+
+    this.setState({
+      offsetTop: this.state.isOffsetTop ? this.state.offsetTop : newOffsetTop,
+      isOffsetTop: this.state.isOffsetTop || newOffsetTop !== 0,
+    });
+
+    return this.state.isOffsetTop ? this.state.offsetTop : newOffsetTop;
+  }
+
   getTranslate() {
     const { width, height } = getGraphContainerDims();
-
-    const nodesG = $('#nodesG');
-    const nodesRect = nodesG ? nodesG.getBoundingClientRect() : { left: 0 };
-    const offsetLeft =
-      nodesRect.left < 0 && this.state.sortedType ? -nodesRect.left : 0;
-    return `${+width / 2 + +offsetLeft}px,${+height / 2}px`;
+    return `${+width / 2}px,${+height / 2 + this.getOffsetTop()}px`;
   }
 
   getScale() {
@@ -138,11 +153,7 @@ class ContextProvider extends Component {
     const { width, height } = getGraphContainerDims();
 
     // zoom in until you hit the edge of...
-    const windowConstrainingLength = this.state.sortedType
-      ? // if split into clusters, constrain by the bigger length
-        Math.max(width, height) * 0.8
-      : // otherwise, constrain by the smaller length
-        Math.min(width, height);
+    const windowConstrainingLength = Math.min(width, height); // constrain by the smaller length
 
     const nodesG = $('#nodesG');
     const nodesBB = nodesG
@@ -172,6 +183,7 @@ class ContextProvider extends Component {
     this.setState({
       svgBBox,
     });
+
     // resize size legend scale
     d3.selectAll('.sizeCircle')
       .style('transform', `scale(${newScale})`)
@@ -217,7 +229,6 @@ class ContextProvider extends Component {
   };
 
   filterNodes = () => {
-    // todo: why are circles sometimes visible entering at the center if paused before state change?
     // pause the simulation if running
     !FORCE.paused && FORCE.stopSimulation();
 
@@ -249,6 +260,10 @@ class ContextProvider extends Component {
     );
   };
   handleFilterMouseup = () => {
+    this.setState({
+      isOffsetTop: false, // recalculate offsetTop after each filter
+      // offsetTop: 0,
+    });
     setTimeout(() => {
       // TODO: instead of actually moving the filters, could set the background fill instead?
       // set all filters to new minima on mouseup
@@ -268,6 +283,8 @@ class ContextProvider extends Component {
     this.setState(
       {
         filters: filtersReset,
+        offsetTop: 0,
+        isOffsetTop: false,
       },
       () => {
         this.filterNodes();
@@ -299,10 +316,6 @@ class ContextProvider extends Component {
       FORCE.colourByValue({ doColour: false, value: null });
     }
   };
-  toggleSummaryBars = () => {
-    console.log(this.state.summaryBarsActive);
-    this.setState({ summaryBarsActive: !this.state.summaryBarsActive });
-  };
   render() {
     return (
       <ControlsContext.Provider
@@ -317,10 +330,8 @@ class ContextProvider extends Component {
           handleFilterMouseup: this.handleFilterMouseup,
           setNodes: nodes => this.setState({ nodes: nodes }),
           sortByValue: this.sortByValue,
-          // sortType: this.sortType,
           colourByValue: this.colourByValue,
           setCurrentColor: this.setCurrentColor,
-          toggleSummaryBars: this.toggleSummaryBars,
         }}
       >
         {this.props.children}

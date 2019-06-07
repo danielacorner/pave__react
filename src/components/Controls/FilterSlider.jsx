@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Slider from '@material-ui/lab/Slider';
 import React, { useContext, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import {
   FILTER_RANGE,
   FILTER_TITLE,

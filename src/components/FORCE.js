@@ -40,9 +40,7 @@ const FORCE = function(nsp) {
     updatePositionsInterval,
     removeLabelsTimeout,
     positionX,
-    positionY,
-    sortedTypeX,
-    sortedTypeY;
+    positionY;
   const // optional: constrain nodes within a bounding box
     nodeTransform = d => {
       // const minLength = Math.min(width, height) * 0.75;
@@ -122,7 +120,7 @@ const FORCE = function(nsp) {
           }),
         )
         // optional center force re-centers the viewport around the nodes
-        // .force('center', d3.forceCenter([width / 2, height / 2]))
+        // .force('center', d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2))
         // forces that push nodes to the center
         .force('x', d3.forceX().strength(CENTER_GRAVITY))
         .force('y', d3.forceY().strength(CENTER_GRAVITY))
@@ -240,10 +238,8 @@ const FORCE = function(nsp) {
 
       if (!sortByValue) {
         nsp.force
-          .force('sortedTypeX', null)
-          .force('sortedTypeY', null)
-          .force('tempSizeX', null)
-          .force('tempSizeY', null)
+          .force('tempSortX', null)
+          .force('tempSortY', null)
           .force('sortedSizeY', null)
           .force('x', d3.forceX().strength(CENTER_GRAVITY))
           .force('y', d3.forceY().strength(CENTER_GRAVITY))
@@ -255,10 +251,8 @@ const FORCE = function(nsp) {
         const SORT_FRICTION = 0.015;
         if (sortByValue === WORKERS) {
           nsp.force
-            .force('sortedTypeX', null)
-            .force('sortedTypeY', null)
-            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 1.8))
-            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -16.6))
+            .force('tempSortX', d3.forceX().strength(CENTER_GRAVITY * 2.0))
+            .force('tempSortY', d3.forceY().strength(CENTER_GRAVITY * -18.6))
             .force(
               'sortedSizeY',
               d3
@@ -283,10 +277,8 @@ const FORCE = function(nsp) {
         } else if (sortByValue === AUTOMATION_RISK) {
           const DY = 235;
           nsp.force
-            .force('sortedTypeX', null)
-            .force('sortedTypeY', null)
-            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 1.8))
-            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -16.6))
+            .force('tempSortX', d3.forceX().strength(CENTER_GRAVITY * 1.8))
+            .force('tempSortY', d3.forceY().strength(CENTER_GRAVITY * -16.6))
             .force(
               'sortedSizeY',
               d3
@@ -309,10 +301,8 @@ const FORCE = function(nsp) {
           const DY = 200;
 
           nsp.force
-            .force('sortedTypeX', null)
-            .force('sortedTypeY', null)
-            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 1.8))
-            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -16.6))
+            .force('tempSortX', d3.forceX().strength(CENTER_GRAVITY * 1.8))
+            .force('tempSortY', d3.forceY().strength(CENTER_GRAVITY * -16.6))
             .force(
               'sortedSizeY',
               d3
@@ -339,10 +329,8 @@ const FORCE = function(nsp) {
           const DY = 260;
 
           nsp.force
-            .force('sortedTypeX', null)
-            .force('sortedTypeY', null)
-            .force('tempSizeX', d3.forceX().strength(CENTER_GRAVITY * 1.8))
-            .force('tempSizeY', d3.forceY().strength(CENTER_GRAVITY * -16.6))
+            .force('tempSortX', d3.forceX().strength(CENTER_GRAVITY * 1.8))
+            .force('tempSortY', d3.forceY().strength(CENTER_GRAVITY * -16.6))
             .force(
               'sortedSizeY',
               d3
@@ -532,8 +520,6 @@ const FORCE = function(nsp) {
   nsp.toggleClusterTags = toggleClusterTags;
   nsp.resetForceCharge = resetForceCharge;
   nsp.applySortForces = applySortForces;
-  nsp.sortedTypeX = sortedTypeX;
-  nsp.sortedTypeY = sortedTypeY;
   nsp.getPositionXY = getPositionXY;
   nsp.positionX = positionX;
   nsp.positionY = positionY;

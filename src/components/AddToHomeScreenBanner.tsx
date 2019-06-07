@@ -1,6 +1,6 @@
 import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import BalloonIcon from '../assets/BalloonIcon';
 import { brightGreen } from '../App';
 import { Button } from '@material-ui/core';

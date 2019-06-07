@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { MOBILE_MIN_WIDTH, TABLET_MIN_WIDTH } from '../../utils/constants';
 import Collapse from '@material-ui/core/Collapse';
 import Button from '@material-ui/core/Button';

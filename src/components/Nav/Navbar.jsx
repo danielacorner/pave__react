@@ -1,7 +1,7 @@
 import { Button } from '@material-ui/core';
 import MessageIcon from '@material-ui/icons/MessageRounded';
 import InfoIcon from '@material-ui/icons/InfoRounded';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import React, { useState } from 'react';
 import MediaQuery from 'react-responsive';
 import { MOBILE_MIN_WIDTH, TABLET_MIN_WIDTH } from '../../utils/constants';

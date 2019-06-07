@@ -1,11 +1,11 @@
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { COLOUR_SALARY, COLOUR_STUDY, COLOUR_RISK } from '../utils/constants';
 import Joyride, { EVENTS, ACTIONS, STATUS } from 'react-joyride';
 import * as d3 from 'd3';
 
-// import styled, { keyframes } from 'styled-components';
+// import styled, { keyframes } from 'styled-components/macro';
 
 //   const pulse = keyframes`
 //   0% {

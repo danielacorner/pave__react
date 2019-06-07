@@ -8,7 +8,7 @@ import DeleteIcon from '@material-ui/icons/DeleteForever';
 import CopyIcon from '@material-ui/icons/FileCopy';
 import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded';
 import React, { useContext, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { ControlsContext } from '../Context/ContextProvider';
 import SnapshotsButton from './SnapshotsButton';
 

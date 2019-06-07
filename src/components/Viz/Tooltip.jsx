@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
 import { getCircleColour, lightGrey } from '../FORCE';
 import { INDUSTRY } from '../Controls/SortPanel';

@@ -1,7 +1,8 @@
 TODOS:
 
 todo:
-- y axis scale on handleResize
+- ensure nodes always captured inside graphContainer on zoom
+  - adjust forces?
 - add more typescript
 - customize legend based on settingsContext
 
@@ -32,10 +33,7 @@ todo:
 - scatterplot?
 - consider adding setTimeout to FORCE sort functions to increase collision (or repel) force (to spread out circles after transitions)
 
-bug: filtering in colour-sorted mode shouldn't restart the simulation x,y forces
-
 Fancy Up the Visuals
-- transition circles on enter (attrtween?) with delay
 - transition reset filters button
 - smooth out the bouncy reset force after filtering
 

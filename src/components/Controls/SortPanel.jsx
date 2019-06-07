@@ -4,7 +4,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import RestoreIcon from '@material-ui/icons/RestoreRounded';
 import React, { useContext, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { ControlsContext } from '../Context/ContextProvider';
 import { MenuItem, Select } from '@material-ui/core';
 import FORCE from '../FORCE';

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { SLIDER_WIDTH_LG, SLIDER_WIDTH_MD } from '../../utils/constants';
 import { ControlsContext } from '../Context/ContextProvider';
 import FilterSlider from './FilterSlider';

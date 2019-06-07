@@ -1,5 +1,5 @@
 import React, { useEffect, useState, FormEvent } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { TextField, Button, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/CloseRounded';
 import SendIcon from '@material-ui/icons/SendRounded';

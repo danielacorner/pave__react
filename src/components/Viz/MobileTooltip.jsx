@@ -1,6 +1,6 @@
 import Drawer from '@material-ui/core/Drawer';
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { TABLET_MIN_WIDTH } from '../../utils/constants';
 import {
   numberWithCommas,

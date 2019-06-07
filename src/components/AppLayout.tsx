@@ -1,7 +1,7 @@
 // import queryString from 'query-string'
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { unstable_useMediaQuery } from '@material-ui/core/useMediaQuery';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import {
   TABLET_MIN_WIDTH,
   RESIZE_INTERVAL_MS,
@@ -30,6 +30,9 @@ const AppLayoutStyles = styled.div`
   /* Mobile */
   grid-template-rows: auto auto 1fr auto;
   min-height: 620px;
+  &.sorted {
+    min-height: 666px;
+  }
   @media (min-width: 340px) {
     min-height: 695px;
     /* TODO: expand vertically when sorted vertically by something... */
@@ -94,7 +97,7 @@ const AppLayout = () => {
   );
 
   const [expanded, setExpanded] = useState(INITIAL_EXPANDED_STATE);
-  const { getRadiusScale, zScale, uniqueClusterValues } = state;
+  const { getRadiusScale, zScale, uniqueClusterValues, sortedByValue } = state;
 
   useEffect(() => {
     window.addEventListener('mouseup', () => {
@@ -150,6 +153,7 @@ const AppLayout = () => {
   return (
     <>
       <AppLayoutStyles
+        className={sortedByValue ? 'sorted' : ''}
         onClick={
           isTabletOrLarger
             ? event => {

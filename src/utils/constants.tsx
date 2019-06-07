@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 export const COLOUR_SALARY = 'lime';
 export const COLOUR_STUDY = 'cornflowerblue';

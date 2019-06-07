@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import FORCE from '../FORCE';
 import Node from './Node';
 import SVG3dEffect from './SVG3dEffect';
