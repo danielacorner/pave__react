@@ -9,6 +9,7 @@ import { ControlsContext } from '../Context/ContextProvider';
 import { MenuItem, Select } from '@material-ui/core';
 import FORCE from '../FORCE';
 import { INITIAL_EXPANDED_STATE } from '../AppLayout';
+import { MOBILE_MIN_WIDTH } from '../../utils/constants';
 
 export const WORKERS = 'workers';
 export const AUTOMATION_RISK = 'automationRisk';
@@ -185,8 +186,24 @@ const SortButtonsStyles = styled.div`
     align-self: center;
     span {
       display: grid;
-      grid-template-columns: auto 1fr;
-      grid-gap: 4px;
+      align-items: center;
+      grid-template-columns: auto;
+      grid-template-rows: auto auto;
+      div {
+        display: grid;
+        align-items: center;
+        justify-items: center;
+      }
+    }
+    margin-right: 10px;
+    @media (min-width: ${MOBILE_MIN_WIDTH}px) {
+      margin-right: 0;
+      padding-left: 12px;
+      span {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto;
+        grid-gap: 4px;
+      }
     }
     &:not([disabled]) {
       background-color: ${inactive2};
@@ -432,7 +449,10 @@ const SortPanel = ({ setExpanded }) => {
         }
         variant="outlined"
       >
-        <RestoreIcon /> Reset
+        <div>
+          <RestoreIcon />
+        </div>
+        <div>Reset</div>
       </Button>
     </SortButtonsStyles>
   );
