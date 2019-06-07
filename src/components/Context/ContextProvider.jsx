@@ -128,8 +128,6 @@ class ContextProvider extends Component {
     const nodesG = $('#nodesG');
     const nodesRect = nodesG && nodesG.getBoundingClientRect();
 
-    console.log({ nodesRect, graphRect });
-
     const newOffsetTop =
       this.state.sortedByValue && nodesRect.bottom > 0.975 * graphRect.bottom
         ? -(nodesRect.bottom - 0.975 * graphRect.bottom)
@@ -296,7 +294,6 @@ class ContextProvider extends Component {
     const { radiusSelector, getRadiusScale } = this.state;
     const newSortedValue = this.state.sortedByValue && !doSort ? false : value;
     this.setState({ sortedByValue: newSortedValue });
-    // console.log(newSortedValue, this.state);
     FORCE.applySortForces({
       sortByValue: newSortedValue,
       getRadiusScale,
