@@ -1,8 +1,14 @@
+# language setting
+language: node_js
+node_js:
+  - 10
+
 build:
   ci:
     - npm install
     - npm test
   on_success:
+    - bash <(curl -s https://codecov.io/bash)
     - npm run deploy
 integrations:
   notifications:
@@ -10,3 +16,5 @@ integrations:
       type: email
       recipients:
         - danielcorner7@gmail.com
+      sendConsoleLogs: true
+      sendFailingSnippet: true
