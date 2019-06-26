@@ -5,6 +5,7 @@ import styled from 'styled-components/macro';
 import FORCE from '../FORCE';
 import { Selection } from 'd3';
 import { ControlsContext } from '../Context/ContextProvider';
+import { useMount } from '../../utils/constants';
 
 const MAX_LINE_LENGTH = 10;
 const MAX_TEXT_LENGTH = 30;
@@ -67,7 +68,7 @@ const Node = React.memo(
     const { state } = useContext(ControlsContext);
     const { colouredByValue, radiusSelector } = state;
 
-    useEffect(() => {
+    useMount(() => {
       d3Node.current = d3
         .select(findDOMNode(node.current) as any)
         .datum(data)
@@ -79,7 +80,7 @@ const Node = React.memo(
             colouredByValue,
           }),
         );
-    }, []);
+    });
 
     useEffect(() => {
       d3Node.current.datum(data).call((FORCE as any).updateNode);

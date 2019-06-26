@@ -20,6 +20,8 @@ export const SKILLS_LOGI = 'skillsLogi';
 export const SKILLS_MATH = 'skillsMath';
 export const SKILLS_COMP = 'skillsComp';
 
+export const useMount = cb => React.useEffect(cb, []); // eslint-disable-line
+
 export const FILTER_TITLE = (filterVar: string) => {
   switch (filterVar) {
     case SKILLS_LANG:

@@ -5,6 +5,7 @@ import Node from './Node';
 import SVG3dEffect from './SVG3dEffect';
 import { ControlsContext } from '../Context/ContextProvider';
 import YAxis from './YAxis';
+import { useMount } from '../../utils/constants';
 
 const VizStyles = styled.div`
   position: relative;
@@ -53,13 +54,13 @@ const Viz = ({
   const radiusScale = getRadiusScale();
 
   // CDM, CDU, CWU
-  useEffect(() => {
+  useMount(() => {
     // initialize the force simulation
     (FORCE as any).startSimulation(
       { nodes, radiusScale, clusterCenters, radiusSelector },
       vizRef.current,
     );
-  }, []);
+  });
 
   const handleClick = (nodeId: string) => {
     // apply 3d effect to clicked node
