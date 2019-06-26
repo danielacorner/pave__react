@@ -8,7 +8,7 @@ build:
     - npm install
     - npm test
   on_success:
-    - npx codecov@3
+    - npx codecov
     - npm run deploy
 integrations:
   notifications:
