@@ -1,0 +1,12 @@
+build:
+  ci:
+    - npm install
+    - npm test
+  on_success:
+    - npm run deploy
+integrations:
+  notifications:
+    - integrationName: email
+      type: email
+      recipients:
+        - danielcorner7@gmail.com
