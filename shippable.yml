@@ -8,7 +8,7 @@ build:
     - npm install
     - npm test
   on_success:
-    - bash <(curl -s https://codecov.io/bash)
+    - npx codecov@3
     - npm run deploy
 integrations:
   notifications:
