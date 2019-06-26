@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import 'jquery/src/jquery';
 import React, { useRef, useEffect, useContext } from 'react';
 import { findDOMNode } from 'react-dom';
 import styled from 'styled-components/macro';

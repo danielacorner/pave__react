@@ -52,6 +52,7 @@ const Viz = ({
   const { getRadiusScale, radiusSelector, clusterCenters, nodes } = state;
   const radiusScale = getRadiusScale();
 
+  // CDM, CDU, CWU
   useEffect(() => {
     // initialize the force simulation
     (FORCE as any).startSimulation(

@@ -1,6 +1,13 @@
-TODOS:
-
 todo:
+- categorize todos! ha
+
+
+- disable the tour in local storage!
+- represent the data in a histogram
+  - "how is the data represented"
+- add downshift https://material-ui.com/demos/autocomplete/
+
+- favourites in local storage!
 - ensure nodes always captured inside graphContainer on zoom
   - adjust forces?
 - add more typescript
@@ -16,14 +23,11 @@ todo:
   - jobs in high demand
   - soft skills and correlated jobs
   - more modern job categories
-- add downshift https://material-ui.com/demos/autocomplete/
 - desktop tooltip click to expand https://material-ui.com/demos/expansion-panels/ (turn off bottomsheet)
 - tabs for different analysis modes https://material-ui.com/demos/tabs/
 - menu for tooltip action items (favourite, related jobs...)
 - snake oil supplements single y-axis to start
 - bottom navigation for mobile graph mode?
-- disable synchronized sliders
-- feedback form
 - filters should be coloured upwards? (reversed, start filled, drag right to empty)
 - add more info to bottomsheet tooltip (links...)
 - fix resize/translate function when size-sorted (circles shouldn't overlap container)

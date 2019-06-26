@@ -1,6 +1,6 @@
 // import queryString from 'query-string'
 import React, { useContext, useState, useEffect, useRef } from 'react';
-import { unstable_useMediaQuery } from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled from 'styled-components/macro';
 import {
   TABLET_MIN_WIDTH,
@@ -41,13 +41,11 @@ const AppLayoutStyles = styled.div`
     }
   }
   /* Tablet and up */
+  padding: 10px 10px 0 10px;
   @media (min-width: 400px) {
     height: calc(100vh - ${NAV_HEIGHT}px);
     overflow: hidden;
     grid-gap: 16px;
-  }
-  padding: 10px 10px 0 10px;
-  @media (min-width: 400px) {
     padding: 10px 20px 0 20px;
   }
   box-sizing: border-box;
@@ -146,9 +144,7 @@ const AppLayout = () => {
     }, TOOLTIP_DURATION);
   };
 
-  const isTabletOrLarger = unstable_useMediaQuery(
-    `(min-width: ${TABLET_MIN_WIDTH}px)`,
-  );
+  const isTabletOrLarger = useMediaQuery(`(min-width: ${TABLET_MIN_WIDTH}px)`);
 
   return (
     <>
