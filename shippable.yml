@@ -8,9 +8,7 @@ build:
     - npm install
     - npm test
   on_success:
-    - npm install -g codecov istanbul
-    - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
-    - codecov -t "a062fec7-23ca-4e43-95fb-5022bf8a81f7"
+    # - npx codecov -t "a062fec7-23ca-4e43-95fb-5022bf8a81f7"
     - npm run deploy
 integrations:
   notifications:
