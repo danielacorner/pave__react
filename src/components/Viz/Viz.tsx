@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import styled from 'styled-components/macro';
 import FORCE from '../FORCE';
 import Node from './Node';
