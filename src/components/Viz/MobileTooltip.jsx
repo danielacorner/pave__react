@@ -96,7 +96,7 @@ const MobileTooltipStyles = styled.div`
         height: 12px;
         border: 1px solid black;
         border-radius: 100%;
-        transition: ${TOOLTIP_TRANSITION('all', 0.6)};
+        transition: all 0.6s ${TOOLTIP_TRANSITION};
       }
     }
   }
@@ -105,7 +105,7 @@ const MobileTooltipStyles = styled.div`
     position: relative;
   }
   .workersPointer {
-    transition: ${TOOLTIP_TRANSITION('all', 0.4)};
+    transition: all 0.4s ${TOOLTIP_TRANSITION};
     position: absolute;
     height: 1px;
     top: 1.25ch;

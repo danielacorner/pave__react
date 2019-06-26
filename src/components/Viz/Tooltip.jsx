@@ -4,8 +4,7 @@ import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
 import { getCircleColour, lightGrey } from '../FORCE';
 import { INDUSTRY } from '../Controls/SortPanel';
 import { MAX_TOOLTIP_LINES } from './MobileTooltip';
-export const TOOLTIP_TRANSITION = (type, time) =>
-  `${type} ${time}s cubic-bezier(0.165, 0.84, 0.44, 1)`;
+export const TOOLTIP_TRANSITION = `cubic-bezier(0.165, 0.84, 0.44, 1)`;
 
 const TooltipStyles = styled.div`
   .giveMeEllipsis {
@@ -71,7 +70,7 @@ const TooltipStyles = styled.div`
         height: 12px;
         border: 1px solid black;
         border-radius: 100%;
-        transition: ${TOOLTIP_TRANSITION('all', 0.6)};
+        transition: all 0.6s ${TOOLTIP_TRANSITION};
       }
     }
   }
@@ -80,7 +79,7 @@ const TooltipStyles = styled.div`
     position: relative;
   }
   .workersPointer {
-    transition: ${TOOLTIP_TRANSITION('all', 0.4)};
+    transition: all 0.4s ${TOOLTIP_TRANSITION};
     position: absolute;
     height: 1px;
     top: 1.25ch;
@@ -124,14 +123,13 @@ const TooltipStyles = styled.div`
 export const FloatingCircleStyles = styled.div`
   position: absolute;
   .floatingCircle {
-    opacity:0.4;
-    transition: ${TOOLTIP_TRANSITION('all', 0.2)};
+    opacity: 0.4;
+    transition: all 0.2s ${TOOLTIP_TRANSITION};
     position: relative;
     border-radius: 100%;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
     .floatingCircleMeasure {
       transition: none;
-      /* transition: ${TOOLTIP_TRANSITION(0.4)}; */
       position: absolute;
       background: black;
       left: -6px;
@@ -139,7 +137,6 @@ export const FloatingCircleStyles = styled.div`
     }
     .floatingCircleTick {
       transition: none;
-      /* transition: ${TOOLTIP_TRANSITION(0.4)}; */
       position: absolute;
       background: black;
       width: 6px;

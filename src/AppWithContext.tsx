@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import AppLayout from './components/AppLayout';
-import { NavBar } from './components/Nav/Navbar';
+import { NavBar } from './components/Nav/NavBar';
 import { JoyrideWithSteps } from './components/Joyride';
 
 function AppWithContext() {
