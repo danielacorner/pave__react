@@ -1,5 +1,11 @@
 // import queryString from 'query-string'
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+} from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import styled from 'styled-components/macro';
 import {
@@ -100,15 +106,25 @@ const AppLayout = () => {
 
   const [isGraphView, setIsGraphView] = useState(false);
 
+  const onMouseUp = useCallback(() => {
+    if ((FORCE as any).paused && !isGraphView) {
+      // restartSimulation();
+    }
+  }, [isGraphView]);
+
   useEffect(() => {
-    window.addEventListener('mouseup', () => {
-      if ((FORCE as any).paused) {
-        restartSimulation();
-      }
-    });
-    const resizeTimer = setInterval(handleResize, RESIZE_INTERVAL_MS);
-    return () => clearInterval(resizeTimer);
-  }, [handleResize, restartSimulation]);
+    if (!isGraphView) {
+      window.addEventListener('mouseup', onMouseUp);
+    }
+    const resizeTimer = setInterval(
+      handleResize,
+      isGraphView ? RESIZE_INTERVAL_MS : 1000,
+    );
+    return () => {
+      clearInterval(resizeTimer);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, [handleResize, restartSimulation, isGraphView, onMouseUp]);
 
   const legendColours = uniqueClusterValues.map((val: number) => {
     return { colour: zScale(val), text: val };

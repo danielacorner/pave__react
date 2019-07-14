@@ -54,7 +54,7 @@ const Viz = ({
   const [activeNodeId, setActiveNodeId] = useState(null as string | null);
   const vizRef = useRef(null);
 
-  const { state } = useContext(ControlsContext);
+  const { state, restartSimulation } = useContext(ControlsContext);
   const { getRadiusScale, radiusSelector, clusterCenters, nodes } = state;
   const radiusScale = getRadiusScale();
 
@@ -77,24 +77,37 @@ const Viz = ({
 
   const { innerWidth, innerHeight } = useWindowSize();
 
+  const prevPositions = {};
   // switch to graph view and back
   useEffect(() => {
     if (isGraphView) {
-      (FORCE as any).stopSimulation();
+      (FORCE as any).stopSimulation(true);
       setTimeout(() => {
         d3.selectAll('.node')
           .transition()
           .ease(d3.easeCubicInOut)
           .delay((d, i) => i * 0.3)
           .duration(700)
-          .attr('transform', (d: any) => {
-            return `translate(${innerWidth * d.automationRisk -
-              innerWidth / 2},${(innerHeight * d.yearsStudy) / STUDY_AVG -
-              innerHeight / 2})`;
+          .attr('transform', function(d: any) {
+            prevPositions[d.job] = d3.select(this).attr('transform');
+            const x = innerWidth * d.automationRisk - innerWidth / 2;
+            const y = (innerHeight * d.yearsStudy) / STUDY_AVG - innerHeight;
+            return `translate(${x * 0.7},${y * 0.4})`;
           });
       }, 0);
+    } else {
+      if ((FORCE as any).paused) {
+        // d3.selectAll('.node')
+        //   .transition()
+        //   .ease(d3.easeCubicInOut)
+        //   .duration(400)
+        //   .attr('transform', (d: any) => prevPositions[d.job]);
+        setTimeout(() => {
+          restartSimulation();
+        }, 500);
+      }
     }
-  }, [isGraphView]);
+  }, [isGraphView, innerHeight, innerWidth, restartSimulation]);
 
   return (
     <VizStyles ref={vizRef} id="graphContainer">

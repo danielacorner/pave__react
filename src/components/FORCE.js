@@ -36,11 +36,7 @@ export const STUDY_MIN = 0.5;
 export const STUDY_AVG = (STUDY_MAX - STUDY_MIN) / 2;
 
 const FORCE = function(nsp) {
-  let paused,
-    updatePositionsInterval,
-    removeLabelsTimeout,
-    positionX,
-    positionY;
+  let paused, updatePositionsInterval, removeLabelsTimeout, isGraphView;
   const // optional: constrain nodes within a bounding box
     nodeTransform = d => {
       // const minLength = Math.min(width, height) * 0.75;
@@ -223,12 +219,7 @@ const FORCE = function(nsp) {
         }),
       );
     },
-    applySortForces = ({
-      sortByValue,
-      getRadiusScale,
-      radiusSelector,
-      // numClusters,
-    }) => {
+    applySortForces = ({ sortByValue, getRadiusScale, radiusSelector }) => {
       nsp.resetForceCharge({ getRadiusScale, radiusSelector });
 
       const radiusScale = getRadiusScale();
@@ -357,38 +348,6 @@ const FORCE = function(nsp) {
       }
       nsp.force.restart();
     },
-    getPositionXY = ({ numClusters }) => {
-      const { width, height } = $('#graphContainer').getBoundingClientRect();
-      // split the clusters evenly into the allotted space:
-      const growXY = 1.5;
-      // 5 columns maximum
-      const minColWidth = 225;
-      const numCols = Math.min(Math.ceil(width / minColWidth), 5);
-      const growX = numCols === 2 ? 3 : 1;
-      positionX = d => {
-        // space horizontally into columns
-        for (let i = numCols; i >= 0; i--) {
-          // if you're in this column, go to position i
-          if (d.cluster % numCols === i)
-            return (i / numCols - 0.4) * width * growX * growXY;
-          //! -0.4 works, why is -0.5 too much?
-        }
-      };
-
-      // 10 rows maximum:
-      const numRows = Math.min(Math.ceil(numClusters / numCols), 10);
-      const growY = numRows === 2 ? 0.4 : numCols === 2 ? 2.5 : 1;
-      positionY = d => {
-        // space vertically into rows
-        for (let i = numRows; i >= 0; i--) {
-          // if you're in this row, go to position i
-          if (d.cluster % numRows === i)
-            return (i / numRows - 0.4) * height * growY * growXY;
-          //! -0.4 works, why is -0.5 too much?
-        }
-      };
-      return { positionX, positionY };
-    },
     colourByValue = ({ doColour, value }) => {
       if (doColour) {
         d3.selectAll('g.node circle')
@@ -413,12 +372,14 @@ const FORCE = function(nsp) {
         clusterCenters,
       });
       nsp.tick(that);
-      nsp.drag();
+      // nsp.drag();
     },
-    stopSimulation = () => {
+    stopSimulation = (newIsGraphView = false) => {
       nsp.force.stop();
       paused = true;
       nsp.paused = true;
+      isGraphView = newIsGraphView;
+      nsp.isGraphView = newIsGraphView;
     },
     restartSimulation = (
       nodes,
@@ -464,44 +425,43 @@ const FORCE = function(nsp) {
         .style('transform', 'scale(1)');
     },
     updateNode = selection => {
-      selection
-        .attr('transform', d => (d ? nodeTransform(d) : ''))
-        .attr('cx', d => (d ? d.x : 0))
-        .attr('cy', d => (d ? d.y : 0));
+      selection.attr('transform', d => (d ? nodeTransform(d) : ''));
+      // .attr('cx', d => (d ? d.x : 0))
+      // .attr('cy', d => (d ? d.y : 0));
     },
     updateGraph = selection => {
       selection.selectAll('.node').call(updateNode);
     },
-    dragStarted = d => {
-      if (!d3.event.active) nsp.force.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    },
-    dragging = d => {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
-    },
-    dragEnded = d => {
-      if (!d3.event.active) nsp.force.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    },
-    drag = () =>
-      d3.selectAll('g.node').call(
-        d3
-          .drag()
-          .on('start', dragStarted)
-          .on('drag', dragging)
-          .on('end', dragEnded),
-      ),
-    removeDrag = () =>
-      d3.selectAll('g.node').call(
-        d3
-          .drag()
-          .on('start', null)
-          .on('drag', null)
-          .on('end', null),
-      ),
+    // dragStarted = d => {
+    //   if (!d3.event.active) nsp.force.alphaTarget(0.3).restart();
+    //   d.fx = d.x;
+    //   d.fy = d.y;
+    // },
+    // dragging = d => {
+    //   d.fx = d3.event.x;
+    //   d.fy = d3.event.y;
+    // },
+    // dragEnded = d => {
+    //   if (!d3.event.active) nsp.force.alphaTarget(0);
+    //   d.fx = null;
+    //   d.fy = null;
+    // },
+    // drag = () =>
+    //   d3.selectAll('g.node').call(
+    //     d3
+    //       .drag()
+    //       .on('start', dragStarted)
+    //       .on('drag', dragging)
+    //       .on('end', dragEnded),
+    //   ),
+    // removeDrag = () =>
+    //   d3.selectAll('g.node').call(
+    //     d3
+    //       .drag()
+    //       .on('start', null)
+    //       .on('drag', null)
+    //       .on('end', null),
+    //   ),
     tick = that => {
       that.d3Graph = d3.select(findDOMNode(that));
       nsp.force.on('tick', () => {
@@ -520,18 +480,16 @@ const FORCE = function(nsp) {
   nsp.toggleClusterTags = toggleClusterTags;
   nsp.resetForceCharge = resetForceCharge;
   nsp.applySortForces = applySortForces;
-  nsp.getPositionXY = getPositionXY;
-  nsp.positionX = positionX;
-  nsp.positionY = positionY;
   nsp.colourByValue = colourByValue;
   nsp.restartSimulation = restartSimulation;
-  nsp.dragStarted = dragStarted;
-  nsp.dragging = dragging;
-  nsp.dragEnded = dragEnded;
-  nsp.drag = drag;
-  nsp.removeDrag = removeDrag;
+  // nsp.dragStarted = dragStarted;
+  // nsp.dragging = dragging;
+  // nsp.dragEnded = dragEnded;
+  // nsp.drag = drag;
+  // nsp.removeDrag = removeDrag;
   nsp.tick = tick;
   nsp.paused = paused;
+  nsp.isGraphView = isGraphView;
   nsp.color = color;
 
   return nsp;
