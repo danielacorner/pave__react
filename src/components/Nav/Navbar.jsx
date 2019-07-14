@@ -8,7 +8,7 @@ import { MOBILE_MIN_WIDTH, TABLET_MIN_WIDTH } from '../../utils/constants';
 import { FeedbackForm } from '../FeedbackForm';
 export const NAV_HEIGHT = 68;
 const NAV_PADDING_TOP = 12;
-const NavBarStyles = styled.div`
+const NavbarStyles = styled.div`
   height: ${NAV_HEIGHT - NAV_PADDING_TOP}px;
   background: white;
   display: grid;
@@ -76,7 +76,7 @@ const NavBarStyles = styled.div`
   }
 `;
 
-export const NavBar = ({
+export const Navbar = ({
   isJoyrideEnabled,
   setIsJoyrideEnabled,
   setRun,
@@ -87,7 +87,7 @@ export const NavBar = ({
   return (
     <MediaQuery query={`(min-width: ${TABLET_MIN_WIDTH}px)`}>
       {isTabletOrLarger => (
-        <NavBarStyles>
+        <NavbarStyles>
           <div className="titleColumn">
             <div className="titleWrapper">
               <h1 className="title">
@@ -125,7 +125,7 @@ export const NavBar = ({
           {isFeedbackOpen && (
             <FeedbackForm setIsFeedbackOpen={setIsFeedbackOpen} />
           )}
-        </NavBarStyles>
+        </NavbarStyles>
       )}
     </MediaQuery>
   );

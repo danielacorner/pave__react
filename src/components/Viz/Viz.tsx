@@ -1,11 +1,14 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import styled from 'styled-components/macro';
-import FORCE from '../FORCE';
+import FORCE, { STUDY_AVG } from '../FORCE';
 import Node from './Node';
 import SVG3dEffect from './SVG3dEffect';
 import { ControlsContext } from '../Context/ContextProvider';
 import YAxis from './YAxis';
 import { useMount } from '../../utils/constants';
+import * as d3 from 'd3';
+import { useWindowSize } from '../useWindowSize';
+import GraphViewAxes from './GraphViewAxes';
 
 const VizStyles = styled.div`
   position: relative;
@@ -39,12 +42,14 @@ interface VizProps {
   onMouseOut(event: any): void;
   onClick(event: Event, node: any): void;
   isTabletOrLarger: boolean;
+  isGraphView: boolean;
 }
 const Viz = ({
   onMouseMove,
   onMouseOut,
   onClick,
   isTabletOrLarger,
+  isGraphView,
 }: VizProps) => {
   const [activeNodeId, setActiveNodeId] = useState(null as string | null);
   const vizRef = useRef(null);
@@ -69,6 +74,27 @@ const Viz = ({
 
   const MAX_NODES_WITH_TEXT_VISIBLE = 50;
   const isNodeTextVisible = nodes.length < MAX_NODES_WITH_TEXT_VISIBLE;
+
+  const { innerWidth, innerHeight } = useWindowSize();
+
+  // switch to graph view and back
+  useEffect(() => {
+    if (isGraphView) {
+      (FORCE as any).stopSimulation();
+      setTimeout(() => {
+        d3.selectAll('.node')
+          .transition()
+          .ease(d3.easeCubicInOut)
+          .delay((d, i) => i * 0.3)
+          .duration(700)
+          .attr('transform', (d: any) => {
+            return `translate(${innerWidth * d.automationRisk -
+              innerWidth / 2},${(innerHeight * d.yearsStudy) / STUDY_AVG -
+              innerHeight / 2})`;
+          });
+      }, 0);
+    }
+  }, [isGraphView]);
 
   return (
     <VizStyles ref={vizRef} id="graphContainer">
@@ -97,6 +123,7 @@ const Viz = ({
         <SVG3dEffect />
       </svg>
       <YAxis />
+      <GraphViewAxes {...{ isGraphView }} />
     </VizStyles>
   );
 };

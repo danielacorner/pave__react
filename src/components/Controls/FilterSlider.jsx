@@ -114,8 +114,8 @@ const FilterSlider = ({
   filterVar,
   onMouseUp,
   onChange,
-  expanded,
-  setExpanded,
+  isExpanded,
+  setIsExpanded,
 }) => {
   const [minMaxVisible, setMinMaxVisible] = useState(false);
 
@@ -128,7 +128,7 @@ const FilterSlider = ({
     onMouseUp,
   };
 
-  const filterExpanded = expanded[filterVar];
+  const filterIsExpanded = isExpanded[filterVar];
 
   return (
     <LabelAndSliderStyles className="labelAndSlider">
@@ -136,15 +136,15 @@ const FilterSlider = ({
         <Tooltip title={SLIDER_TOOLTIP_TEXT(filterVar)}>
           <Typography id="label">{FILTER_TITLE(filterVar)}</Typography>
         </Tooltip>
-        <Tooltip title={(filterExpanded ? 'Hide' : 'View') + ' Sub-Skills'}>
+        <Tooltip title={(filterIsExpanded ? 'Hide' : 'View') + ' Sub-Skills'}>
           <IconButton
             className={`expand expand${filterVar}${
-              filterExpanded ? ' expandOpen' : ''
+              filterIsExpanded ? ' expandOpen' : ''
             }`}
             onClick={() =>
-              setExpanded({ ...expanded, [filterVar]: !filterExpanded })
+              setIsExpanded({ ...isExpanded, [filterVar]: !filterIsExpanded })
             }
-            aria-expanded={filterExpanded}
+            aria-expanded={filterIsExpanded}
             aria-label="Show more"
           >
             <ExpandMoreIcon />
@@ -170,7 +170,7 @@ const FilterSlider = ({
       <MinMax visible={minMaxVisible} title={filterVar} />
       <Collapse
         className="collapse"
-        in={filterExpanded}
+        in={filterIsExpanded}
         timeout="auto"
         unmountOnExit
       >

@@ -215,7 +215,7 @@ const SortButtonsStyles = styled.div`
   }
 `;
 
-const SortPanel = ({ setExpanded }) => {
+const SortPanel = ({ setIsExpanded, isGraphView }) => {
   const [activeSwitches, setActiveSwitches] = useState([]);
   const [valueToColourBy, setValueToColourBy] = useState(INDUSTRY);
   const [valueToSortBy, setValueToSortBy] = useState(WORKERS);
@@ -254,7 +254,7 @@ const SortPanel = ({ setExpanded }) => {
       context.colourByValue(valueToColourBy);
     }
     context.resetFilters();
-    setExpanded(INITIAL_EXPANDED_STATE);
+    setIsExpanded(INITIAL_EXPANDED_STATE);
     setValueToSortBy(WORKERS);
     setValueToColourBy(INDUSTRY);
     setActiveSwitches([]);
@@ -264,6 +264,7 @@ const SortPanel = ({ setExpanded }) => {
       <div className="sortBtnGroup">
         <Tooltip title={getTooltipText(valueToSortBy, SORT_BY_VALUE)}>
           <FormControlLabel
+            disabled={isGraphView}
             className="formControl sortByValue"
             control={
               <Switch
@@ -382,11 +383,8 @@ const SortPanel = ({ setExpanded }) => {
                     event.preventDefault();
                   }}
                   onChange={event => {
-                    console.log(event.target.value);
                     setValueToColourBy(event.target.value);
                     if (activeSwitches.includes(COLOUR_BY_VALUE)) {
-                      console.log(event);
-                      console.log('colouring by', event.target.value);
                       FORCE.colourByValue({
                         doColour: true,
                         value: event.target.value,

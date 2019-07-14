@@ -34,7 +34,7 @@ const FiltersPanelStyles = styled.div`
   }
 `;
 
-const FiltersPanel = ({ filterVariables, expanded, setExpanded }) => {
+const FiltersPanel = ({ filterVariables, isExpanded, setIsExpanded }) => {
   const { handleFilterMouseup, handleFilterChange, state } = useContext(
     ControlsContext,
   );
@@ -44,8 +44,8 @@ const FiltersPanel = ({ filterVariables, expanded, setExpanded }) => {
       <div className="slidersDiv">
         {filterVariables.map(filterVar => (
           <FilterSlider
-            expanded={expanded}
-            setExpanded={setExpanded}
+            isExpanded={isExpanded}
+            setIsExpanded={setIsExpanded}
             key={filterVar}
             filterVar={filterVar}
             value={state.filters[filterVar]}

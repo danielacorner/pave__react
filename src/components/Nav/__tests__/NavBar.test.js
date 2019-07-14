@@ -1,6 +1,6 @@
 import React from 'react';
-import { NavBar } from '../NavBar';
+import { Navbar } from '../Navbar';
 
 test('renders', () => {
-  expect(<NavBar />).toMatchSnapshot();
+  expect(<Navbar />).toMatchSnapshot();
 });

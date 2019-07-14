@@ -21,6 +21,7 @@ import Legend from './Viz/Legend';
 import FORCE from './FORCE';
 import { useWindowSize } from './useWindowSize';
 import { NAV_HEIGHT } from './Nav/Navbar';
+import GraphViewButton from './Controls/GraphViewButton';
 
 const AppLayoutStyles = styled.div`
   position: relative;
@@ -94,8 +95,10 @@ const AppLayout = () => {
     ControlsContext,
   );
 
-  const [expanded, setExpanded] = useState(INITIAL_EXPANDED_STATE);
+  const [isExpanded, setIsExpanded] = useState(INITIAL_EXPANDED_STATE);
   const { getRadiusScale, zScale, uniqueClusterValues, sortedByValue } = state;
+
+  const [isGraphView, setIsGraphView] = useState(false);
 
   useEffect(() => {
     window.addEventListener('mouseup', () => {
@@ -161,7 +164,7 @@ const AppLayout = () => {
                   (event.target as HTMLElement).id === 'svg' ||
                   (event.target as HTMLElement).nodeName === 'circle'
                 ) {
-                  setExpanded(INITIAL_EXPANDED_STATE);
+                  setIsExpanded(INITIAL_EXPANDED_STATE);
                 }
               }
             : event => {
@@ -173,7 +176,7 @@ const AppLayout = () => {
                   (event.target as HTMLElement).id === 'svg' ||
                   (event.target as HTMLElement).nodeName === 'circle'
                 ) {
-                  setExpanded(INITIAL_EXPANDED_STATE);
+                  setIsExpanded(INITIAL_EXPANDED_STATE);
                 }
                 if ((event.target as HTMLElement).nodeName !== 'circle') {
                   setMobileTooltipProps(null);
@@ -181,14 +184,9 @@ const AppLayout = () => {
               }
         }
       >
-        <FiltersPanel
-          filterVariables={filterVariables}
-          expanded={expanded}
-          setExpanded={setExpanded}
-        />
-        <SortPanel setExpanded={setExpanded} />
+        <FiltersPanel {...{ filterVariables, isExpanded, setIsExpanded }} />
+        <SortPanel {...{ setIsExpanded, isGraphView }} />
         <Viz
-          isTabletOrLarger={isTabletOrLarger}
           onMouseMove={
             isTabletOrLarger
               ? (event: Event, datum: any) => {
@@ -224,9 +222,14 @@ const AppLayout = () => {
                 }
               : () => {}
           }
-          onMouseOut={isTabletOrLarger ? stopTooltipActive : () => {}}
+          {...{
+            onMouseOut: isTabletOrLarger ? stopTooltipActive : () => {},
+            isGraphView,
+            isTabletOrLarger,
+          }}
         />
         <Legend {...legendProps} />
+        <GraphViewButton {...{ isGraphView, setIsGraphView }} />
       </AppLayoutStyles>
 
       {isTooltipActive && isTabletOrLarger ? (

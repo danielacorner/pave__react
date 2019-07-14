@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import AppLayout from './components/AppLayout';
-import { NavBar } from './components/Nav/NavBar';
+import { Navbar } from './components/Nav/Navbar';
 import { JoyrideWithSteps } from './components/Joyride';
 
 function AppWithContext() {
@@ -19,7 +19,7 @@ function AppWithContext() {
   return (
     <React.Fragment>
       {isJoyrideEnabled && <JoyrideWithSteps {...joyRideProps} />}
-      <NavBar {...joyRideProps} />
+      <Navbar {...joyRideProps} />
       <AppLayout />
     </React.Fragment>
   );
