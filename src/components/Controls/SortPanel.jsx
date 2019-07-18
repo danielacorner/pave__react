@@ -288,60 +288,15 @@ const SortPanel = ({ setIsExpanded, isGraphView }) => {
                     : ''}{' '}
                   by{' '}
                 </div>
-                <Select
-                  classes={{ root: 'select' }}
+                <VariablePickerMenu
                   value={valueToSortBy}
-                  onClick={event => event.preventDefault()}
-                  onMouseOver={event => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                  }}
-                  onTouchStart={event => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                  }}
                   onChange={event => {
                     setValueToSortBy(event.target.value);
                     if (activeSwitches.includes(SORT_BY_VALUE)) {
                       context.sortByValue(event.target.value, true);
                     }
                   }}
-                >
-                  <MenuItem value="workers">
-                    <Tooltip
-                      placement="right"
-                      title={'Number of people working in this job'}
-                    >
-                      <div>Workers</div>
-                    </Tooltip>
-                  </MenuItem>
-                  <MenuItem value={AUTOMATION_RISK}>
-                    <Tooltip
-                      placement="right"
-                      title={'Risk that tasks will be replaced by machine work'}
-                    >
-                      <div>Risk</div>
-                    </Tooltip>
-                  </MenuItem>
-                  <MenuItem value="salary">
-                    <Tooltip
-                      placement="right"
-                      title={'Average yearly income in $CAD'}
-                    >
-                      <div>Salary</div>
-                    </Tooltip>
-                  </MenuItem>
-                  <MenuItem value="study">
-                    <Tooltip
-                      placement="right"
-                      title={
-                        'Average years of study for people working in this job (not necessarily required for the job)'
-                      }
-                    >
-                      <div>Study</div>
-                    </Tooltip>
-                  </MenuItem>
-                </Select>
+                />
               </div>
             }
           />
@@ -372,6 +327,7 @@ const SortPanel = ({ setIsExpanded, isGraphView }) => {
                   by{' '}
                 </div>
                 <VariablePickerMenu
+                  isIndustry={true}
                   value={valueToColourBy}
                   onChange={event => {
                     setValueToColourBy(event.target.value);
@@ -384,66 +340,6 @@ const SortPanel = ({ setIsExpanded, isGraphView }) => {
                     }
                   }}
                 />
-                {/* //   <Select
-                //   classes={{ root: 'select' }}
-                //   value={valueToColourBy}
-                //   onClick={event => event.preventDefault()}
-                //   onMouseOver={event => {
-                //     event.stopPropagation();
-                //     event.preventDefault();
-                //   }}
-                //   onTouchStart={event => {
-                //     event.stopPropagation();
-                //     event.preventDefault();
-                //   }}
-                //   onChange={event => {
-                //     setValueToColourBy(event.target.value);
-                //     if (activeSwitches.includes(COLOUR_BY_VALUE)) {
-                //       FORCE.colourByValue({
-                //         doColour: true,
-                //         value: event.target.value,
-                //       });
-                //       context.setCurrentColor(event.target.value);
-                //     }
-                //   }}
-                // >
-                //   <MenuItem value={INDUSTRY}>
-                //     <Tooltip
-                //       placement="right"
-                //       title={
-                //         'Job industry, jobs that are related to each other'
-                //       }
-                //     >
-                //       <div>Type</div>
-                //     </Tooltip>
-                //   </MenuItem>
-                //   <MenuItem value={AUTOMATION_RISK}>
-                //     <Tooltip
-                //       placement="right"
-                //       title={'Risk that tasks will be replaced by machine work'}
-                //     >
-                //       <div>Risk</div>
-                //     </Tooltip>
-                //   </MenuItem>
-                //   <MenuItem value="salary">
-                //     <Tooltip
-                //       placement="right"
-                //       title={'Average yearly income in $CAD'}
-                //     >
-                //       <div>Salary</div>
-                //     </Tooltip>
-                //   </MenuItem>
-                //   <MenuItem value={STUDY}>
-                //     <Tooltip
-                //       placement="right"
-                //       title={
-                //         'Average years of study for people working in this job (not necessarily required for the job)'
-                //       }
-                //     >
-                //       <div>Study</div>
-                //     </Tooltip>
-                //   </MenuItem>
-                // </Select> */}
               </div>
             }
           />

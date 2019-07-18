@@ -4,9 +4,9 @@ import styled from 'styled-components/macro';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import { MenuItem, Select } from '@material-ui/core';
-import { AUTOMATION_RISK, WORKERS, SALARY, STUDY } from './SortPanel';
+import { AUTOMATION_RISK, WORKERS, SALARY, STUDY, INDUSTRY } from './SortPanel';
 
-export const VariablePickerMenu = ({ value, onChange }) => (
+export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
   <Select
     classes={{ root: 'select' }}
     value={value}
@@ -21,9 +21,16 @@ export const VariablePickerMenu = ({ value, onChange }) => (
     }}
     onChange={onChange}
   >
-    <MenuItem value={WORKERS}>
-      <Tooltip placement="right" title={'Number of people working in this job'}>
-        <div>Workers</div>
+    <MenuItem value={isIndustry ? INDUSTRY : WORKERS}>
+      <Tooltip
+        placement="right"
+        title={
+          isIndustry
+            ? 'Job industry, jobs that are related to each other'
+            : 'Number of people working in this job'
+        }
+      >
+        <div>{isIndustry ? 'Type' : 'Workers'}</div>
       </Tooltip>
     </MenuItem>
     <MenuItem value={AUTOMATION_RISK}>
