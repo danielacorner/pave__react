@@ -1,5 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import { STUDY_AVG } from '../FORCE';
+
+export const getGraphViewPositions = ({ d, innerWidth, innerHeight }) => {
+  const x = innerWidth * d.automationRisk - innerWidth / 2;
+  const y = (innerHeight * d.yearsStudy) / STUDY_AVG - innerHeight;
+  return { x, y };
+};
 
 const AxisStyles = styled.div`
   position: absolute;

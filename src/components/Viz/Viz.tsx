@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import styled from 'styled-components/macro';
-import FORCE, { STUDY_AVG } from '../FORCE';
+import FORCE from '../FORCE';
 import Node from './Node';
 import SVG3dEffect from './SVG3dEffect';
 import { ControlsContext } from '../Context/ContextProvider';
@@ -8,7 +8,7 @@ import YAxis from './YAxis';
 import { useMount } from '../../utils/constants';
 import * as d3 from 'd3';
 import { useWindowSize } from '../useWindowSize';
-import GraphViewAxes from './GraphViewAxes';
+import GraphViewAxes, { getGraphViewPositions } from './GraphViewAxes';
 
 const VizStyles = styled.div`
   position: relative;
@@ -77,7 +77,7 @@ const Viz = ({
 
   const { innerWidth, innerHeight } = useWindowSize();
 
-  const prevPositions = {};
+  const prevPositions = useRef({});
   // switch to graph view and back
   useEffect(() => {
     if (isGraphView) {
@@ -89,22 +89,29 @@ const Viz = ({
           .delay((d, i) => i * 0.3)
           .duration(700)
           .attr('transform', function(d: any) {
-            prevPositions[d.job] = d3.select(this).attr('transform');
-            const x = innerWidth * d.automationRisk - innerWidth / 2;
-            const y = (innerHeight * d.yearsStudy) / STUDY_AVG - innerHeight;
+            // preserve previous positions to return to
+            prevPositions.current[d.job] = d3.select(this).attr('transform');
+            const { x, y } = getGraphViewPositions({
+              d,
+              innerWidth,
+              innerHeight,
+            });
             return `translate(${x * 0.7},${y * 0.4})`;
           });
       }, 0);
     } else {
       if ((FORCE as any).paused) {
-        // d3.selectAll('.node')
-        //   .transition()
-        //   .ease(d3.easeCubicInOut)
-        //   .duration(400)
-        //   .attr('transform', (d: any) => prevPositions[d.job]);
+        d3.selectAll('.node')
+          .transition()
+          .ease(d3.easeBackInOut)
+          .delay((d, i) => i * 0.3)
+          .duration(500)
+          .attr('transform', (d: any) => {
+            return prevPositions.current[d.job];
+          });
         setTimeout(() => {
           restartSimulation();
-        }, 500);
+        }, 400);
       }
     }
   }, [isGraphView, innerHeight, innerWidth, restartSimulation]);

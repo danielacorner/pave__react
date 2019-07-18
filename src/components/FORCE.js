@@ -388,6 +388,7 @@ const FORCE = function(nsp) {
     ) => {
       paused = false;
       nsp.paused = false;
+      nsp.isGraphView = false;
       nsp.force
         .nodes(nodes)
         .force('x', d3.forceX().strength(CENTER_GRAVITY))
@@ -425,7 +426,13 @@ const FORCE = function(nsp) {
         .style('transform', 'scale(1)');
     },
     updateNode = selection => {
-      selection.attr('transform', d => (d ? nodeTransform(d) : ''));
+      selection.attr('transform', d =>
+        d
+          ? nsp.isGraphView
+            ? selection.attr('transform')
+            : nodeTransform(d)
+          : '',
+      );
       // .attr('cx', d => (d ? d.x : 0))
       // .attr('cy', d => (d ? d.y : 0));
     },

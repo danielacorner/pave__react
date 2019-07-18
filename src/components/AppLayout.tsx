@@ -18,7 +18,7 @@ import {
 } from '../utils/constants';
 import { ControlsContext } from './Context/ContextProvider';
 import FiltersPanel from './Controls/FiltersPanel';
-import SortPanel from './Controls/SortPanel';
+import SortPanel, { STUDY, SALARY } from './Controls/SortPanel';
 import MobileTooltip from './Viz/MobileTooltip';
 import Tooltip from './Viz/Tooltip';
 import Viz from './Viz/Viz';
@@ -97,6 +97,7 @@ const AppLayout = () => {
   const [isTooltipActive, setIsTooltipActive] = useState(null as
     | boolean
     | null);
+  const [axisValues, setAxisValues] = useState({ x: STUDY, y: SALARY });
   const { state, handleResize, restartSimulation } = useContext(
     ControlsContext,
   );
@@ -108,7 +109,7 @@ const AppLayout = () => {
 
   const onMouseUp = useCallback(() => {
     if ((FORCE as any).paused && !isGraphView) {
-      // restartSimulation();
+      restartSimulation();
     }
   }, [isGraphView]);
 
@@ -245,7 +246,9 @@ const AppLayout = () => {
           }}
         />
         <Legend {...legendProps} />
-        <GraphViewButton {...{ isGraphView, setIsGraphView }} />
+        <GraphViewButton
+          {...{ isGraphView, setIsGraphView, axisValues, setAxisValues }}
+        />
       </AppLayoutStyles>
 
       {isTooltipActive && isTabletOrLarger ? (
