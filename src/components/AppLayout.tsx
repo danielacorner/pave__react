@@ -111,7 +111,7 @@ const AppLayout = () => {
     if ((FORCE as any).paused && !isGraphView) {
       restartSimulation();
     }
-  }, [isGraphView]);
+  }, [isGraphView, restartSimulation]);
 
   useEffect(() => {
     if (!isGraphView) {

@@ -14,7 +14,6 @@ const getAxisTranslate = (d, axisLength, axisValue) => {
       return (axisLength * d.salaryMed) / SALARY_MED - axisLength;
     case WORKERS:
       return (axisLength * d.workers) / WORKERS_MED - axisLength;
-
     default:
       break;
   }
@@ -26,6 +25,7 @@ export const getGraphViewPositions = ({
   innerHeight,
   axisValues,
 }) => {
+  console.log(axisValues);
   const x = getAxisTranslate(d, innerWidth, axisValues.x);
   const y = getAxisTranslate(d, innerHeight, axisValues.y);
   return { x, y };

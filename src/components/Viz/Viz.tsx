@@ -117,7 +117,7 @@ const Viz = ({
         }, 400);
       }
     }
-  }, [isGraphView, innerHeight, innerWidth, restartSimulation]);
+  }, [isGraphView, innerHeight, innerWidth, restartSimulation, axisValues]);
 
   return (
     <VizStyles ref={vizRef} id="graphContainer">

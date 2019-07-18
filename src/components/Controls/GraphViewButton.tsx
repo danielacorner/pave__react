@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import { MenuItem, Select } from '@material-ui/core';
-import { AUTOMATION_RISK } from './SortPanel';
+import { AUTOMATION_RISK, WORKERS, SALARY, STUDY } from './SortPanel';
 
 export const VariablePickerMenu = ({ value, onChange }) => (
   <Select
@@ -19,9 +19,9 @@ export const VariablePickerMenu = ({ value, onChange }) => (
       event.stopPropagation();
       event.preventDefault();
     }}
-    {...onChange}
+    onChange={onChange}
   >
-    <MenuItem value="workers">
+    <MenuItem value={WORKERS}>
       <Tooltip placement="right" title={'Number of people working in this job'}>
         <div>Workers</div>
       </Tooltip>
@@ -34,12 +34,12 @@ export const VariablePickerMenu = ({ value, onChange }) => (
         <div>Risk</div>
       </Tooltip>
     </MenuItem>
-    <MenuItem value="salary">
+    <MenuItem value={SALARY}>
       <Tooltip placement="right" title={'Average yearly income in $CAD'}>
         <div>Salary</div>
       </Tooltip>
     </MenuItem>
-    <MenuItem value="study">
+    <MenuItem value={STUDY}>
       <Tooltip
         placement="right"
         title={
