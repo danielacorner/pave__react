@@ -243,6 +243,7 @@ const AppLayout = () => {
             onMouseOut: isTabletOrLarger ? stopTooltipActive : () => {},
             isGraphView,
             isTabletOrLarger,
+            axisValues,
           }}
         />
         <Legend {...legendProps} />

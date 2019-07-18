@@ -10,6 +10,7 @@ import { MenuItem, Select } from '@material-ui/core';
 import FORCE from '../FORCE';
 import { INITIAL_EXPANDED_STATE } from '../AppLayout';
 import { MOBILE_MIN_WIDTH } from '../../utils/constants';
+import { VariablePickerMenu } from './GraphViewButton';
 
 export const WORKERS = 'workers';
 export const AUTOMATION_RISK = 'automationRisk';
@@ -370,18 +371,8 @@ const SortPanel = ({ setIsExpanded, isGraphView }) => {
                     : ''}{' '}
                   by{' '}
                 </div>
-                <Select
-                  classes={{ root: 'select' }}
+                <VariablePickerMenu
                   value={valueToColourBy}
-                  onClick={event => event.preventDefault()}
-                  onMouseOver={event => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                  }}
-                  onTouchStart={event => {
-                    event.stopPropagation();
-                    event.preventDefault();
-                  }}
                   onChange={event => {
                     setValueToColourBy(event.target.value);
                     if (activeSwitches.includes(COLOUR_BY_VALUE)) {
@@ -392,44 +383,67 @@ const SortPanel = ({ setIsExpanded, isGraphView }) => {
                       context.setCurrentColor(event.target.value);
                     }
                   }}
-                >
-                  <MenuItem value={INDUSTRY}>
-                    <Tooltip
-                      placement="right"
-                      title={
-                        'Job industry, jobs that are related to each other'
-                      }
-                    >
-                      <div>Type</div>
-                    </Tooltip>
-                  </MenuItem>
-                  <MenuItem value={AUTOMATION_RISK}>
-                    <Tooltip
-                      placement="right"
-                      title={'Risk that tasks will be replaced by machine work'}
-                    >
-                      <div>Risk</div>
-                    </Tooltip>
-                  </MenuItem>
-                  <MenuItem value="salary">
-                    <Tooltip
-                      placement="right"
-                      title={'Average yearly income in $CAD'}
-                    >
-                      <div>Salary</div>
-                    </Tooltip>
-                  </MenuItem>
-                  <MenuItem value={STUDY}>
-                    <Tooltip
-                      placement="right"
-                      title={
-                        'Average years of study for people working in this job (not necessarily required for the job)'
-                      }
-                    >
-                      <div>Study</div>
-                    </Tooltip>
-                  </MenuItem>
-                </Select>
+                />
+                {/* //   <Select
+                //   classes={{ root: 'select' }}
+                //   value={valueToColourBy}
+                //   onClick={event => event.preventDefault()}
+                //   onMouseOver={event => {
+                //     event.stopPropagation();
+                //     event.preventDefault();
+                //   }}
+                //   onTouchStart={event => {
+                //     event.stopPropagation();
+                //     event.preventDefault();
+                //   }}
+                //   onChange={event => {
+                //     setValueToColourBy(event.target.value);
+                //     if (activeSwitches.includes(COLOUR_BY_VALUE)) {
+                //       FORCE.colourByValue({
+                //         doColour: true,
+                //         value: event.target.value,
+                //       });
+                //       context.setCurrentColor(event.target.value);
+                //     }
+                //   }}
+                // >
+                //   <MenuItem value={INDUSTRY}>
+                //     <Tooltip
+                //       placement="right"
+                //       title={
+                //         'Job industry, jobs that are related to each other'
+                //       }
+                //     >
+                //       <div>Type</div>
+                //     </Tooltip>
+                //   </MenuItem>
+                //   <MenuItem value={AUTOMATION_RISK}>
+                //     <Tooltip
+                //       placement="right"
+                //       title={'Risk that tasks will be replaced by machine work'}
+                //     >
+                //       <div>Risk</div>
+                //     </Tooltip>
+                //   </MenuItem>
+                //   <MenuItem value="salary">
+                //     <Tooltip
+                //       placement="right"
+                //       title={'Average yearly income in $CAD'}
+                //     >
+                //       <div>Salary</div>
+                //     </Tooltip>
+                //   </MenuItem>
+                //   <MenuItem value={STUDY}>
+                //     <Tooltip
+                //       placement="right"
+                //       title={
+                //         'Average years of study for people working in this job (not necessarily required for the job)'
+                //       }
+                //     >
+                //       <div>Study</div>
+                //     </Tooltip>
+                //   </MenuItem>
+                // </Select> */}
               </div>
             }
           />

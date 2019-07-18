@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button, Switch } from '@material-ui/core';
-import styled from 'styled-components';
+import { Switch } from '@material-ui/core';
+import styled from 'styled-components/macro';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import { MenuItem, Select } from '@material-ui/core';
 import { AUTOMATION_RISK } from './SortPanel';
 
-const VariablePickerMenu = ({ value }) => (
+export const VariablePickerMenu = ({ value, onChange }) => (
   <Select
     classes={{ root: 'select' }}
     value={value}
@@ -19,12 +19,7 @@ const VariablePickerMenu = ({ value }) => (
       event.stopPropagation();
       event.preventDefault();
     }}
-    onChange={event => {
-      // setValueToSortBy(event.target.value);
-      // if (activeSwitches.includes(SORT_BY_VALUE)) {
-      //   context.sortByValue(event.target.value, true);
-      // }
-    }}
+    {...onChange}
   >
     <MenuItem value="workers">
       <Tooltip placement="right" title={'Number of people working in this job'}>
@@ -57,23 +52,43 @@ const VariablePickerMenu = ({ value }) => (
   </Select>
 );
 
-const ButtonStyles = styled.div`
+const GraphViewButtonStyles = styled.div`
   position: fixed;
-  bottom: 36px;
-  right: 40px;
-  button {
-    text-transform: none;
-    padding: 8px 24px;
+  bottom: 25px;
+  right: 29px;
+  display: flex;
+  padding: 4px 0 4px 12px;
+  border-radius: 4px;
+  background: #e0e0e0;
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2),
+    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);
+
+  .MuiFormControlLabel-root,
+  .MuiFormControlLabel-label,
+  .labelAndSelect {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-items: center;
+    grid-gap: 6px;
+  }
+  .MuiFormControlLabel-root {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 0;
+  }
+  .select {
+    transform: scale(0.85);
   }
 `;
 export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => (
-  <ButtonStyles>
+  <GraphViewButtonStyles>
     <FormControlLabel
       className="formControl graphView"
       control={
         <Switch
           onChange={() => {
-            setIsGraphView(true);
+            setIsGraphView(!isGraphView);
           }}
           checked={isGraphView}
         />
@@ -84,11 +99,21 @@ export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => (
             Compar
             {isGraphView ? 'ing' : 'e'}
           </div>
-          <VariablePickerMenu value={axisValues.x} />
+          <VariablePickerMenu
+            value={axisValues.x}
+            onChange={event => {
+              setAxisValues({ ...axisValues, x: event.target.value });
+            }}
+          />
           <div>to</div>
-          <VariablePickerMenu value={axisValues.y} />
+          <VariablePickerMenu
+            value={axisValues.y}
+            onChange={event => {
+              setAxisValues({ ...axisValues, y: event.target.value });
+            }}
+          />
         </div>
       }
     />
-  </ButtonStyles>
+  </GraphViewButtonStyles>
 );

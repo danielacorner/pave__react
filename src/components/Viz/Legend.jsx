@@ -14,8 +14,8 @@ const LegendButtonStyles = styled.div`
     bottom: 10px;
     left: 10px;
     @media (min-width: ${TABLET_MIN_WIDTH - 200}px) {
-      bottom: 36px;
-      left: 40px;
+      bottom: 25px;
+      left: 29px;
     }
     text-transform: none;
   }

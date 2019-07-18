@@ -20,6 +20,11 @@ export const SKILLS_LOGI = 'skillsLogi';
 export const SKILLS_MATH = 'skillsMath';
 export const SKILLS_COMP = 'skillsComp';
 
+// TODO: avg should be sum over # nodes
+export const WORKERS_MAX = 116000;
+export const WORKERS_MIN = 100;
+export const WORKERS_MED = (WORKERS_MAX - WORKERS_MIN) / 2;
+
 export const useMount = cb => React.useEffect(cb, []); // eslint-disable-line
 
 export const FILTER_TITLE = (filterVar: string) => {

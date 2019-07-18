@@ -43,6 +43,7 @@ interface VizProps {
   onClick(event: Event, node: any): void;
   isTabletOrLarger: boolean;
   isGraphView: boolean;
+  axisValues: { x: string; y: string };
 }
 const Viz = ({
   onMouseMove,
@@ -50,6 +51,7 @@ const Viz = ({
   onClick,
   isTabletOrLarger,
   isGraphView,
+  axisValues,
 }: VizProps) => {
   const [activeNodeId, setActiveNodeId] = useState(null as string | null);
   const vizRef = useRef(null);
@@ -95,6 +97,7 @@ const Viz = ({
               d,
               innerWidth,
               innerHeight,
+              axisValues,
             });
             return `translate(${x * 0.7},${y * 0.4})`;
           });

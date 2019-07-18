@@ -26,14 +26,14 @@ export const getCircleColour = ({ d, colouredByValue }) => {
   }
 };
 
-// TODO: values?
+// TODO: avg should be sum over # nodes
 export const SALARY_MAX = 125;
 export const SALARY_MIN = 10;
-export const SALARY_AVG = (SALARY_MAX - SALARY_MIN) / 2;
-// TODO: values?
+export const SALARY_MED = (SALARY_MAX - SALARY_MIN) / 2;
+// TODO: avg should be sum over # nodes
 export const STUDY_MAX = 6;
 export const STUDY_MIN = 0.5;
-export const STUDY_AVG = (STUDY_MAX - STUDY_MIN) / 2;
+export const STUDY_MED = (STUDY_MAX - STUDY_MIN) / 2;
 
 const FORCE = function(nsp) {
   let paused, updatePositionsInterval, removeLabelsTimeout, isGraphView;
@@ -300,7 +300,7 @@ const FORCE = function(nsp) {
                 .forceY(d => {
                   const yPosition =
                     Math.log2(
-                      (d['salaryMed'] + 1.2 * SALARY_AVG - SALARY_MIN) /
+                      (d['salaryMed'] + 1.2 * SALARY_MED - SALARY_MIN) /
                         (SALARY_MAX - SALARY_MIN),
                     ) * DY;
                   return -yPosition;
@@ -328,7 +328,7 @@ const FORCE = function(nsp) {
                 .forceY(d => {
                   const yPosition =
                     Math.log2(
-                      (d['yearsStudy'] + 1.2 * STUDY_AVG - STUDY_MIN) /
+                      (d['yearsStudy'] + 1.2 * STUDY_MED - STUDY_MIN) /
                         (STUDY_MAX - STUDY_MIN),
                     ) * DY;
                   return -yPosition;

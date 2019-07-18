@@ -1,10 +1,33 @@
 import React from 'react';
 import styled from 'styled-components';
-import { STUDY_AVG } from '../FORCE';
+import { STUDY_MED, SALARY_MED } from '../FORCE';
+import { STUDY, AUTOMATION_RISK, SALARY, WORKERS } from '../Controls/SortPanel';
+import { WORKERS_MED } from '../../utils/constants';
 
-export const getGraphViewPositions = ({ d, innerWidth, innerHeight }) => {
-  const x = innerWidth * d.automationRisk - innerWidth / 2;
-  const y = (innerHeight * d.yearsStudy) / STUDY_AVG - innerHeight;
+const getAxisTranslate = (d, axisLength, axisValue) => {
+  switch (axisValue) {
+    case AUTOMATION_RISK:
+      return axisLength * d.automationRisk - axisLength;
+    case STUDY:
+      return (axisLength * d.yearsStudy) / STUDY_MED - axisLength;
+    case SALARY:
+      return (axisLength * d.salaryMed) / SALARY_MED - axisLength;
+    case WORKERS:
+      return (axisLength * d.workers) / WORKERS_MED - axisLength;
+
+    default:
+      break;
+  }
+};
+
+export const getGraphViewPositions = ({
+  d,
+  innerWidth,
+  innerHeight,
+  axisValues,
+}) => {
+  const x = getAxisTranslate(d, innerWidth, axisValues.x);
+  const y = getAxisTranslate(d, innerHeight, axisValues.y);
   return { x, y };
 };
 
