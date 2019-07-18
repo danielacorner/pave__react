@@ -25,7 +25,6 @@ export const getGraphViewPositions = ({
   innerHeight,
   axisValues,
 }) => {
-  console.log(axisValues);
   const x = getAxisTranslate(d, innerWidth, axisValues.x);
   const y = getAxisTranslate(d, innerHeight, axisValues.y);
   return { x, y };
