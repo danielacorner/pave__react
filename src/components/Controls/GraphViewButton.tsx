@@ -61,7 +61,6 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
 
 const GraphViewButtonStyles = styled.div`
   display: flex;
-
   .MuiFormControlLabel-root,
   .MuiFormControlLabel-label,
   .labelAndSelect {

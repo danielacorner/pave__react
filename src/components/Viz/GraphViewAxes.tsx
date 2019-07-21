@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { STUDY_MED, SALARY_MED } from '../FORCE';
 import { STUDY, AUTOMATION_RISK, SALARY, WORKERS } from '../Controls/SortPanel';
 import { WORKERS_MED } from '../../utils/constants';
+import * as d3 from 'd3';
 
 const getAxisTranslate = (d, axisLength, axisValue) => {
   switch (axisValue) {
@@ -30,6 +31,21 @@ export const getGraphViewPositions = ({
   return { x, y };
 };
 
+const reScaleAxes = ({ axisValues }) => {
+  let graphViewPositions = {};
+  const nodes = d3.selectAll('.node');
+  nodes.each(
+    (d: any) =>
+      (graphViewPositions[d.id] = getGraphViewPositions({
+        d,
+        innerWidth: window.innerWidth,
+        innerHeight: window.innerHeight,
+        axisValues,
+      }))
+  );
+  console.log('💡: reScaleAxes -> graphViewPositions', graphViewPositions);
+};
+
 const AxisStyles = styled.div`
   position: absolute;
   top: 0;
@@ -43,10 +59,22 @@ const AxisStyles = styled.div`
   }
 `;
 
-export default ({ isGraphView }) => {
-  const XAxis = () => <div className="axis axisX" />;
+export default ({ isGraphView, axisValues }) => {
+  // update every second based on remaining nodes
+  const timerRef = useRef(null as number | null);
+  useEffect(() => {
+    timerRef.current = window.setInterval(
+      () => reScaleAxes({ axisValues }),
+      1000
+    );
+    return () => {
+      window.clearInterval(timerRef.current);
+    };
+  });
 
-  const YAxis = () => <div className="axis axisY" />;
+  const XAxis = () => <div className='axis axisX' />;
+
+  const YAxis = () => <div className='axis axisY' />;
 
   return (
     <AxisStyles className={isGraphView ? 'hidden' : ''}>
