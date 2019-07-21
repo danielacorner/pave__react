@@ -1,20 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { STUDY_MED, SALARY_MED } from '../FORCE';
+import { STUDY_MAX, STUDY_MIN, SALARY_MAX, SALARY_MIN } from '../FORCE';
 import { STUDY, AUTOMATION_RISK, SALARY, WORKERS } from '../Controls/SortPanel';
-import { WORKERS_MED } from '../../utils/constants';
+import { WORKERS_MIN, WORKERS_MAX } from '../../utils/constants';
 import * as d3 from 'd3';
 
 const getAxisTranslate = (d, axisLength, axisValue) => {
   switch (axisValue) {
     case AUTOMATION_RISK:
-      return axisLength * d.automationRisk - axisLength;
+      return axisLength * d.automationRisk;
     case STUDY:
-      return (axisLength * d.yearsStudy) / STUDY_MED - axisLength;
+      return (
+        (axisLength * (d.yearsStudy - STUDY_MIN)) / (STUDY_MAX - STUDY_MIN)
+      );
     case SALARY:
-      return (axisLength * d.salaryMed) / SALARY_MED - axisLength;
+      return (
+        (axisLength * (d.salaryMed - SALARY_MIN)) / (SALARY_MAX - SALARY_MIN)
+      );
     case WORKERS:
-      return (axisLength * d.workers) / WORKERS_MED - axisLength;
+      return (
+        (axisLength * (d.workers - WORKERS_MIN)) / (WORKERS_MAX - WORKERS_MIN)
+      );
     default:
       break;
   }
@@ -28,22 +34,37 @@ export const getGraphViewPositions = ({
 }) => {
   const x = getAxisTranslate(d, innerWidth, axisValues.x);
   const y = getAxisTranslate(d, innerHeight, axisValues.y);
-  return { x, y };
+  return { x: x * 2 - innerWidth, y: y * 2 - innerHeight * 1.1 };
 };
 
 const reScaleAxes = ({ axisValues }) => {
   let graphViewPositions = {};
+  let bounds = {
+    min: { x: Infinity, y: Infinity },
+    max: { x: -Infinity, y: -Infinity },
+  };
   const nodes = d3.selectAll('.node');
-  nodes.each(
-    (d: any) =>
-      (graphViewPositions[d.id] = getGraphViewPositions({
-        d,
-        innerWidth: window.innerWidth,
-        innerHeight: window.innerHeight,
-        axisValues,
-      }))
-  );
+  nodes.each((node: any) => {
+    const nodePositions = getGraphViewPositions({
+      d: node,
+      innerWidth: window.innerWidth,
+      innerHeight: window.innerHeight,
+      axisValues,
+    });
+    graphViewPositions[node.id] = nodePositions;
+    bounds = {
+      min: {
+        x: Math.min(bounds.min.x, nodePositions.x),
+        y: Math.min(bounds.min.y, nodePositions.y),
+      },
+      max: {
+        x: Math.max(bounds.max.x, nodePositions.x),
+        y: Math.max(bounds.max.y, nodePositions.y),
+      },
+    };
+  });
   console.log('💡: reScaleAxes -> graphViewPositions', graphViewPositions);
+  console.log('💡: reScaleAxes -> bounds', bounds);
   // TODO: change the margin of ticks?
 };
 
@@ -96,7 +117,7 @@ export default ({ isGraphView, axisValues }) => {
 
   const XAxis = () => (
     <div className='axis axisX'>
-      {new Array(100).fill('').map((tick, idx) => (
+      {new Array(20).fill('').map((tick, idx) => (
         <div className='tick' />
       ))}
     </div>
@@ -104,7 +125,7 @@ export default ({ isGraphView, axisValues }) => {
 
   const YAxis = () => (
     <div className='axis axisY'>
-      {new Array(100).fill('').map((tick, idx) => (
+      {new Array(20).fill('').map((tick, idx) => (
         <div className='tick' />
       ))}
     </div>
