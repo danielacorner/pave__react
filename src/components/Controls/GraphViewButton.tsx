@@ -23,7 +23,7 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
   >
     <MenuItem value={isIndustry ? INDUSTRY : WORKERS}>
       <Tooltip
-        placement="right"
+        placement='right'
         title={
           isIndustry
             ? 'Job industry, jobs that are related to each other'
@@ -35,20 +35,20 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
     </MenuItem>
     <MenuItem value={AUTOMATION_RISK}>
       <Tooltip
-        placement="right"
+        placement='right'
         title={'Risk that tasks will be replaced by machine work'}
       >
         <div>Risk</div>
       </Tooltip>
     </MenuItem>
     <MenuItem value={SALARY}>
-      <Tooltip placement="right" title={'Average yearly income in $CAD'}>
+      <Tooltip placement='right' title={'Average yearly income in $CAD'}>
         <div>Salary</div>
       </Tooltip>
     </MenuItem>
     <MenuItem value={STUDY}>
       <Tooltip
-        placement="right"
+        placement='right'
         title={
           'Average years of study for people working in this job (not necessarily required for the job)'
         }
@@ -60,24 +60,16 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
 );
 
 const GraphViewButtonStyles = styled.div`
-  position: fixed;
-  bottom: 25px;
-  right: 29px;
   display: flex;
-  padding: 4px 0 4px 12px;
-  border-radius: 4px;
-  background: #e0e0e0;
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2),
-    0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);
 
   .MuiFormControlLabel-root,
   .MuiFormControlLabel-label,
   .labelAndSelect {
+    padding-right: 4px;
     display: grid;
     grid-auto-flow: column;
     align-items: center;
     justify-items: center;
-    grid-gap: 6px;
   }
   .MuiFormControlLabel-root {
     display: flex;
@@ -91,7 +83,7 @@ const GraphViewButtonStyles = styled.div`
 export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => (
   <GraphViewButtonStyles>
     <FormControlLabel
-      className="formControl graphView"
+      className='formControl graphView'
       control={
         <Switch
           onChange={() => {
@@ -101,7 +93,7 @@ export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => (
         />
       }
       label={
-        <div className="labelAndSelect">
+        <div className='labelAndSelect'>
           <div>
             Compar
             {isGraphView ? 'ing' : 'e'}

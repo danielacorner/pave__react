@@ -27,7 +27,6 @@ import Legend from './Viz/Legend';
 import FORCE from './FORCE';
 import { useWindowSize } from './useWindowSize';
 import { NAV_HEIGHT } from './Nav/Navbar';
-import GraphViewButton from './Controls/GraphViewButton';
 
 const AppLayoutStyles = styled.div`
   position: relative;
@@ -89,17 +88,17 @@ const emptyMobileTooltipProps = {
 const AppLayout = () => {
   const { innerHeight } = useWindowSize();
   const [tooltipProps, setTooltipProps] = useState(
-    emptyTooltipProps as TooltipProps | null,
+    emptyTooltipProps as TooltipProps | null
   );
   const [mobileTooltipProps, setMobileTooltipProps] = useState(
-    emptyMobileTooltipProps as MobileTooltipProps | null,
+    emptyMobileTooltipProps as MobileTooltipProps | null
   );
   const [isTooltipActive, setIsTooltipActive] = useState(null as
     | boolean
     | null);
   const [axisValues, setAxisValues] = useState({ x: STUDY, y: SALARY });
   const { state, handleResize, restartSimulation } = useContext(
-    ControlsContext,
+    ControlsContext
   );
 
   const [isExpanded, setIsExpanded] = useState(INITIAL_EXPANDED_STATE);
@@ -119,7 +118,7 @@ const AppLayout = () => {
     }
     const resizeTimer = setInterval(
       handleResize,
-      isGraphView ? RESIZE_INTERVAL_MS : 1000,
+      isGraphView ? RESIZE_INTERVAL_MS : 1000
     );
     return () => {
       clearInterval(resizeTimer);
@@ -176,7 +175,7 @@ const AppLayout = () => {
                 if (
                   ((event.target as HTMLElement).classList &&
                     Array.from(
-                      (event.target as HTMLElement).classList,
+                      (event.target as HTMLElement).classList
                     ).includes('slidersDiv')) ||
                   (event.target as HTMLElement).id === 'svg' ||
                   (event.target as HTMLElement).nodeName === 'circle'
@@ -188,7 +187,7 @@ const AppLayout = () => {
                 if (
                   ((event.target as HTMLElement).classList &&
                     Array.from(
-                      (event.target as HTMLElement).classList,
+                      (event.target as HTMLElement).classList
                     ).includes('slidersDiv')) ||
                   (event.target as HTMLElement).id === 'svg' ||
                   (event.target as HTMLElement).nodeName === 'circle'
@@ -202,7 +201,15 @@ const AppLayout = () => {
         }
       >
         <FiltersPanel {...{ filterVariables, isExpanded, setIsExpanded }} />
-        <SortPanel {...{ setIsExpanded, isGraphView }} />
+        <SortPanel
+          {...{
+            setIsExpanded,
+            isGraphView,
+            setIsGraphView,
+            axisValues,
+            setAxisValues,
+          }}
+        />
         <Viz
           onMouseMove={
             isTabletOrLarger
@@ -247,9 +254,6 @@ const AppLayout = () => {
           }}
         />
         <Legend {...legendProps} />
-        <GraphViewButton
-          {...{ isGraphView, setIsGraphView, axisValues, setAxisValues }}
-        />
       </AppLayoutStyles>
 
       {isTooltipActive && isTabletOrLarger ? (

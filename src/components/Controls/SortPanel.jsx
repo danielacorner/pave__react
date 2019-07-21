@@ -6,11 +6,10 @@ import RestoreIcon from '@material-ui/icons/RestoreRounded';
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components/macro';
 import { ControlsContext } from '../Context/ContextProvider';
-import { MenuItem, Select } from '@material-ui/core';
 import FORCE from '../FORCE';
 import { INITIAL_EXPANDED_STATE } from '../AppLayout';
 import { MOBILE_MIN_WIDTH } from '../../utils/constants';
-import { VariablePickerMenu } from './GraphViewButton';
+import GraphViewButton, { VariablePickerMenu } from './GraphViewButton';
 
 export const WORKERS = 'workers';
 export const AUTOMATION_RISK = 'automationRisk';
@@ -182,9 +181,9 @@ const SortButtonsStyles = styled.div`
   .btnReset {
     text-transform: none;
     background: white;
-    max-height: 60px;
+    height: 40px;
     justify-self: end;
-    align-self: center;
+    align-self: start;
     span {
       display: grid;
       align-items: center;
@@ -216,7 +215,13 @@ const SortButtonsStyles = styled.div`
   }
 `;
 
-const SortPanel = ({ setIsExpanded, isGraphView }) => {
+const SortPanel = ({
+  setIsExpanded,
+  isGraphView,
+  setIsGraphView,
+  axisValues,
+  setAxisValues,
+}) => {
   const [activeSwitches, setActiveSwitches] = useState([]);
   const [valueToColourBy, setValueToColourBy] = useState(INDUSTRY);
   const [valueToSortBy, setValueToSortBy] = useState(WORKERS);
@@ -344,6 +349,9 @@ const SortPanel = ({ setIsExpanded, isGraphView }) => {
             }
           />
         </Tooltip>
+        <GraphViewButton
+          {...{ isGraphView, setIsGraphView, axisValues, setAxisValues }}
+        />
       </div>
       <Button
         className="btnReset"
@@ -352,7 +360,7 @@ const SortPanel = ({ setIsExpanded, isGraphView }) => {
           // Disable Reset button if all filters are at 0
           !Object.values(context.state.filters).reduce(
             (tot, curr) => tot + curr,
-            0,
+            0
           ) > 0 && activeSwitches.length === 0
         }
         variant="outlined"
