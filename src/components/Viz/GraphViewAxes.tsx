@@ -44,7 +44,7 @@ const reScaleAxes = ({ axisValues }) => {
       }))
   );
   console.log('💡: reScaleAxes -> graphViewPositions', graphViewPositions);
-  // TODO: change the flex-grow of ticks?
+  // TODO: change the margin of ticks?
 };
 
 const AxisStyles = styled.div`
@@ -55,8 +55,29 @@ const AxisStyles = styled.div`
   right: 0;
   pointer-events: none;
   transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-  &.hidden {
+  /* &.hidden {
     opacity: 0;
+  } */
+  .axis .tick {
+    background: rgba(0, 0, 0, 0.7);
+    box-sizing: border-box;
+  }
+  .axisX {
+    display: flex;
+    .tick {
+      min-width: 1px;
+      min-height: 6px;
+      margin-left: 10px;
+    }
+  }
+  .axisY {
+    display: flex;
+    flex-direction: column;
+    .tick {
+      width: 6px;
+      min-height: 1px;
+      margin-top: 10px;
+    }
   }
 `;
 
@@ -75,7 +96,7 @@ export default ({ isGraphView, axisValues }) => {
 
   const XAxis = () => (
     <div className='axis axisX'>
-      {new Array(100).map((tick, idx) => (
+      {new Array(100).fill('').map((tick, idx) => (
         <div className='tick' />
       ))}
     </div>
@@ -83,14 +104,14 @@ export default ({ isGraphView, axisValues }) => {
 
   const YAxis = () => (
     <div className='axis axisY'>
-      {new Array(100).map((tick, idx) => (
+      {new Array(100).fill('').map((tick, idx) => (
         <div className='tick' />
       ))}
     </div>
   );
 
   return (
-    <AxisStyles className={isGraphView ? 'hidden' : ''}>
+    <AxisStyles className={!isGraphView ? 'hidden' : ''}>
       <XAxis />
       <YAxis />
     </AxisStyles>
