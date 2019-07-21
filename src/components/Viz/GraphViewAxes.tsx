@@ -43,7 +43,7 @@ const reScaleAxes = ({ axisValues }) => {
         axisValues,
       }))
   );
-  console.log('💡: reScaleAxes -> graphViewPositions', graphViewPositions);
+  // console.log('💡: reScaleAxes -> graphViewPositions', graphViewPositions);
 };
 
 const AxisStyles = styled.div`
