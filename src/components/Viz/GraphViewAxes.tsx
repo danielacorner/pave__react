@@ -43,7 +43,8 @@ const reScaleAxes = ({ axisValues }) => {
         axisValues,
       }))
   );
-  // console.log('💡: reScaleAxes -> graphViewPositions', graphViewPositions);
+  console.log('💡: reScaleAxes -> graphViewPositions', graphViewPositions);
+  // TODO: change the flex-grow of ticks?
 };
 
 const AxisStyles = styled.div`
@@ -65,16 +66,28 @@ export default ({ isGraphView, axisValues }) => {
   useEffect(() => {
     timerRef.current = window.setInterval(
       () => reScaleAxes({ axisValues }),
-      1000
+      1500
     );
     return () => {
       window.clearInterval(timerRef.current);
     };
   });
 
-  const XAxis = () => <div className='axis axisX' />;
+  const XAxis = () => (
+    <div className='axis axisX'>
+      {new Array(100).map((tick, idx) => (
+        <div className='tick' />
+      ))}
+    </div>
+  );
 
-  const YAxis = () => <div className='axis axisY' />;
+  const YAxis = () => (
+    <div className='axis axisY'>
+      {new Array(100).map((tick, idx) => (
+        <div className='tick' />
+      ))}
+    </div>
+  );
 
   return (
     <AxisStyles className={isGraphView ? 'hidden' : ''}>
