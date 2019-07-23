@@ -114,7 +114,9 @@ const GraphViewAxes = ({ axisValues, width, height }) => {
       top: height / NUM_TICKS,
     };
     setMargins(newMargins);
-    // TODO: change the margin of ticks?
+    // TODO: set the tick labels
+    // TODO: find min/max by axisValues on top/bottom/left/right
+    // TODO: calculate & set tick labels
   };
 
   useEffect(() => {
