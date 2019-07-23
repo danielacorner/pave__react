@@ -65,7 +65,7 @@ const Viz = ({
     // initialize the force simulation
     (FORCE as any).startSimulation(
       { nodes, radiusScale, clusterCenters, radiusSelector },
-      vizRef.current
+      vizRef.current,
     );
   });
 
@@ -120,9 +120,9 @@ const Viz = ({
   }, [isGraphView, innerHeight, innerWidth, restartSimulation, axisValues]);
 
   return (
-    <VizStyles ref={vizRef} id='graphContainer'>
-      <svg id='svg'>
-        <g id='nodesG'>
+    <VizStyles ref={vizRef} id="graphContainer">
+      <svg id="svg">
+        <g id="nodesG">
           {nodes.map(node => {
             return (
               <Node

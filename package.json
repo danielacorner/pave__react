@@ -24,6 +24,7 @@
     "query-string": "^6.6.0",
     "react": "^16.8.6",
     "react-annotation": "^2.1.6",
+    "react-container-dimensions": "^1.4.1",
     "react-dom": "^16.8.6",
     "react-joyride": "^2.0.5",
     "react-responsive": "^6.1.1",
