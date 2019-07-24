@@ -1,10 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import styled from 'styled-components';
 import { STUDY_MAX, STUDY_MIN, SALARY_MAX, SALARY_MIN } from '../FORCE';
-import { STUDY, AUTOMATION_RISK, SALARY, WORKERS } from '../Controls/SortPanel';
+import {
+  STUDY,
+  AUTOMATION_RISK,
+  SALARY,
+  WORKERS,
+  SALARY_LABEL,
+  WORKERS_LABEL,
+  STUDY_LABEL,
+} from '../Controls/SortPanel';
 import { WORKERS_MIN, WORKERS_MAX } from '../../utils/constants';
-import * as d3 from 'd3';
 import ContainerDimensions from 'react-container-dimensions';
+import { ControlsContext } from '../Context/ContextProvider';
 
 const NUM_TICKS = 6;
 
@@ -14,15 +22,17 @@ const getAxisTranslate = (d, axisLength, axisValue) => {
       return axisLength * d.automationRisk;
     case STUDY:
       return (
-        (axisLength * (d.yearsStudy - STUDY_MIN)) / (STUDY_MAX - STUDY_MIN)
+        (axisLength * (d[STUDY_LABEL] - STUDY_MIN)) / (STUDY_MAX - STUDY_MIN)
       );
     case SALARY:
       return (
-        (axisLength * (d.salaryMed - SALARY_MIN)) / (SALARY_MAX - SALARY_MIN)
+        (axisLength * (d[SALARY_LABEL] - SALARY_MIN)) /
+        (SALARY_MAX - SALARY_MIN)
       );
     case WORKERS:
       return (
-        (axisLength * (d.workers - WORKERS_MIN)) / (WORKERS_MAX - WORKERS_MIN)
+        (axisLength * (d[WORKERS_LABEL] - WORKERS_MIN)) /
+        (WORKERS_MAX - WORKERS_MIN)
       );
     default:
       break;
@@ -35,8 +45,8 @@ export const getGraphViewPositions = ({
   innerHeight,
   axisValues,
 }) => {
-  const x = getAxisTranslate(d, innerWidth, axisValues.x);
-  const y = getAxisTranslate(d, innerHeight, axisValues.y);
+  const x = getAxisTranslate(d, innerWidth, axisValues.x.displayName);
+  const y = getAxisTranslate(d, innerHeight, axisValues.y.displayName);
   return { x: x * 2 - innerWidth, y: y * 2 - innerHeight * 1.1 };
 };
 
@@ -79,85 +89,117 @@ const AxisStyles = styled.div`
   }
 `;
 
-const GraphViewAxes = ({ axisValues, width, height }) => {
-  // update every second based on remaining nodes
-  const timerRef = useRef(null as number | null);
-  const [margins, setMargins] = useState({ left: 0, top: 0 });
+const reScaleAxes = ({ axisValues, nodes, setMargins }) => {
+  if (!nodes) {
+    return null;
+  }
 
-  const reScaleAxes = ({ axisValues }) => {
-    let graphViewPositions = {};
-    let bounds = {
-      min: { x: Infinity, y: Infinity },
-      max: { x: -Infinity, y: -Infinity },
-    };
-    const nodes = d3.selectAll('.node');
-    nodes.each((node: any) => {
-      const nodePositions = getGraphViewPositions({
-        d: node,
-        innerWidth: window.innerWidth,
-        innerHeight: window.innerHeight,
-        axisValues,
-      });
-      graphViewPositions[node.id] = nodePositions;
-      bounds = {
-        min: {
-          x: Math.min(bounds.min.x, nodePositions.x),
-          y: Math.min(bounds.min.y, nodePositions.y),
-        },
-        max: {
-          x: Math.max(bounds.max.x, nodePositions.x),
-          y: Math.max(bounds.max.y, nodePositions.y),
+  // TODO: do we need these?
+  // const graphViewPositions = {};
+  // gives x/y values
+  // const boundaries = {
+  //   min: { x: Infinity, y: Infinity },
+  //   max: { x: -Infinity, y: -Infinity },
+  // };
+
+  const boundingNodes = { right: null, left: null, top: null, bottom: null };
+  // TODO: could get more accurate by doing top-bottom/2, right-left/2 (node centers)
+  document.querySelectorAll('.node').forEach(node => {
+    // const nodePositionInGraphView = getGraphViewPositions({
+    //   d: node,
+    //   innerWidth: window.innerWidth,
+    //   innerHeight: window.innerHeight,
+    //   axisValues,
+    // });
+    // graphViewPositions[node.id] = nodePositionInGraphView;
+    // boundaries.min = {
+    //   x: Math.min(boundaries.min.x, nodePositionInGraphView.x),
+    //   y: Math.min(boundaries.min.y, nodePositionInGraphView.y),
+    // };
+    // boundaries.max = {
+    //   x: Math.max(boundaries.max.x, nodePositionInGraphView.x),
+    //   y: Math.max(boundaries.max.y, nodePositionInGraphView.y),
+    // };
+
+    const { top, right, bottom, left } = node.getBoundingClientRect();
+    // TODO: abstract
+    if (!boundingNodes.top || boundingNodes.top.distance > top) {
+      boundingNodes.top = {
+        node,
+        distance: top,
+        axisLabels: {
+          x: nodes[node.id.slice(5)][axisValues.x.dataLabel],
+          y: nodes[node.id.slice(5)][axisValues.y.dataLabel],
         },
       };
-    });
-    console.log('💡: reScaleAxes -> graphViewPositions', graphViewPositions);
-    console.log('💡: reScaleAxes -> bounds', bounds);
+    }
+    if (!boundingNodes.right || boundingNodes.right.distance < right) {
+      boundingNodes.right = {
+        node,
+        distance: right,
+        axisLabels: {
+          x: nodes[node.id.slice(5)][axisValues.x.dataLabel],
+          y: nodes[node.id.slice(5)][axisValues.y.dataLabel],
+        },
+      };
+    }
+    if (!boundingNodes.bottom || boundingNodes.bottom.distance < bottom) {
+      boundingNodes.bottom = {
+        node,
+        distance: bottom,
+        axisLabels: {
+          x: nodes[node.id.slice(5)][axisValues.x.dataLabel],
+          y: nodes[node.id.slice(5)][axisValues.y.dataLabel],
+        },
+      };
+    }
+    if (!boundingNodes.left || boundingNodes.left.distance > left) {
+      boundingNodes.left = {
+        node,
+        distance: left,
+        axisLabels: {
+          x: nodes[node.id.slice(5)][axisValues.x.dataLabel],
+          y: nodes[node.id.slice(5)][axisValues.y.dataLabel],
+        },
+      };
+    }
+  });
+  console.log('TCL: reScaleAxes -> axisValues', axisValues);
+  console.log('TCL: reScaleAxes -> boundingNodes', boundingNodes);
 
-    const boundingNodes = { right: null, left: null, top: null, bottom: null };
-    // TODO: could get more accurate by doing top-bottom/2, right-left/2 (node centers)
-    document.querySelectorAll('.node').forEach(node => {
-      const { top, right, bottom, left } = node.getBoundingClientRect();
-      if (!boundingNodes.top || boundingNodes.top.distance > top) {
-        boundingNodes.top = { node, distance: top };
-      }
-      if (!boundingNodes.right || boundingNodes.right.distance < right) {
-        boundingNodes.right = { node, distance: right };
-      }
-      if (!boundingNodes.bottom || boundingNodes.bottom.distance < bottom) {
-        boundingNodes.bottom = { node, distance: bottom };
-      }
-      if (!boundingNodes.left || boundingNodes.left.distance > left) {
-        boundingNodes.left = { node, distance: left };
-      }
-    });
-    console.log('TCL: reScaleAxes -> boundingNodes', boundingNodes);
+  const graphWidth = boundingNodes.right.distance - boundingNodes.left.distance;
+  const graphHeight =
+    boundingNodes.bottom.distance - boundingNodes.top.distance;
 
-    const graphWidth =
-      boundingNodes.right.distance - boundingNodes.left.distance;
-    const graphHeight =
-      boundingNodes.bottom.distance - boundingNodes.top.distance;
-
-    const newMargins = {
-      left: graphWidth / (NUM_TICKS - 1),
-      top: graphHeight / (NUM_TICKS - 1),
-    };
-    setMargins(newMargins);
-
-    // TODO: set the tick labels
-    // TODO: find min/max by axisValues on top/bottom/left/right
-    // TODO: calculate & set tick labels
-    // TODO: set tick margins based on positions of min/max nodes
+  const newMargins = {
+    left: graphWidth / (NUM_TICKS - 1),
+    top: graphHeight / (NUM_TICKS - 1),
   };
+  setMargins(newMargins);
 
+  // TODO: set the tick labels
+  // TODO: find min/max by axisValues on top/bottom/left/right
+  // TODO: calculate & set tick labels
+  // TODO: set tick margins based on positions of min/max nodes
+};
+
+const GraphViewAxes = ({ axisValues, width, height }) => {
+  const {
+    state: { nodes },
+  } = useContext(ControlsContext);
+
+  // update every second based on remaining nodes
+  const timerRef = useRef(null as number | null);
   useEffect(() => {
     timerRef.current = window.setInterval(
-      () => reScaleAxes({ axisValues }),
+      () => reScaleAxes({ axisValues, nodes, setMargins }),
       1500,
     );
     return () => {
       window.clearInterval(timerRef.current);
     };
   });
+  const [margins, setMargins] = useState({ left: 0, top: 0 });
 
   const XAxis = () => (
     <div className="axis axisX">

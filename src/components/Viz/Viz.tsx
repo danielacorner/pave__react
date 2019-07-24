@@ -5,7 +5,7 @@ import Node from './Node';
 import SVG3dEffect from './SVG3dEffect';
 import { ControlsContext } from '../Context/ContextProvider';
 import YAxis from './YAxis';
-import { useMount } from '../../utils/constants';
+import { useMount, APP_OUTER_PADDING } from '../../utils/constants';
 import * as d3 from 'd3';
 import { useWindowSize } from '../useWindowSize';
 import GraphViewAxes, { getGraphViewPositions } from './GraphViewAxes';
@@ -43,7 +43,10 @@ interface VizProps {
   onClick(event: Event, node: any): void;
   isTabletOrLarger: boolean;
   isGraphView: boolean;
-  axisValues: { x: string; y: string };
+  axisValues: {
+    x: { displayName: string; dataLabel: string };
+    y: { displayName: string; dataLabel: string };
+  };
 }
 const Viz = ({
   onMouseMove,
@@ -95,8 +98,8 @@ const Viz = ({
             prevPositions.current[d.job] = d3.select(this).attr('transform');
             const { x, y } = getGraphViewPositions({
               d,
-              innerWidth,
-              innerHeight,
+              innerWidth: innerWidth - APP_OUTER_PADDING * 4,
+              innerHeight: innerHeight - APP_OUTER_PADDING * 4,
               axisValues,
             });
             return `translate(${x * 0.7},${y * 0.4})`;

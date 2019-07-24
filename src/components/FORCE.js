@@ -7,6 +7,7 @@ import {
   AUTOMATION_RISK,
   SALARY,
   STUDY,
+  SALARY_LABEL,
 } from './Controls/SortPanel';
 
 export const lightGrey = 'hsl(0,0%,80%)';
@@ -104,7 +105,7 @@ const FORCE = function(nsp) {
           'collide',
           d3
             .forceCollide(d => radiusScale(d[radiusSelector]))
-            .strength(COLLIDE_STRENGTH)
+            .strength(COLLIDE_STRENGTH),
         )
         // charge/repellent force helps nodes equilibrate into clusters by reducing FRICTION
         .force(
@@ -113,7 +114,7 @@ const FORCE = function(nsp) {
             return (
               -Math.pow(radiusScale(d[radiusSelector]), 2) - CLUSTER_PADDING
             ); // todo: calculate this magic number
-          })
+          }),
         )
         // optional center force re-centers the viewport around the nodes
         // .force('center', d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2))
@@ -124,8 +125,8 @@ const FORCE = function(nsp) {
         .force(
           'cluster',
           cluster(nodes, radiusScale, radiusSelector, clusterCenters).strength(
-            1
-          )
+            1,
+          ),
         )
         .velocityDecay(FRICTION)
         .alpha(START_SPEED)
@@ -136,8 +137,11 @@ const FORCE = function(nsp) {
       toggleOn,
       nodes,
       uniqueClusterValues,
-      clusterSelector
+      clusterSelector,
     ) => {
+      if (isGraphView) {
+        return;
+      }
       if (toggleOn) {
         clearTimeout(removeLabelsTimeout);
         const getBBox = el =>
@@ -146,7 +150,7 @@ const FORCE = function(nsp) {
         const calcCenter = clusterValue => {
           // return {x,y} cluster center-of-mass
           const clusterNodes = nodes.filter(
-            node => node[clusterSelector] === clusterValue
+            node => node[clusterSelector] === clusterValue,
           );
           let numNodes = clusterNodes.length;
 
@@ -161,7 +165,7 @@ const FORCE = function(nsp) {
                 y: acc.y + nodeBB.y,
               };
             },
-            { x: 0, y: 0, denom: 1 }
+            { x: 0, y: 0, denom: 1 },
           );
           // divide by the number of nodes in that cluster
           return { x: totals.x / numNodes, y: totals.y / numNodes };
@@ -189,13 +193,13 @@ const FORCE = function(nsp) {
             d3.select(`#clusterLabel_${idx}`)
               .style(
                 'left',
-                `${calcCenter(clusterTitle).x - 0.5 * divBB.width}px`
+                `${calcCenter(clusterTitle).x - 0.5 * divBB.width}px`,
               )
               .style(
                 'top',
                 `${calcCenter(clusterTitle).y -
                   // move the div up by half its own height
-                  0.5 * divBB.height}px`
+                  0.5 * divBB.height}px`,
               );
           });
         };
@@ -204,7 +208,7 @@ const FORCE = function(nsp) {
         d3.selectAll('.clusterLabel').style('opacity', 0);
         removeLabelsTimeout = setTimeout(
           () => d3.selectAll('.clusterLabel').remove(),
-          500
+          500,
         );
         // remove text groups
         clearInterval(updatePositionsInterval);
@@ -216,7 +220,7 @@ const FORCE = function(nsp) {
         'charge',
         d3.forceManyBody().strength(d => {
           return -Math.pow(radiusScale(d[radiusSelector]), 2) - CLUSTER_PADDING;
-        })
+        }),
       );
     },
     applySortForces = ({ sortByValue, getRadiusScale, radiusSelector }) => {
@@ -254,13 +258,13 @@ const FORCE = function(nsp) {
                     (0.5 - normalizedRadius) * (minLength * 0.5);
                   return yPosition;
                 })
-                .strength(CENTER_GRAVITY * 28)
+                .strength(CENTER_GRAVITY * 28),
             )
             .force(
               'charge',
               d3.forceManyBody().strength(d => {
                 return -Math.pow(radiusScale(d[WORKERS]), 2.16) - 150;
-              })
+              }),
             )
             .alpha(SORT_SPEED)
             .alphaDecay(SORT_FRICTION)
@@ -277,13 +281,13 @@ const FORCE = function(nsp) {
                   const yPosition = (d[AUTOMATION_RISK] - 0.5) * DY;
                   return yPosition;
                 })
-                .strength(CENTER_GRAVITY * 28)
+                .strength(CENTER_GRAVITY * 28),
             )
             .force(
               'charge',
               d3.forceManyBody().strength(d => {
                 return -Math.pow(radiusScale(d[WORKERS]), 2.16) - 150;
-              })
+              }),
             )
             .alpha(SORT_SPEED)
             .alphaDecay(SORT_FRICTION)
@@ -300,18 +304,18 @@ const FORCE = function(nsp) {
                 .forceY(d => {
                   const yPosition =
                     Math.log2(
-                      (d['salaryMed'] + 1.2 * SALARY_MED - SALARY_MIN) /
-                        (SALARY_MAX - SALARY_MIN)
+                      (d[SALARY_LABEL] + 1.2 * SALARY_MED - SALARY_MIN) /
+                        (SALARY_MAX - SALARY_MIN),
                     ) * DY;
                   return -yPosition;
                 })
-                .strength(CENTER_GRAVITY * 28)
+                .strength(CENTER_GRAVITY * 28),
             )
             .force(
               'charge',
               d3.forceManyBody().strength(d => {
                 return -Math.pow(radiusScale(d[WORKERS]), 2.16) - 150;
-              })
+              }),
             )
             .alpha(SORT_SPEED)
             .alphaDecay(SORT_FRICTION)
@@ -329,17 +333,17 @@ const FORCE = function(nsp) {
                   const yPosition =
                     Math.log2(
                       (d['yearsStudy'] + 1.2 * STUDY_MED - STUDY_MIN) /
-                        (STUDY_MAX - STUDY_MIN)
+                        (STUDY_MAX - STUDY_MIN),
                     ) * DY;
                   return -yPosition;
                 })
-                .strength(CENTER_GRAVITY * 28)
+                .strength(CENTER_GRAVITY * 28),
             )
             .force(
               'charge',
               d3.forceManyBody().strength(d => {
                 return -Math.pow(radiusScale(d[WORKERS]), 2.16) - 150;
-              })
+              }),
             )
             .alpha(SORT_SPEED)
             .alphaDecay(SORT_FRICTION)
@@ -363,7 +367,7 @@ const FORCE = function(nsp) {
     },
     startSimulation = (
       { nodes, radiusScale, clusterCenters, radiusSelector },
-      that
+      that,
     ) => {
       nsp.initForce({
         nodes,
@@ -384,7 +388,7 @@ const FORCE = function(nsp) {
     restartSimulation = (
       nodes,
       isStrongForce = false,
-      isMediumForce = false
+      isMediumForce = false,
     ) => {
       paused = false;
       nsp.paused = false;
@@ -431,7 +435,7 @@ const FORCE = function(nsp) {
           ? nsp.isGraphView
             ? selection.attr('transform')
             : nodeTransform(d)
-          : ''
+          : '',
       );
       // .attr('cx', d => (d ? d.x : 0))
       // .attr('cy', d => (d ? d.y : 0));

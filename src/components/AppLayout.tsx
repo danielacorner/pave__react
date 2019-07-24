@@ -18,7 +18,12 @@ import {
 } from '../utils/constants';
 import { ControlsContext } from './Context/ContextProvider';
 import FiltersPanel from './Controls/FiltersPanel';
-import SortPanel, { STUDY, SALARY } from './Controls/SortPanel';
+import SortPanel, {
+  STUDY,
+  SALARY,
+  STUDY_LABEL,
+  SALARY_LABEL,
+} from './Controls/SortPanel';
 import MobileTooltip from './Viz/MobileTooltip';
 import Tooltip from './Viz/Tooltip';
 import Viz from './Viz/Viz';
@@ -88,17 +93,20 @@ const emptyMobileTooltipProps = {
 const AppLayout = () => {
   const { innerHeight } = useWindowSize();
   const [tooltipProps, setTooltipProps] = useState(
-    emptyTooltipProps as TooltipProps | null
+    emptyTooltipProps as TooltipProps | null,
   );
   const [mobileTooltipProps, setMobileTooltipProps] = useState(
-    emptyMobileTooltipProps as MobileTooltipProps | null
+    emptyMobileTooltipProps as MobileTooltipProps | null,
   );
   const [isTooltipActive, setIsTooltipActive] = useState(null as
     | boolean
     | null);
-  const [axisValues, setAxisValues] = useState({ x: STUDY, y: SALARY });
+  const [axisValues, setAxisValues] = useState({
+    x: { displayName: STUDY, dataLabel: STUDY_LABEL },
+    y: { displayName: SALARY, dataLabel: SALARY_LABEL },
+  });
   const { state, handleResize, restartSimulation } = useContext(
-    ControlsContext
+    ControlsContext,
   );
 
   const [isExpanded, setIsExpanded] = useState(INITIAL_EXPANDED_STATE);
@@ -118,7 +126,7 @@ const AppLayout = () => {
     }
     const resizeTimer = setInterval(
       handleResize,
-      isGraphView ? RESIZE_INTERVAL_MS : 1000
+      isGraphView ? RESIZE_INTERVAL_MS : 1000,
     );
     return () => {
       clearInterval(resizeTimer);
@@ -175,7 +183,7 @@ const AppLayout = () => {
                 if (
                   ((event.target as HTMLElement).classList &&
                     Array.from(
-                      (event.target as HTMLElement).classList
+                      (event.target as HTMLElement).classList,
                     ).includes('slidersDiv')) ||
                   (event.target as HTMLElement).id === 'svg' ||
                   (event.target as HTMLElement).nodeName === 'circle'
@@ -187,7 +195,7 @@ const AppLayout = () => {
                 if (
                   ((event.target as HTMLElement).classList &&
                     Array.from(
-                      (event.target as HTMLElement).classList
+                      (event.target as HTMLElement).classList,
                     ).includes('slidersDiv')) ||
                   (event.target as HTMLElement).id === 'svg' ||
                   (event.target as HTMLElement).nodeName === 'circle'

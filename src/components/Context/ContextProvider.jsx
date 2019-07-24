@@ -173,6 +173,9 @@ class ContextProvider extends Component {
   }
 
   handleResize = debounce(() => {
+    if (FORCE.isGraphView) {
+      return;
+    }
     const newScale = this.getScale();
     const graphContainer = $('#graphContainer');
     const svgBBox = graphContainer
@@ -262,6 +265,9 @@ class ContextProvider extends Component {
       isOffsetTop: false, // recalculate offsetTop after each filter
       // offsetTop: 0,
     });
+    if (FORCE.isGraphView) {
+      return;
+    }
     setTimeout(() => {
       // TODO: instead of actually moving the filters, could set the background fill instead?
       // set all filters to new minima on mouseup

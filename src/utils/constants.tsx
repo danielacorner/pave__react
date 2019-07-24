@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 
+export const APP_OUTER_PADDING = 20;
+
 export const COLOUR_SALARY = 'lime';
 export const COLOUR_STUDY = 'cornflowerblue';
 export const COLOUR_RISK = 'tomato';

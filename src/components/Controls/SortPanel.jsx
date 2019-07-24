@@ -11,13 +11,18 @@ import { INITIAL_EXPANDED_STATE } from '../AppLayout';
 import { MOBILE_MIN_WIDTH } from '../../utils/constants';
 import GraphViewButton, { VariablePickerMenu } from './GraphViewButton';
 
-export const WORKERS = 'workers';
 export const AUTOMATION_RISK = 'automationRisk';
+export const AUTOMATION_RISK_LABEL = 'automationRisk';
 export const COLOUR_BY_VALUE = 'colourByValue';
 export const SORT_BY_VALUE = 'sortByValue';
+export const WORKERS = 'workers';
 export const SALARY = 'salary';
 export const STUDY = 'study';
 export const INDUSTRY = 'industry';
+export const WORKERS_LABEL = 'workers';
+export const SALARY_LABEL = 'salaryMed';
+export const STUDY_LABEL = 'yearsStudy';
+export const INDUSTRY_LABEL = 'industry';
 
 const white = 'rgba(255,255,255,0.98)';
 const inactive2 = 'hsl(160, 50%, 50%)';
@@ -360,7 +365,7 @@ const SortPanel = ({
           // Disable Reset button if all filters are at 0
           !Object.values(context.state.filters).reduce(
             (tot, curr) => tot + curr,
-            0
+            0,
           ) > 0 && activeSwitches.length === 0
         }
         variant="outlined"
