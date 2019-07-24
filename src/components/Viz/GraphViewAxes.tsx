@@ -114,9 +114,29 @@ const GraphViewAxes = ({ axisValues, width, height }) => {
       top: height / NUM_TICKS,
     };
     setMargins(newMargins);
+
+    const boundingNodes = { right: null, left: null, top: null, bottom: null };
+    document.querySelectorAll('.node').forEach(node => {
+      const { top, right, bottom, left } = node.getBoundingClientRect();
+      if (!boundingNodes.top || boundingNodes.top.distance > top) {
+        boundingNodes.top = { node, distance: top };
+      }
+      if (!boundingNodes.right || boundingNodes.right.distance < right) {
+        boundingNodes.right = { node, distance: right };
+      }
+      if (!boundingNodes.bottom || boundingNodes.bottom.distance < bottom) {
+        boundingNodes.bottom = { node, distance: bottom };
+      }
+      if (!boundingNodes.left || boundingNodes.left.distance > left) {
+        boundingNodes.left = { node, distance: left };
+      }
+    });
+    console.log('TCL: reScaleAxes -> boundingNodes', boundingNodes);
+
     // TODO: set the tick labels
     // TODO: find min/max by axisValues on top/bottom/left/right
     // TODO: calculate & set tick labels
+    // TODO: set tick margins based on positions of min/max nodes
   };
 
   useEffect(() => {
