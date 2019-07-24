@@ -59,15 +59,19 @@ const AxisStyles = styled.div`
     box-sizing: border-box;
   }
   .axisX {
-    display: flex;
+    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: center;
     .tick {
       min-width: 1px;
       min-height: 6px;
     }
   }
   .axisY {
-    display: flex;
-    flex-direction: column;
+    height: 100%;
+    display: grid;
+    align-content: center;
     .tick {
       width: 6px;
       min-height: 1px;
@@ -109,13 +113,8 @@ const GraphViewAxes = ({ axisValues, width, height }) => {
     console.log('💡: reScaleAxes -> graphViewPositions', graphViewPositions);
     console.log('💡: reScaleAxes -> bounds', bounds);
 
-    const newMargins = {
-      left: width / NUM_TICKS,
-      top: height / NUM_TICKS,
-    };
-    setMargins(newMargins);
-
     const boundingNodes = { right: null, left: null, top: null, bottom: null };
+    // TODO: could get more accurate by doing top-bottom/2, right-left/2 (node centers)
     document.querySelectorAll('.node').forEach(node => {
       const { top, right, bottom, left } = node.getBoundingClientRect();
       if (!boundingNodes.top || boundingNodes.top.distance > top) {
@@ -132,6 +131,17 @@ const GraphViewAxes = ({ axisValues, width, height }) => {
       }
     });
     console.log('TCL: reScaleAxes -> boundingNodes', boundingNodes);
+
+    const graphWidth =
+      boundingNodes.right.distance - boundingNodes.left.distance;
+    const graphHeight =
+      boundingNodes.bottom.distance - boundingNodes.top.distance;
+
+    const newMargins = {
+      left: graphWidth / (NUM_TICKS - 1),
+      top: graphHeight / (NUM_TICKS - 1),
+    };
+    setMargins(newMargins);
 
     // TODO: set the tick labels
     // TODO: find min/max by axisValues on top/bottom/left/right
@@ -153,7 +163,11 @@ const GraphViewAxes = ({ axisValues, width, height }) => {
     <div className="axis axisX">
       {new Array(NUM_TICKS).fill('').map((tick, idx) => (
         // key = idx because all ticks are identical?
-        <div key={idx} className="tick" style={{ marginLeft: margins.left }} />
+        <div
+          key={idx}
+          className="tick"
+          style={{ marginLeft: idx === 0 ? 0 : margins.left }}
+        />
       ))}
     </div>
   );
@@ -161,7 +175,11 @@ const GraphViewAxes = ({ axisValues, width, height }) => {
   const YAxis = () => (
     <div className="axis axisY">
       {new Array(NUM_TICKS).fill('').map((tick, idx) => (
-        <div key={idx} className="tick" style={{ marginTop: margins.top }} />
+        <div
+          key={idx}
+          className="tick"
+          style={{ marginTop: idx === 0 ? 0 : margins.top }}
+        />
       ))}
     </div>
   );
