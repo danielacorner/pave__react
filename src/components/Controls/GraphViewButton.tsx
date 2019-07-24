@@ -23,7 +23,7 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
   >
     <MenuItem value={isIndustry ? INDUSTRY : WORKERS}>
       <Tooltip
-        placement='right'
+        placement="right"
         title={
           isIndustry
             ? 'Job industry, jobs that are related to each other'
@@ -35,20 +35,20 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
     </MenuItem>
     <MenuItem value={AUTOMATION_RISK}>
       <Tooltip
-        placement='right'
+        placement="right"
         title={'Risk that tasks will be replaced by machine work'}
       >
         <div>Risk</div>
       </Tooltip>
     </MenuItem>
     <MenuItem value={SALARY}>
-      <Tooltip placement='right' title={'Average yearly income in $CAD'}>
+      <Tooltip placement="right" title={'Average yearly income in $CAD'}>
         <div>Salary</div>
       </Tooltip>
     </MenuItem>
     <MenuItem value={STUDY}>
       <Tooltip
-        placement='right'
+        placement="right"
         title={
           'Average years of study for people working in this job (not necessarily required for the job)'
         }
@@ -82,7 +82,7 @@ const GraphViewButtonStyles = styled.div`
 export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => (
   <GraphViewButtonStyles>
     <FormControlLabel
-      className='formControl graphView'
+      className="formControl graphView"
       control={
         <Switch
           onChange={() => {
@@ -92,20 +92,20 @@ export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => (
         />
       }
       label={
-        <div className='labelAndSelect'>
+        <div className="labelAndSelect">
           <div>
             Compar
             {isGraphView ? 'ing' : 'e'}
           </div>
           <VariablePickerMenu
-            value={axisValues.x}
+            value={axisValues.x.displayName}
             onChange={event => {
               setAxisValues({ ...axisValues, x: event.target.value });
             }}
           />
           <div>to</div>
           <VariablePickerMenu
-            value={axisValues.y}
+            value={axisValues.y.displayName}
             onChange={event => {
               setAxisValues({ ...axisValues, y: event.target.value });
             }}
