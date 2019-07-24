@@ -64,10 +64,21 @@ const AxisStyles = styled.div`
   .erd_scroll_detection_container {
     opacity: 0;
   }
-  .axis .tick {
-    background: rgba(0, 0, 0, 0.7);
-    box-sizing: border-box;
+  .axis {
+    .tickAndLabelWrapper {
+      width: 0;
+      position: relative;
+      .label {
+        position: absolute;
+        font-family: system-ui;
+      }
+      .tick {
+        background: rgba(0, 0, 0, 0.7);
+        box-sizing: border-box;
+      }
+    }
   }
+
   .axisX {
     width: 100%;
     display: grid;
@@ -75,7 +86,11 @@ const AxisStyles = styled.div`
     justify-content: center;
     .tick {
       min-width: 1px;
+      width: 1px;
       min-height: 6px;
+    }
+    .label {
+      left: -1.2ch;
     }
   }
   .axisY {
@@ -85,11 +100,16 @@ const AxisStyles = styled.div`
     .tick {
       width: 6px;
       min-height: 1px;
+      height: 1px;
+    }
+    .label {
+      top: -1.4ch;
+      left: 8px;
     }
   }
 `;
 
-const reScaleAxes = ({ axisValues, nodes, setMargins }) => {
+const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
   if (!nodes) {
     return null;
   }
@@ -175,7 +195,30 @@ const reScaleAxes = ({ axisValues, nodes, setMargins }) => {
     left: graphWidth / (NUM_TICKS - 1),
     top: graphHeight / (NUM_TICKS - 1),
   };
+  const newLabels = {
+    x: new Array(NUM_TICKS)
+      .fill('')
+      .map((d, idx) =>
+        (
+          ((idx + 1) / NUM_TICKS) *
+            (boundingNodes.right.axisLabels.x -
+              boundingNodes.left.axisLabels.x) +
+          boundingNodes.left.axisLabels.x
+        ).toFixed(1),
+      ),
+    y: new Array(NUM_TICKS)
+      .fill('')
+      .map((d, idx) =>
+        (
+          (-(idx + 1) / NUM_TICKS) *
+            (boundingNodes.top.axisLabels.y -
+              boundingNodes.bottom.axisLabels.y) +
+          boundingNodes.top.axisLabels.y
+        ).toFixed(1),
+      ),
+  };
   setMargins(newMargins);
+  setLabels(newLabels);
 
   // TODO: set the tick labels
   // TODO: find min/max by axisValues on top/bottom/left/right
@@ -188,40 +231,50 @@ const GraphViewAxes = ({ axisValues, width, height }) => {
     state: { nodes },
   } = useContext(ControlsContext);
 
+  const EMPTY_TICKS_ARRAY = new Array(NUM_TICKS).fill('');
+
+  const [margins, setMargins] = useState({ left: 0, top: 0 });
+  const [labels, setLabels] = useState({
+    x: EMPTY_TICKS_ARRAY,
+    y: EMPTY_TICKS_ARRAY,
+  });
   // update every second based on remaining nodes
   const timerRef = useRef(null as number | null);
   useEffect(() => {
     timerRef.current = window.setInterval(
-      () => reScaleAxes({ axisValues, nodes, setMargins }),
+      () => reScaleAxes({ axisValues, nodes, setMargins, setLabels }),
       1500,
     );
     return () => {
       window.clearInterval(timerRef.current);
     };
   });
-  const [margins, setMargins] = useState({ left: 0, top: 0 });
 
   const XAxis = () => (
     <div className="axis axisX">
-      {new Array(NUM_TICKS).fill('').map((tick, idx) => (
+      {EMPTY_TICKS_ARRAY.map((tick, idx) => (
         // key = idx because all ticks are identical?
         <div
-          key={idx}
-          className="tick"
+          className="tickAndLabelWrapper"
           style={{ marginLeft: idx === 0 ? 0 : margins.left }}
-        />
+        >
+          <div key={idx} className="tick" />
+          <div className="label">{labels.x[idx]}</div>
+        </div>
       ))}
     </div>
   );
 
   const YAxis = () => (
     <div className="axis axisY">
-      {new Array(NUM_TICKS).fill('').map((tick, idx) => (
+      {EMPTY_TICKS_ARRAY.map((tick, idx) => (
         <div
-          key={idx}
-          className="tick"
+          className="tickAndLabelWrapper"
           style={{ marginTop: idx === 0 ? 0 : margins.top }}
-        />
+        >
+          <div key={idx} className="tick" />
+          <div className="label">{labels.y[idx]}</div>
+        </div>
       ))}
     </div>
   );
