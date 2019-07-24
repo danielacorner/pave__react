@@ -57,15 +57,16 @@ const AxisStyles = styled.div`
   bottom: 0;
   right: 0;
   pointer-events: none;
-  transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
-  /* &.hidden {
+  transition: all 2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  &.hidden {
     opacity: 0;
-  } */
+  }
   .erd_scroll_detection_container {
     opacity: 0;
   }
   .axis {
     .tickAndLabelWrapper {
+      transition: all 2s cubic-bezier(0.075, 0.82, 0.165, 1);
       width: 0;
       position: relative;
       .label {
@@ -226,12 +227,41 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
   // TODO: set tick margins based on positions of min/max nodes
 };
 
-const GraphViewAxes = ({ axisValues, width, height }) => {
+const EMPTY_TICKS_ARRAY = new Array(NUM_TICKS).fill('');
+
+const XAxis = ({ labels, margins }) => (
+  <div className="axis axisX">
+    {EMPTY_TICKS_ARRAY.map((tick, idx) => (
+      // key = idx because all ticks are identical?
+      <div
+        className="tickAndLabelWrapper"
+        style={{ marginLeft: idx === 0 ? 0 : margins.left }}
+      >
+        <div key={labels.x[idx]} className="tick" />
+        <div className="label">{labels.x[idx]}</div>
+      </div>
+    ))}
+  </div>
+);
+
+const YAxis = ({ labels, margins }) => (
+  <div className="axis axisY">
+    {EMPTY_TICKS_ARRAY.map((tick, idx) => (
+      <div
+        className="tickAndLabelWrapper"
+        style={{ marginTop: idx === 0 ? 0 : margins.top }}
+      >
+        <div key={labels.x[idx]} className="tick" />
+        <div className="label">{labels.y[idx]}</div>
+      </div>
+    ))}
+  </div>
+);
+
+const GraphViewAxes = ({ axisValues }) => {
   const {
     state: { nodes },
   } = useContext(ControlsContext);
-
-  const EMPTY_TICKS_ARRAY = new Array(NUM_TICKS).fill('');
 
   const [margins, setMargins] = useState({ left: 0, top: 0 });
   const [labels, setLabels] = useState({
@@ -250,39 +280,10 @@ const GraphViewAxes = ({ axisValues, width, height }) => {
     };
   });
 
-  const XAxis = () => (
-    <div className="axis axisX">
-      {EMPTY_TICKS_ARRAY.map((tick, idx) => (
-        // key = idx because all ticks are identical?
-        <div
-          className="tickAndLabelWrapper"
-          style={{ marginLeft: idx === 0 ? 0 : margins.left }}
-        >
-          <div key={idx} className="tick" />
-          <div className="label">{labels.x[idx]}</div>
-        </div>
-      ))}
-    </div>
-  );
-
-  const YAxis = () => (
-    <div className="axis axisY">
-      {EMPTY_TICKS_ARRAY.map((tick, idx) => (
-        <div
-          className="tickAndLabelWrapper"
-          style={{ marginTop: idx === 0 ? 0 : margins.top }}
-        >
-          <div key={idx} className="tick" />
-          <div className="label">{labels.y[idx]}</div>
-        </div>
-      ))}
-    </div>
-  );
-
   return (
     <>
-      <XAxis />
-      <YAxis />
+      <XAxis {...{ labels, margins }} />
+      <YAxis {...{ labels, margins }} />
     </>
   );
 };
