@@ -234,10 +234,11 @@ const XAxis = ({ labels, margins }) => (
     {EMPTY_TICKS_ARRAY.map((tick, idx) => (
       // key = idx because all ticks are identical?
       <div
+        key={idx}
         className="tickAndLabelWrapper"
         style={{ marginLeft: idx === 0 ? 0 : margins.left }}
       >
-        <div key={labels.x[idx]} className="tick" />
+        <div className="tick" />
         <div className="label">{labels.x[idx]}</div>
       </div>
     ))}
@@ -248,10 +249,11 @@ const YAxis = ({ labels, margins }) => (
   <div className="axis axisY">
     {EMPTY_TICKS_ARRAY.map((tick, idx) => (
       <div
+        key={idx}
         className="tickAndLabelWrapper"
         style={{ marginTop: idx === 0 ? 0 : margins.top }}
       >
-        <div key={labels.x[idx]} className="tick" />
+        <div className="tick" />
         <div className="label">{labels.y[idx]}</div>
       </div>
     ))}

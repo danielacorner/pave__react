@@ -4,7 +4,18 @@ import styled from 'styled-components/macro';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import { MenuItem, Select } from '@material-ui/core';
-import { AUTOMATION_RISK, WORKERS, SALARY, STUDY, INDUSTRY } from './SortPanel';
+import {
+  AUTOMATION_RISK,
+  WORKERS,
+  SALARY,
+  STUDY,
+  INDUSTRY,
+  AUTOMATION_RISK_LABEL,
+  WORKERS_LABEL,
+  INDUSTRY_LABEL,
+  SALARY_LABEL,
+  STUDY_LABEL,
+} from './SortPanel';
 
 export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
   <Select
@@ -21,7 +32,10 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
     }}
     onChange={onChange}
   >
-    <MenuItem value={isIndustry ? INDUSTRY : WORKERS}>
+    <MenuItem
+      value={isIndustry ? INDUSTRY : WORKERS}
+      data-name={isIndustry ? INDUSTRY_LABEL : WORKERS_LABEL}
+    >
       <Tooltip
         placement="right"
         title={
@@ -33,7 +47,7 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
         <div>{isIndustry ? 'Type' : 'Workers'}</div>
       </Tooltip>
     </MenuItem>
-    <MenuItem value={AUTOMATION_RISK}>
+    <MenuItem value={AUTOMATION_RISK} data-name={AUTOMATION_RISK_LABEL}>
       <Tooltip
         placement="right"
         title={'Risk that tasks will be replaced by machine work'}
@@ -41,12 +55,12 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
         <div>Risk</div>
       </Tooltip>
     </MenuItem>
-    <MenuItem value={SALARY}>
+    <MenuItem value={SALARY} data-name={SALARY_LABEL}>
       <Tooltip placement="right" title={'Average yearly income in $CAD'}>
         <div>Salary</div>
       </Tooltip>
     </MenuItem>
-    <MenuItem value={STUDY}>
+    <MenuItem value={STUDY} data-name={STUDY_LABEL}>
       <Tooltip
         placement="right"
         title={
@@ -100,14 +114,26 @@ export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => (
           <VariablePickerMenu
             value={axisValues.x.displayName}
             onChange={event => {
-              setAxisValues({ ...axisValues, x: event.target.value });
+              setAxisValues({
+                ...axisValues,
+                x: {
+                  displayName: event.target.value,
+                  dataLabel: event.target['data-name'],
+                },
+              });
             }}
           />
           <div>to</div>
           <VariablePickerMenu
             value={axisValues.y.displayName}
             onChange={event => {
-              setAxisValues({ ...axisValues, y: event.target.value });
+              setAxisValues({
+                ...axisValues,
+                y: {
+                  displayName: event.target.value,
+                  dataLabel: event.target['data-name'],
+                },
+              });
             }}
           />
         </div>
