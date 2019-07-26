@@ -7,7 +7,6 @@ import { ControlsContext } from '../Context/ContextProvider';
 import YAxis from './YAxis';
 import { useMount } from '../../utils/constants';
 import * as d3 from 'd3';
-import { useWindowSize } from '../useWindowSize';
 import GraphViewAxes, { getGraphViewPositions } from './GraphViewAxes';
 
 const VizStyles = styled.div`
@@ -84,8 +83,6 @@ const Viz = ({
   const MAX_NODES_WITH_TEXT_VISIBLE = 50;
   const isNodeTextVisible = nodes.length < MAX_NODES_WITH_TEXT_VISIBLE;
 
-  const { innerWidth, innerHeight } = useWindowSize();
-
   const prevPositions = useRef({});
   // switch to graph view and back
   useEffect(() => {
@@ -97,7 +94,7 @@ const Viz = ({
         deactivateGraphView({ prevPositions, restartSimulation });
       }
     }
-  }, [isGraphView, innerHeight, innerWidth, restartSimulation, axisValues]);
+  }, [isGraphView, width, height, getScale, restartSimulation, axisValues]);
 
   return (
     <VizStyles ref={vizRef} id="graphContainer">

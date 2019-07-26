@@ -17,6 +17,23 @@ import {
   STUDY_LABEL,
 } from './SortPanel';
 
+const MAP_VALUE_TO_DATALABEL = value => {
+  switch (value) {
+    case INDUSTRY:
+      return INDUSTRY_LABEL;
+    case WORKERS:
+      return WORKERS_LABEL;
+    case AUTOMATION_RISK:
+      return AUTOMATION_RISK_LABEL;
+    case SALARY:
+      return SALARY_LABEL;
+    case STUDY:
+      return STUDY_LABEL;
+    default:
+      return null;
+  }
+};
+
 export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
   <Select
     classes={{ root: 'select' }}
@@ -32,10 +49,7 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
     }}
     onChange={onChange}
   >
-    <MenuItem
-      value={isIndustry ? INDUSTRY : WORKERS}
-      data-name={isIndustry ? INDUSTRY_LABEL : WORKERS_LABEL}
-    >
+    <MenuItem value={isIndustry ? INDUSTRY : WORKERS}>
       <Tooltip
         placement="right"
         title={
@@ -47,7 +61,7 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
         <div>{isIndustry ? 'Type' : 'Workers'}</div>
       </Tooltip>
     </MenuItem>
-    <MenuItem value={AUTOMATION_RISK} data-name={AUTOMATION_RISK_LABEL}>
+    <MenuItem value={AUTOMATION_RISK}>
       <Tooltip
         placement="right"
         title={'Risk that tasks will be replaced by machine work'}
@@ -55,12 +69,12 @@ export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
         <div>Risk</div>
       </Tooltip>
     </MenuItem>
-    <MenuItem value={SALARY} data-name={SALARY_LABEL}>
+    <MenuItem value={SALARY}>
       <Tooltip placement="right" title={'Average yearly income in $CAD'}>
         <div>Salary</div>
       </Tooltip>
     </MenuItem>
-    <MenuItem value={STUDY} data-name={STUDY_LABEL}>
+    <MenuItem value={STUDY}>
       <Tooltip
         placement="right"
         title={
@@ -118,7 +132,7 @@ export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => (
                 ...axisValues,
                 x: {
                   displayName: event.target.value,
-                  dataLabel: event.target['data-name'],
+                  dataLabel: MAP_VALUE_TO_DATALABEL(event.target.value),
                 },
               });
             }}
@@ -131,7 +145,7 @@ export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => (
                 ...axisValues,
                 y: {
                   displayName: event.target.value,
-                  dataLabel: event.target['data-name'],
+                  dataLabel: MAP_VALUE_TO_DATALABEL(event.target.value),
                 },
               });
             }}

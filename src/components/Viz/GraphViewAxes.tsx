@@ -110,33 +110,10 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
     return null;
   }
 
-  // TODO: do we need these?
-  // const graphViewPositions = {};
-  // gives x/y values
-  // const boundaries = {
-  //   min: { x: Infinity, y: Infinity },
-  //   max: { x: -Infinity, y: -Infinity },
-  // };
-
   const boundingNodes = { right: null, left: null, top: null, bottom: null };
   // TODO: could get more accurate by doing top-bottom/2, right-left/2 (node centers)
+  // get the node, distance, and labels for the most extreme nodes
   document.querySelectorAll('.node').forEach(node => {
-    // const nodePositionInGraphView = getGraphViewPositions({
-    //   d: node,
-    //   innerWidth: window.innerWidth,
-    //   innerHeight: window.innerHeight,
-    //   axisValues,
-    // });
-    // graphViewPositions[node.id] = nodePositionInGraphView;
-    // boundaries.min = {
-    //   x: Math.min(boundaries.min.x, nodePositionInGraphView.x),
-    //   y: Math.min(boundaries.min.y, nodePositionInGraphView.y),
-    // };
-    // boundaries.max = {
-    //   x: Math.max(boundaries.max.x, nodePositionInGraphView.x),
-    //   y: Math.max(boundaries.max.y, nodePositionInGraphView.y),
-    // };
-
     const { top, right, bottom, left } = node.getBoundingClientRect();
     // TODO: abstract
     if (!boundingNodes.top || boundingNodes.top.distance > top) {
@@ -179,6 +156,11 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
         },
       };
     }
+    // console.log('⚡🚨: reScaleAxes -> axisValues', axisValues);
+    // console.log(
+    //   '⚡🚨: reScaleAxes -> nodes[node.id.slice(5)]',
+    //   nodes[node.id.slice(5)],
+    // );
   });
 
   const graphWidth = boundingNodes.right.distance - boundingNodes.left.distance;
@@ -189,6 +171,7 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
     left: graphWidth / (NUM_TICKS - 1),
     top: graphHeight / (NUM_TICKS - 1),
   };
+
   const newLabels = {
     x: new Array(NUM_TICKS)
       .fill('')
