@@ -189,21 +189,22 @@ const SortButtonsStyles = styled.div`
     height: 40px;
     justify-self: end;
     align-self: start;
-    span {
+    padding: 0 8px 0 6px;
+    .MuiButton-label {
       display: grid;
       align-items: center;
-      grid-template-columns: auto;
-      grid-template-rows: auto auto;
+      grid-template-columns: auto auto;
+      grid-gap: 4px;
       div {
         display: grid;
+        grid-auto-flow: column;
         align-items: center;
         justify-items: center;
       }
     }
-    margin-right: 10px;
     @media (min-width: ${MOBILE_MIN_WIDTH}px) {
-      margin-right: 0;
-      padding-left: 12px;
+      padding: 0 14px 0 10px;
+
       span {
         grid-template-columns: auto 1fr;
         grid-template-rows: auto;

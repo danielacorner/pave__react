@@ -32,6 +32,7 @@ import Legend from './Viz/Legend';
 import FORCE from './FORCE';
 import { useWindowSize } from './useWindowSize';
 import { NAV_HEIGHT } from './Nav/Navbar';
+import ContainerDimensions from 'react-container-dimensions';
 
 const AppLayoutStyles = styled.div`
   position: relative;
@@ -218,49 +219,55 @@ const AppLayout = () => {
             setAxisValues,
           }}
         />
-        <Viz
-          onMouseMove={
-            isTabletOrLarger
-              ? (event: Event, datum: any) => {
-                  const {
-                    bottom,
-                    height,
-                    left,
-                    width,
-                  } = (event.target as HTMLElement).getBoundingClientRect();
+        <ContainerDimensions>
+          {({ width, height }) => (
+            <Viz
+              onMouseMove={
+                isTabletOrLarger
+                  ? (event: Event, datum: any) => {
+                      const {
+                        bottom,
+                        height,
+                        left,
+                        width,
+                      } = (event.target as HTMLElement).getBoundingClientRect();
 
-                  const tooltipProps = {
-                    data: datum,
-                    bottom: (innerHeight || 0) - bottom + height / 2,
-                    left: left + width / 2 + 20,
-                    width,
-                  };
-                  setTooltipProps(tooltipProps);
-                  startTooltipActive();
-                }
-              : () => {}
-          }
-          onClick={
-            !isTabletOrLarger
-              ? (event: Event, datum: any) => {
-                  const {
-                    width,
-                  } = (event.target as HTMLElement).getBoundingClientRect();
-                  const mobileTooltipProps = {
-                    data: datum,
-                    width,
-                  };
-                  setMobileTooltipProps(mobileTooltipProps);
-                }
-              : () => {}
-          }
-          {...{
-            onMouseOut: isTabletOrLarger ? stopTooltipActive : () => {},
-            isGraphView,
-            isTabletOrLarger,
-            axisValues,
-          }}
-        />
+                      const tooltipProps = {
+                        data: datum,
+                        bottom: (innerHeight || 0) - bottom + height / 2,
+                        left: left + width / 2 + 20,
+                        width,
+                      };
+                      setTooltipProps(tooltipProps);
+                      startTooltipActive();
+                    }
+                  : () => {}
+              }
+              onClick={
+                !isTabletOrLarger
+                  ? (event: Event, datum: any) => {
+                      const {
+                        width,
+                      } = (event.target as HTMLElement).getBoundingClientRect();
+                      const mobileTooltipProps = {
+                        data: datum,
+                        width,
+                      };
+                      setMobileTooltipProps(mobileTooltipProps);
+                    }
+                  : () => {}
+              }
+              {...{
+                onMouseOut: isTabletOrLarger ? stopTooltipActive : () => {},
+                isGraphView,
+                isTabletOrLarger,
+                axisValues,
+                width,
+                height,
+              }}
+            />
+          )}
+        </ContainerDimensions>
         <Legend {...legendProps} />
       </AppLayoutStyles>
 

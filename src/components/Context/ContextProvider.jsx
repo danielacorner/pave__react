@@ -335,6 +335,7 @@ class ContextProvider extends Component {
           sortByValue: this.sortByValue,
           colourByValue: this.colourByValue,
           setCurrentColor: this.setCurrentColor,
+          getScale: this.getScale,
         }}
       >
         {this.props.children}

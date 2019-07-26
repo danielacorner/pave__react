@@ -39,15 +39,10 @@ const getAxisTranslate = (d, axisLength, axisValue) => {
   }
 };
 
-export const getGraphViewPositions = ({
-  d,
-  innerWidth,
-  innerHeight,
-  axisValues,
-}) => {
-  const x = getAxisTranslate(d, innerWidth, axisValues.x.displayName);
-  const y = getAxisTranslate(d, innerHeight, axisValues.y.displayName);
-  return { x: x * 2 - innerWidth, y: y * 2 - innerHeight * 1.1 };
+export const getGraphViewPositions = ({ d, width, height, axisValues }) => {
+  const x = getAxisTranslate(d, width, axisValues.x.displayName);
+  const y = getAxisTranslate(d, height, axisValues.y.displayName);
+  return { x: x - width / 2, y: y - height / 2 };
 };
 
 const AxisStyles = styled.div`
@@ -232,7 +227,7 @@ const EMPTY_TICKS_ARRAY = new Array(NUM_TICKS).fill('');
 const XAxis = ({ labels, margins }) => (
   <div className="axis axisX">
     {EMPTY_TICKS_ARRAY.map((tick, idx) => (
-      // key = idx because all ticks are identical?
+      // key = idx because ticks won't change?
       <div
         key={idx}
         className="tickAndLabelWrapper"
