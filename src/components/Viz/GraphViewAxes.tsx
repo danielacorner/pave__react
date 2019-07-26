@@ -180,8 +180,6 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
       };
     }
   });
-  console.log('TCL: reScaleAxes -> axisValues', axisValues);
-  console.log('TCL: reScaleAxes -> boundingNodes', boundingNodes);
 
   const graphWidth = boundingNodes.right.distance - boundingNodes.left.distance;
   const graphHeight =
