@@ -4,12 +4,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import RestoreIcon from '@material-ui/icons/RestoreRounded';
 import React, { useContext, useState } from 'react';
-import styled from 'styled-components/macro';
 import { ControlsContext } from '../Context/ContextProvider';
 import FORCE from '../FORCE';
-import { INITIAL_EXPANDED_STATE } from '../AppLayout';
-import { MOBILE_MIN_WIDTH } from '../../utils/constants';
 import GraphViewButton, { VariablePickerMenu } from './GraphViewButton';
+import { SortPanelStyles } from './SortPanelStyles';
+import { deactivateGraphView } from '../Viz/graphViewUtils';
+import { INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE } from '../AppLayout';
 
 export const AUTOMATION_RISK = 'automationRisk';
 export const AUTOMATION_RISK_LABEL = 'automationRisk';
@@ -23,10 +23,6 @@ export const WORKERS_LABEL = 'workers';
 export const SALARY_LABEL = 'salaryMed';
 export const STUDY_LABEL = 'yearsStudy';
 export const INDUSTRY_LABEL = 'industry';
-
-const white = 'rgba(255,255,255,0.98)';
-const inactive2 = 'hsl(160, 50%, 50%)';
-const hover2 = 'hsl(160, 50%, 45%)';
 
 const getTooltipText = (value, type) => {
   if (value === WORKERS) {
@@ -136,102 +132,26 @@ const getTooltipText = (value, type) => {
   }
 };
 
-const SortButtonsStyles = styled.div`
-  position: relative;
-  z-index: 1;
-  min-height: 36px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  grid-gap: 6px;
-  .sortBtnGroup {
-    display: grid;
-    width: 100%;
-    grid-template-columns: repeat(auto-fit, 220px);
-    grid-gap: 6px;
-    justify-items: start;
-    .formControl {
-      width: 100%;
-      background: white;
-      border: 1px solid rgba(0, 0, 0, 0.26);
-      border-radius: 4px;
-      display: grid;
-      justify-items: start;
-      grid-template-columns: auto 1fr;
-    }
-    @media (max-width: 399px) {
-      grid-gap: 0px;
-      margin-top: -10px;
-      .formControl {
-        border: none;
-      }
-    }
-    label {
-      margin: 0;
-    }
-    .labelAndSelect {
-      display: grid;
-      grid-auto-flow: column;
-      align-items: center;
-      .select {
-        transform: scale(0.85);
-      }
-    }
-  }
-  button {
-    border-radius: 4px;
-    transition: all 0.1s ease-in-out;
-    height: 100%;
-  }
-  .btnReset {
-    text-transform: none;
-    background: white;
-    height: 40px;
-    justify-self: end;
-    align-self: start;
-    padding: 0 8px 0 6px;
-    .MuiButton-label {
-      display: grid;
-      align-items: center;
-      grid-template-columns: auto auto;
-      grid-gap: 4px;
-      div {
-        display: grid;
-        grid-auto-flow: column;
-        align-items: center;
-        justify-items: center;
-      }
-    }
-    @media (min-width: ${MOBILE_MIN_WIDTH}px) {
-      padding: 0 14px 0 10px;
-
-      span {
-        grid-template-columns: auto 1fr;
-        grid-template-rows: auto;
-        grid-gap: 4px;
-      }
-    }
-    &:not([disabled]) {
-      background-color: ${inactive2};
-      color: ${white};
-      &:hover {
-        background-color: ${hover2};
-      }
-    }
-  }
-`;
-
 const SortPanel = ({
   setIsExpanded,
+  isExpanded,
   isGraphView,
   setIsGraphView,
   axisValues,
   setAxisValues,
+  prevPositions,
 }) => {
   const [activeSwitches, setActiveSwitches] = useState([]);
   const [valueToColourBy, setValueToColourBy] = useState(INDUSTRY);
   const [valueToSortBy, setValueToSortBy] = useState(WORKERS);
-  const context = useContext(ControlsContext);
+  const {
+    sortByValue,
+    colourByValue,
+    restartSimulation,
+    resetFilters,
+    setCurrentColor,
+    state,
+  } = useContext(ControlsContext);
 
   const handleSort = ({
     toggleActivated,
@@ -239,7 +159,7 @@ const SortPanel = ({
     setActiveSwitches,
   }) => {
     if (toggleActivated === SORT_BY_VALUE) {
-      context.sortByValue(valueToSortBy);
+      sortByValue(valueToSortBy);
 
       if (!activeSwitches.includes(SORT_BY_VALUE)) {
         setActiveSwitches([...activeSwitches, SORT_BY_VALUE]);
@@ -248,7 +168,7 @@ const SortPanel = ({
       }
     }
     if (toggleActivated === COLOUR_BY_VALUE) {
-      context.colourByValue(valueToColourBy);
+      colourByValue(valueToColourBy);
 
       if (!activeSwitches.includes(COLOUR_BY_VALUE)) {
         setActiveSwitches([...activeSwitches, COLOUR_BY_VALUE]);
@@ -259,20 +179,35 @@ const SortPanel = ({
   };
 
   const handleReset = () => {
+    // if any sort switches are enabled, reset them
     if (activeSwitches.includes(SORT_BY_VALUE)) {
-      context.sortByValue(valueToSortBy);
+      sortByValue(valueToSortBy);
     }
     if (activeSwitches.includes(COLOUR_BY_VALUE)) {
-      context.colourByValue(valueToColourBy);
+      colourByValue(valueToColourBy);
     }
-    context.resetFilters();
-    setIsExpanded(INITIAL_EXPANDED_STATE);
-    setValueToSortBy(WORKERS);
-    setValueToColourBy(INDUSTRY);
-    setActiveSwitches([]);
+    // if any filter is active, reset them
+    if (
+      Object.values(state.filters).reduce((tally, cur) => tally + cur, 0) > 0
+    ) {
+      resetFilters();
+    }
+    // if any subskill slider panel is open, close them
+    if (Object.values(isExpanded).includes(true)) {
+      setIsExpanded(INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE);
+    }
+    // setValueToSortBy(WORKERS);
+    // setValueToColourBy(INDUSTRY);
+    if (activeSwitches.length > 0) {
+      setActiveSwitches([]);
+    }
+    if (isGraphView) {
+      deactivateGraphView({ prevPositions, restartSimulation });
+      setTimeout(() => setIsGraphView(false), 0);
+    }
   };
   return (
-    <SortButtonsStyles>
+    <SortPanelStyles>
       <div className="sortBtnGroup">
         <Tooltip title={getTooltipText(valueToSortBy, SORT_BY_VALUE)}>
           <FormControlLabel
@@ -304,7 +239,7 @@ const SortPanel = ({
                   onChange={event => {
                     setValueToSortBy(event.target.value);
                     if (activeSwitches.includes(SORT_BY_VALUE)) {
-                      context.sortByValue(event.target.value, true);
+                      sortByValue(event.target.value, true);
                     }
                   }}
                 />
@@ -347,7 +282,7 @@ const SortPanel = ({
                         doColour: true,
                         value: event.target.value,
                       });
-                      context.setCurrentColor(event.target.value);
+                      setCurrentColor(event.target.value);
                     }
                   }}
                 />
@@ -364,10 +299,12 @@ const SortPanel = ({
         onClick={handleReset}
         disabled={
           // Disable Reset button if all filters are at 0
-          !Object.values(context.state.filters).reduce(
-            (tot, curr) => tot + curr,
-            0,
-          ) > 0 && activeSwitches.length === 0
+          !Object.values(state.filters).reduce((tot, curr) => tot + curr, 0) >
+            0 &&
+          // and no switches are active
+          activeSwitches.length === 0 &&
+          // (including graph view)
+          !isGraphView
         }
         variant="outlined"
       >
@@ -376,7 +313,7 @@ const SortPanel = ({
         </div>
         <div>Reset</div>
       </Button>
-    </SortButtonsStyles>
+    </SortPanelStyles>
   );
 };
 export default SortPanel;

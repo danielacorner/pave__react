@@ -62,7 +62,7 @@ const AppLayoutStyles = styled.div`
   }
   box-sizing: border-box;
 `;
-export const INITIAL_EXPANDED_STATE = {
+export const INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE = {
   skillsLang: false,
   skillsLogi: false,
   skillsMath: false,
@@ -110,10 +110,14 @@ const AppLayout = () => {
     ControlsContext,
   );
 
-  const [isExpanded, setIsExpanded] = useState(INITIAL_EXPANDED_STATE);
+  const [isExpanded, setIsExpanded] = useState(
+    INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE,
+  );
   const { getRadiusScale, zScale, uniqueClusterValues, sortedByValue } = state;
 
   const [isGraphView, setIsGraphView] = useState(false);
+
+  const prevPositions = useRef({});
 
   const onMouseUp = useCallback(() => {
     if ((FORCE as any).paused && !isGraphView) {
@@ -189,7 +193,7 @@ const AppLayout = () => {
                   (event.target as HTMLElement).id === 'svg' ||
                   (event.target as HTMLElement).nodeName === 'circle'
                 ) {
-                  setIsExpanded(INITIAL_EXPANDED_STATE);
+                  setIsExpanded(INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE);
                 }
               }
             : event => {
@@ -201,7 +205,7 @@ const AppLayout = () => {
                   (event.target as HTMLElement).id === 'svg' ||
                   (event.target as HTMLElement).nodeName === 'circle'
                 ) {
-                  setIsExpanded(INITIAL_EXPANDED_STATE);
+                  setIsExpanded(INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE);
                 }
                 if ((event.target as HTMLElement).nodeName !== 'circle') {
                   setMobileTooltipProps(null);
@@ -213,10 +217,12 @@ const AppLayout = () => {
         <SortPanel
           {...{
             setIsExpanded,
+            isExpanded,
             isGraphView,
             setIsGraphView,
             axisValues,
             setAxisValues,
+            prevPositions,
           }}
         />
         <ContainerDimensions>
@@ -264,6 +270,7 @@ const AppLayout = () => {
                 axisValues,
                 width,
                 height,
+                prevPositions,
               }}
             />
           )}
