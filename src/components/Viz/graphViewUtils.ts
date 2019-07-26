@@ -36,7 +36,7 @@ export function activateGraphView({
           height,
           axisValues,
         });
-        return `translate(${(x / scale) * 0.7},${y * 0.8})`;
+        return `translate(${(x / scale) * 0.7},${y * 0.7})`;
       });
   }, 0);
 }

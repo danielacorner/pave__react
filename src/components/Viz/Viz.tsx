@@ -95,7 +95,15 @@ const Viz = ({
         deactivateGraphView({ prevPositions, restartSimulation });
       }
     }
-  }, [isGraphView, width, height, getScale, restartSimulation, axisValues]);
+  }, [
+    isGraphView,
+    width,
+    height,
+    getScale,
+    restartSimulation,
+    axisValues,
+    prevPositions,
+  ]);
 
   return (
     <VizStyles ref={vizRef} id="graphContainer">

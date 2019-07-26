@@ -142,15 +142,6 @@ const AppLayout = () => {
   const legendColours = uniqueClusterValues.map((val: number) => {
     return { colour: zScale(val), text: val };
   });
-  const legendProps = {
-    colours: legendColours,
-    sizes: [
-      { size: 1000, text: '1000 workers' },
-      { size: 10000, text: '10000 workers' },
-      { size: 50000, text: '50000 workers' },
-    ],
-    radiusScale: getRadiusScale(),
-  };
 
   const tooltipTimer = useRef(null as number | null);
 
@@ -275,7 +266,18 @@ const AppLayout = () => {
             />
           )}
         </ContainerDimensions>
-        <Legend {...legendProps} />
+        <Legend
+          {...{
+            colours: legendColours,
+            sizes: [
+              { size: 1000, text: '1000 workers' },
+              { size: 10000, text: '10000 workers' },
+              { size: 50000, text: '50000 workers' },
+            ],
+            radiusScale: getRadiusScale(),
+            isGraphView,
+          }}
+        />
       </AppLayoutStyles>
 
       {isTooltipActive && isTabletOrLarger ? (

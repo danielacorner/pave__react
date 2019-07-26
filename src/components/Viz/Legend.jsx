@@ -12,12 +12,22 @@ const LegendButtonStyles = styled.div`
     position: fixed;
     z-index: 99;
     bottom: 10px;
-    left: 10px;
+    right: 10px;
     @media (min-width: ${TABLET_MIN_WIDTH - 200}px) {
       bottom: 25px;
-      left: 29px;
+      right: 29px;
     }
     text-transform: none;
+  }
+  &.graphView button {
+    transform-origin: bottom right;
+    transform: scale(0.6);
+    bottom: 10px;
+    right: 4px;
+    @media (min-width: ${TABLET_MIN_WIDTH - 200}px) {
+      bottom: 6px;
+      right: 4px;
+    }
   }
   .icon {
     transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -117,19 +127,22 @@ const LegendStyles = styled.div`
   }
 `;
 
+// TODO: use Intl.format('en') instead
 export function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 // TODO: min, max radii based on radiusSelector
 // TODO: highlight clusters on hover, click
-const Legend = ({ colours, sizes, radiusScale }) => {
+const Legend = ({ colours, sizes, radiusScale, isGraphView }) => {
   const [legendExpanded, setLegendExpanded] = useState(false);
 
   return (
     <LegendStyles className={legendExpanded ? 'expanded' : ''}>
       <Portal>
-        <LegendButtonStyles className="btnLegendWrapper">
+        <LegendButtonStyles
+          className={`btnLegendWrapper${isGraphView ? ' graphView' : ''}`}
+        >
           <Button
             variant="contained"
             size="large"
