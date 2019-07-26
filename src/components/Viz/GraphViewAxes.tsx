@@ -121,8 +121,8 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
         node,
         distance: top,
         axisLabels: {
-          x: nodes[node.id.slice(5)][axisValues.x.dataLabel],
-          y: nodes[node.id.slice(5)][axisValues.y.dataLabel],
+          x: nodes[+node.id.slice(5) - 1][axisValues.x.dataLabel],
+          y: nodes[+node.id.slice(5) - 1][axisValues.y.dataLabel],
         },
       };
     }
@@ -131,8 +131,8 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
         node,
         distance: right,
         axisLabels: {
-          x: nodes[node.id.slice(5)][axisValues.x.dataLabel],
-          y: nodes[node.id.slice(5)][axisValues.y.dataLabel],
+          x: nodes[+node.id.slice(5) - 1][axisValues.x.dataLabel],
+          y: nodes[+node.id.slice(5) - 1][axisValues.y.dataLabel],
         },
       };
     }
@@ -141,8 +141,8 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
         node,
         distance: bottom,
         axisLabels: {
-          x: nodes[node.id.slice(5)][axisValues.x.dataLabel],
-          y: nodes[node.id.slice(5)][axisValues.y.dataLabel],
+          x: nodes[+node.id.slice(5) - 1][axisValues.x.dataLabel],
+          y: nodes[+node.id.slice(5) - 1][axisValues.y.dataLabel],
         },
       };
     }
@@ -151,16 +151,11 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
         node,
         distance: left,
         axisLabels: {
-          x: nodes[node.id.slice(5)][axisValues.x.dataLabel],
-          y: nodes[node.id.slice(5)][axisValues.y.dataLabel],
+          x: nodes[+node.id.slice(5) - 1][axisValues.x.dataLabel],
+          y: nodes[+node.id.slice(5) - 1][axisValues.y.dataLabel],
         },
       };
     }
-    // console.log('⚡🚨: reScaleAxes -> axisValues', axisValues);
-    // console.log(
-    //   '⚡🚨: reScaleAxes -> nodes[node.id.slice(5)]',
-    //   nodes[node.id.slice(5)],
-    // );
   });
 
   const graphWidth = boundingNodes.right.distance - boundingNodes.left.distance;
@@ -177,7 +172,7 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
       .fill('')
       .map((d, idx) =>
         (
-          ((idx + 1) / NUM_TICKS) *
+          (idx / NUM_TICKS) *
             (boundingNodes.right.axisLabels.x -
               boundingNodes.left.axisLabels.x) +
           boundingNodes.left.axisLabels.x
@@ -187,7 +182,7 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
       .fill('')
       .map((d, idx) =>
         (
-          (-(idx + 1) / NUM_TICKS) *
+          (-idx / NUM_TICKS) *
             (boundingNodes.top.axisLabels.y -
               boundingNodes.bottom.axisLabels.y) +
           boundingNodes.top.axisLabels.y
