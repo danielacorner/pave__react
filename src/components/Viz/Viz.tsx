@@ -9,14 +9,21 @@ import { useMount } from '../../utils/constants';
 import GraphViewAxes from './GraphViewAxes';
 import { activateGraphView, deactivateGraphView } from './graphViewUtils';
 
+const AXIS_HEIGHT = 24;
+
 const VizStyles = styled.div`
   position: relative;
   overflow: hidden;
   width: 100%;
   height: 100%;
+  transition: all 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
+  &.graphView {
+    width: calc(100% - ${AXIS_HEIGHT}px);
+    height: calc(100% - ${AXIS_HEIGHT}px);
+  }
   display: grid;
-  justify-self: center;
-  align-self: center;
+  justify-self: end;
+  align-self: end;
   background: rgba(0, 0, 0, 0.01);
   box-shadow: 1px 1px 6px 2px rgba(0, 0, 0, 0.1) inset;
   svg {
@@ -106,7 +113,11 @@ const Viz = ({
   ]);
 
   return (
-    <VizStyles ref={vizRef} id="graphContainer">
+    <VizStyles
+      ref={vizRef}
+      id="graphContainer"
+      className={isGraphView ? `graphView` : ``}
+    >
       <svg id="svg">
         <g id="nodesG">
           {nodes.map(node => {
