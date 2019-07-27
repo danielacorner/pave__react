@@ -278,6 +278,7 @@ export default props => (
 );
 
 const GraphViewAxisTitlesStyles = styled.div`
+  pointer-events: none;
   position: absolute;
   display: grid;
   justify-items: center;
