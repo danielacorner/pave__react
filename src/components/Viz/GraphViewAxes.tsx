@@ -4,6 +4,7 @@ import { STUDY_MAX, STUDY_MIN, SALARY_MAX, SALARY_MIN } from '../FORCE';
 import {
   STUDY,
   AUTOMATION_RISK,
+  AUTOMATION_RISK_LABEL,
   SALARY,
   WORKERS,
   SALARY_LABEL,
@@ -200,32 +201,20 @@ const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
 
 const EMPTY_TICKS_ARRAY = new Array(NUM_TICKS).fill('');
 
-const XAxis = ({ labels, margins }) => (
-  <div className="axis axisX">
+const Axis = ({ labels, margins, isXAxis }) => (
+  <div className={`axis axis${isXAxis ? 'X' : 'Y'}`}>
     {EMPTY_TICKS_ARRAY.map((tick, idx) => (
       // key = idx because ticks won't change?
       <div
         key={idx}
         className="tickAndLabelWrapper"
-        style={{ marginLeft: idx === 0 ? 0 : margins.left }}
+        style={{
+          [isXAxis ? 'marginLeft' : 'marginTop']:
+            idx === 0 ? 0 : margins[isXAxis ? 'left' : 'top'],
+        }}
       >
         <div className="tick" />
-        <div className="label">{labels.x[idx]}</div>
-      </div>
-    ))}
-  </div>
-);
-
-const YAxis = ({ labels, margins }) => (
-  <div className="axis axisY">
-    {EMPTY_TICKS_ARRAY.map((tick, idx) => (
-      <div
-        key={idx}
-        className="tickAndLabelWrapper"
-        style={{ marginTop: idx === 0 ? 0 : margins.top }}
-      >
-        <div className="tick" />
-        <div className="label">{labels.y[idx]}</div>
+        <div className="label">{labels[isXAxis ? 'x' : 'y'][idx]}</div>
       </div>
     ))}
   </div>
@@ -255,8 +244,20 @@ const GraphViewAxes = ({ axisValues }) => {
 
   return (
     <>
-      <XAxis {...{ labels, margins }} />
-      <YAxis {...{ labels, margins }} />
+      <Axis
+        {...{
+          labels,
+          margins,
+          isXAxis: true,
+        }}
+      />
+      <Axis
+        {...{
+          labels,
+          margins,
+          isXAxis: false,
+        }}
+      />
     </>
   );
 };
@@ -270,3 +271,57 @@ export default props => (
     </ContainerDimensions>
   </AxisStyles>
 );
+
+const GraphViewAxisTitlesStyles = styled.div`
+  position: absolute;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  height: 100%;
+  font-family: system-ui;
+  font-size: 1.5em;
+  line-height: 0;
+  .axisTitle {
+    white-space: nowrap;
+    position: absolute;
+    transition: all 1s ease-in-out;
+    &.hidden {
+      opacity: 0;
+      transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+    }
+  }
+  .axisTitleX {
+    &.hidden {
+      transform: translateY(10px);
+    }
+  }
+  .axisTitleY {
+    text-align: center;
+    width: 100%;
+    justify-self: left;
+    align-self: end;
+    transform-origin: left;
+    transform: rotate(-90deg);
+    &.hidden {
+      transform: rotate(-90deg) translateY(10px);
+    }
+  }
+`;
+export const GraphViewAxisTitles = ({ isGraphView, axisValues }) => {
+  const AXIS_TITLE_MAP = {
+    [STUDY_LABEL]: 'Years of study',
+    [AUTOMATION_RISK_LABEL]: 'Risk of machines replacing tasks (%)',
+    [SALARY_LABEL]: 'Salary, median ($K per year)',
+    [WORKERS_LABEL]: 'Workers in this job',
+  };
+  return (
+    <GraphViewAxisTitlesStyles>
+      <div className={`axisTitle axisTitleX${!isGraphView ? ' hidden' : ''}`}>
+        {AXIS_TITLE_MAP[axisValues.x.dataLabel]}
+      </div>
+      <div className={`axisTitle axisTitleY${!isGraphView ? ' hidden' : ''}`}>
+        {AXIS_TITLE_MAP[axisValues.y.dataLabel]}
+      </div>
+    </GraphViewAxisTitlesStyles>
+  );
+};

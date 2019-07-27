@@ -6,26 +6,35 @@ import SVG3dEffect from './SVG3dEffect';
 import { ControlsContext } from '../Context/ContextProvider';
 import YAxis from './YAxis';
 import { useMount } from '../../utils/constants';
-import GraphViewAxes from './GraphViewAxes';
+import GraphViewAxes, { GraphViewAxisTitles } from './GraphViewAxes';
 import { activateGraphView, deactivateGraphView } from './graphViewUtils';
 
 const AXIS_HEIGHT = 24;
 
 const VizStyles = styled.div`
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  transition: all 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
-  &.graphView {
-    width: calc(100% - ${AXIS_HEIGHT}px);
-    height: calc(100% - ${AXIS_HEIGHT}px);
-  }
   display: grid;
   justify-self: end;
   align-self: end;
-  background: rgba(0, 0, 0, 0.01);
-  box-shadow: 1px 1px 6px 2px rgba(0, 0, 0, 0.1) inset;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  .graphViewWrapper {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    transition: all 0.5s cubic-bezier(0.4, -0.49, 0.43, 1.74);
+    display: grid;
+    justify-self: end;
+    align-self: end;
+    background: rgba(0, 0, 0, 0.01);
+    box-shadow: 1px 1px 6px 2px rgba(0, 0, 0, 0.1) inset;
+    &.graphView {
+      width: calc(100% - ${AXIS_HEIGHT}px);
+      height: calc(100% - ${AXIS_HEIGHT}px);
+      transition: all 1s cubic-bezier(0.63, 0, 0.29, 0.99);
+    }
+  }
   svg {
     width: 100%;
     height: 100%;
@@ -113,37 +122,36 @@ const Viz = ({
   ]);
 
   return (
-    <VizStyles
-      ref={vizRef}
-      id="graphContainer"
-      className={isGraphView ? `graphView` : ``}
-    >
-      <svg id="svg">
-        <g id="nodesG">
-          {nodes.map(node => {
-            return (
-              <Node
-                radiusScale={radiusScale}
-                key={`vizNode_${node.noc}`}
-                onMouseMove={onMouseMove}
-                onMouseOut={onMouseOut}
-                onClick={(event: Event, datum: any) => {
-                  handleClick(node.id);
-                  if (!isTabletOrLarger) {
-                    onClick(event, node);
-                  }
-                }}
-                data={node}
-                isActive={activeNodeId === node.id}
-                isNodeTextVisible={isNodeTextVisible}
-              />
-            );
-          })}
-        </g>
-        <SVG3dEffect />
-      </svg>
-      <YAxis />
-      <GraphViewAxes {...{ isGraphView, axisValues }} />
+    <VizStyles ref={vizRef} id="graphContainer">
+      <div className={`graphViewWrapper${isGraphView ? ` graphView` : ``}`}>
+        <svg id="svg">
+          <g id="nodesG">
+            {nodes.map(node => {
+              return (
+                <Node
+                  radiusScale={radiusScale}
+                  key={`vizNode_${node.noc}`}
+                  onMouseMove={onMouseMove}
+                  onMouseOut={onMouseOut}
+                  onClick={(event: Event, datum: any) => {
+                    handleClick(node.id);
+                    if (!isTabletOrLarger) {
+                      onClick(event, node);
+                    }
+                  }}
+                  data={node}
+                  isActive={activeNodeId === node.id}
+                  isNodeTextVisible={isNodeTextVisible}
+                />
+              );
+            })}
+          </g>
+          <SVG3dEffect />
+        </svg>
+        <YAxis />
+        <GraphViewAxes {...{ isGraphView, axisValues }} />
+      </div>
+      <GraphViewAxisTitles {...{ isGraphView, axisValues }} />
     </VizStyles>
   );
 };
