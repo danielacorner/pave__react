@@ -115,7 +115,8 @@ const Node = React.memo(
 
     // console.count('node rendering!');
     return (
-      <NodeGroupStyles ref={node} className="node" id={`node_${data.id}`}>
+      <NodeGroupStyles ref={node} className="node" id={`node_${data.id}`} aria-labelledby={data.job}>
+        <title id={data.job}>{data.job}</title>
         <circle
           onMouseMove={event => onMouseMove(event, data)}
           onMouseOut={onMouseOut}
