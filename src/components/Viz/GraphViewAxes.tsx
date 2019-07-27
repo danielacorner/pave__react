@@ -11,9 +11,14 @@ import {
   WORKERS_LABEL,
   STUDY_LABEL,
 } from '../Controls/SortPanel';
-import { WORKERS_MIN, WORKERS_MAX } from '../../utils/constants';
+import {
+  WORKERS_MIN,
+  WORKERS_MAX,
+  MOBILE_MIN_WIDTH,
+} from '../../utils/constants';
 import ContainerDimensions from 'react-container-dimensions';
 import { ControlsContext } from '../Context/ContextProvider';
+import { AXIS_HEIGHT } from './Viz';
 
 const NUM_TICKS = 6;
 
@@ -279,31 +284,50 @@ const GraphViewAxisTitlesStyles = styled.div`
   width: 100%;
   height: 100%;
   font-family: system-ui;
-  font-size: 1.5em;
-  line-height: 0;
+  font-size: 1em;
+  line-height: 1em;
   .axisTitle {
     white-space: nowrap;
     position: absolute;
     transition: all 1s ease-in-out;
-    &.hidden {
+    &.hidden,
+    &.hidden .titleWrapper {
       opacity: 0;
       transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
     }
   }
   .axisTitleX {
+    margin-right: ${-AXIS_HEIGHT / 2}px;
     &.hidden {
       transform: translateY(10px);
     }
   }
   .axisTitleY {
-    text-align: center;
+    height: 100%;
     width: 100%;
-    justify-self: left;
-    align-self: end;
-    transform-origin: left;
-    transform: rotate(-90deg);
+    text-align: center;
+    display: grid;
+    .titleWrapper {
+      display: grid;
+      align-items: center;
+      justify-content: center;
+      margin-top: ${AXIS_HEIGHT / 2}px;
+      height: 100%;
+      transform: rotate(-90deg);
+      width: 1em;
+    }
     &.hidden {
-      transform: rotate(-90deg) translateY(10px);
+      transform: translateX(10px);
+      .titleWrapper {
+        transform: rotate(-90deg) translateY(10px);
+      }
+    }
+  }
+  @media (min-width: ${MOBILE_MIN_WIDTH}px) {
+    line-height: 0;
+    font-size: 1.5em;
+    .titleWrapper {
+      width: 1.5em;
     }
   }
 `;
@@ -320,7 +344,9 @@ export const GraphViewAxisTitles = ({ isGraphView, axisValues }) => {
         {AXIS_TITLE_MAP[axisValues.x.dataLabel]}
       </div>
       <div className={`axisTitle axisTitleY${!isGraphView ? ' hidden' : ''}`}>
-        {AXIS_TITLE_MAP[axisValues.y.dataLabel]}
+        <div className="titleWrapper">
+          {AXIS_TITLE_MAP[axisValues.y.dataLabel]}
+        </div>
       </div>
     </GraphViewAxisTitlesStyles>
   );

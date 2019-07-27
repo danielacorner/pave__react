@@ -9,7 +9,7 @@ import { useMount } from '../../utils/constants';
 import GraphViewAxes, { GraphViewAxisTitles } from './GraphViewAxes';
 import { activateGraphView, deactivateGraphView } from './graphViewUtils';
 
-const AXIS_HEIGHT = 24;
+export const AXIS_HEIGHT = 24;
 
 const VizStyles = styled.div`
   display: grid;
