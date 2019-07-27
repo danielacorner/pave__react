@@ -58,12 +58,19 @@ const AxisStyles = styled.div`
   bottom: 0;
   right: 0;
   pointer-events: none;
-  transition: all 2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: all 2s ease-in-out;
   &.hidden {
+    transition: all 2s cubic-bezier(0.075, 0.82, 0.165, 1);
     opacity: 0;
-  }
-  .erd_scroll_detection_container {
-    opacity: 0;
+    .axis .tickAndLabelWrapper {
+      opacity: 0;
+    }
+    .axisX {
+      transform: translateY(-10px);
+    }
+    .axisY {
+      transform: translateX(-10px);
+    }
   }
   .axis {
     .tickAndLabelWrapper {
@@ -73,6 +80,10 @@ const AxisStyles = styled.div`
       .label {
         position: absolute;
         font-family: system-ui;
+        transform: scale(0.75);
+        @media (min-width: ${MOBILE_MIN_WIDTH}px) {
+          transform: scale(1);
+        }
       }
       .tick {
         background: rgba(0, 0, 0, 0.7);
@@ -80,7 +91,6 @@ const AxisStyles = styled.div`
       }
     }
   }
-
   .axisX {
     width: 100%;
     display: grid;
@@ -92,6 +102,7 @@ const AxisStyles = styled.div`
       min-height: 6px;
     }
     .label {
+      transform-origin: left center;
       left: -1.2ch;
     }
   }
@@ -105,6 +116,7 @@ const AxisStyles = styled.div`
       height: 1px;
     }
     .label {
+      transform-origin: top center;
       top: -1.4ch;
       left: 8px;
     }
@@ -315,7 +327,7 @@ const GraphViewAxisTitlesStyles = styled.div`
       margin-top: ${AXIS_HEIGHT / 2}px;
       height: 100%;
       transform: rotate(-90deg);
-      width: 1em;
+      width: 0;
     }
     &.hidden {
       transform: translateX(10px);
@@ -328,7 +340,7 @@ const GraphViewAxisTitlesStyles = styled.div`
     line-height: 0;
     font-size: 1.5em;
     .titleWrapper {
-      width: 1.5em;
+      width: 1em;
     }
   }
 `;
