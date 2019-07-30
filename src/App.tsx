@@ -38,8 +38,10 @@ function App() {
         <PictogramClipPathsDefs />
         <AppWithContext />
         <AddToHomeScreenBanner
-          deferredPrompt={deferredPrompt}
-          setDeferredPrompt={setDeferredPrompt}
+          {...{
+            deferredPrompt,
+            setDeferredPrompt,
+          }}
         />
       </ContextProvider>
     </MuiThemeProvider>

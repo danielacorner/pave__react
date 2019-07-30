@@ -147,6 +147,9 @@ class ContextProvider extends Component {
   }
 
   getScale() {
+    if (FORCE.isGraphView) {
+      return 0.95;
+    }
     // resize the graph container to fit the screen
     const { width, height } = getGraphContainerDims();
 

@@ -41,6 +41,7 @@ const VizStyles = styled.div`
     #nodesG {
       transition: transform 0.5s ease-in-out;
       transform: translate(50%, 50%);
+      max-width: 100%;
     }
     #summaryBar {
       transition: all 0.5s;
