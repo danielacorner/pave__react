@@ -21,5 +21,6 @@ module.exports = {
   rules: {
     'react-hooks/rules-of-hooks': 'error',
     'react/prop-types': 0,
+    'react/no-unescaped-entities': 0,
   },
 };

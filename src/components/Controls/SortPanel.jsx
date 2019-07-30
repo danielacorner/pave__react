@@ -46,12 +46,12 @@ const getTooltipText = (value, type) => {
         {type === COLOUR_BY_VALUE ? (
           <div>
             Once coloured, look for{' '}
-            <span style={{ color: 'rgb(180, 223, 117)' }}>green circles</span>{' '}
-            to find jobs which won{"'"}t be taken over by machines for a long
-            time. Darker green means lower risk.
+            <span style={{ color: 'hsl(84, 62%, 47%)' }}>green circles</span> to
+            find jobs which won{"'"}t be taken over by machines for a long time.
+            Darker green means lower risk.
             <div>
               Avoid high-risk{' '}
-              <span style={{ color: 'rgb(253, 193, 114)' }}>red circles</span>.
+              <span style={{ color: 'hsl(34, 97%, 49%)' }}>red circles</span>.
             </div>
           </div>
         ) : (
@@ -74,7 +74,7 @@ const getTooltipText = (value, type) => {
         {type === COLOUR_BY_VALUE ? (
           <div>
             Once coloured, look for{' '}
-            <span style={{ color: 'rgb(170, 213, 107)' }}>
+            <span style={{ color: 'hsl(84, 76%, 43%)' }}>
               dark green circles
             </span>{' '}
             to find jobs which make more money.
@@ -99,9 +99,9 @@ const getTooltipText = (value, type) => {
         {type === COLOUR_BY_VALUE ? (
           <div>
             Once coloured, look for{' '}
-            <span style={{ color: 'hsl(203,70%,70%)' }}>dark blue circles</span>{' '}
+            <span style={{ color: 'hsl(203,70%,50%)' }}>dark blue circles</span>{' '}
             to find jobs which require more study, or{' '}
-            <span style={{ color: 'hsl(203,85%,85%)' }}>
+            <span style={{ color: 'hsl(203,85%,70%)' }}>
               light blue circles
             </span>{' '}
             for jobs which require less study.
@@ -209,7 +209,10 @@ const SortPanel = ({
   return (
     <SortPanelStyles>
       <div className="sortBtnGroup">
-        <Tooltip title={getTooltipText(valueToSortBy, SORT_BY_VALUE)}>
+        <Tooltip
+          className="bigTooltip"
+          title={getTooltipText(valueToSortBy, SORT_BY_VALUE)}
+        >
           <FormControlLabel
             disabled={isGraphView}
             className="formControl sortByValue"
@@ -247,7 +250,10 @@ const SortPanel = ({
             }
           />
         </Tooltip>
-        <Tooltip title={getTooltipText(valueToColourBy, COLOUR_BY_VALUE)}>
+        <Tooltip
+          className="bigTooltip"
+          title={getTooltipText(valueToColourBy, COLOUR_BY_VALUE)}
+        >
           <FormControlLabel
             classes={{ root: 'formControlRoot' }}
             className="formControl colourByValue"
