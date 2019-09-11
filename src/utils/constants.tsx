@@ -41,8 +41,11 @@ export const WORKERS_MED = (WORKERS_MAX - WORKERS_MIN) / 2;
 
 export const getAxisTitleMap = () => ({
   [STUDY_LABEL]: 'Years of study',
-  [AUTOMATION_RISK_LABEL]: 'Risk of machines replacing tasks (%)',
-  [SALARY_LABEL]: 'Salary, median ($K per year)',
+  [AUTOMATION_RISK_LABEL]:
+    window.innerWidth > MOBLET_MIN_WIDTH
+      ? 'Risk of machines replacing tasks (%)'
+      : 'Risk of machine takeover (%)',
+  [SALARY_LABEL]: 'Salary (median, $K per year)',
   [WORKERS_LABEL]: 'Workers in this job',
 });
 export const getDatalabelMap = () => ({

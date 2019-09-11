@@ -1,6 +1,7 @@
 import FORCE from '../FORCE';
 import * as d3 from 'd3';
 import { getDatalabelMap } from '../../utils/constants';
+import { AUTOMATION_RISK_LABEL } from '../Controls/SortPanel';
 type ActivateGraphViewProps = {
   prevPositions: React.MutableRefObject<{}>;
   width: number;
@@ -99,4 +100,89 @@ export function deactivateGraphView({
   setTimeout(() => {
     restartSimulation();
   }, 400);
+}
+
+export const NUM_TICKS = 6;
+
+export const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
+  if (!nodes) {
+    return null;
+  }
+  const boundingNodes = { top: null, right: null, bottom: null, left: null };
+
+  // get the node, distance, and labels for the most extreme nodes
+  document.querySelectorAll('.node').forEach(node => {
+    const nodeIdx = +node.id.slice(5) - 1;
+    const axisLabels = {
+      x: nodes[nodeIdx][axisValues.x.dataLabel],
+      y: nodes[nodeIdx][axisValues.y.dataLabel],
+    };
+
+    // multiply by 100 for any percent labels (automation risk)
+    if (axisValues.x.dataLabel === AUTOMATION_RISK_LABEL) {
+      axisLabels.x *= 100;
+    }
+    if (axisValues.y.dataLabel === AUTOMATION_RISK_LABEL) {
+      axisLabels.y *= 100;
+    }
+
+    const nodeRect = node.getBoundingClientRect();
+
+    // track the most extreme node so far (small for top/left, big for right/bottom)
+    Object.entries(boundingNodes).forEach(([side, boundingNode]) => {
+      if (
+        !boundingNode ||
+        (['top', 'left'].includes(side)
+          ? boundingNode.distance > nodeRect[side]
+          : boundingNode.distance < nodeRect[side])
+      ) {
+        boundingNodes[side] = {
+          node,
+          axisLabels,
+          distance: nodeRect[side],
+        };
+      }
+    });
+  });
+
+  // TODO: could get more accurate by using node centers to position axis labels
+  // TODO: (top-bottom)/2, (right-left)/2
+
+  const graphWidth = boundingNodes.right.distance - boundingNodes.left.distance;
+  const graphHeight =
+    boundingNodes.bottom.distance - boundingNodes.top.distance;
+
+  const newMargins = {
+    left: graphWidth / (NUM_TICKS - 1),
+    top: graphHeight / (NUM_TICKS - 1),
+  };
+
+  const newLabels = {
+    x: [...Array(NUM_TICKS)].map((d, idx) => {
+      const tickLabel =
+        (idx / NUM_TICKS) *
+          (boundingNodes.right.axisLabels.x - boundingNodes.left.axisLabels.x) +
+        boundingNodes.left.axisLabels.x;
+      return formatTickLabel(tickLabel);
+    }),
+    y: [...Array(NUM_TICKS)].map((d, idx) => {
+      const tickLabel =
+        (-idx / NUM_TICKS) *
+          (boundingNodes.top.axisLabels.y - boundingNodes.bottom.axisLabels.y) +
+        boundingNodes.top.axisLabels.y;
+      return formatTickLabel(tickLabel);
+    }),
+  };
+  setMargins(newMargins);
+  setLabels(newLabels);
+};
+
+function formatTickLabel(num: number) {
+  if (num < 10) {
+    return num.toFixed(1);
+  } else if (num >= 10 && num < 1000) {
+    return num.toFixed(0);
+  } else if (num >= 1000) {
+    return `${(num / 1000).toFixed(0)}k`;
+  }
 }
