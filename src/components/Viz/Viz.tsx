@@ -6,7 +6,9 @@ import SVG3dEffect from './SVG3dEffect';
 import { ControlsContext } from '../Context/ContextProvider';
 import YAxis from './YAxis';
 import { useMount } from '../../utils/constants';
-import GraphViewAxes, { GraphViewAxisTitles } from './GraphViewAxes';
+import GraphViewAxes, {
+  GraphViewAxisTitles,
+} from './GraphViewAxes/GraphViewAxes';
 import { activateGraphView, deactivateGraphView } from './graphViewUtils';
 
 export const AXIS_HEIGHT = 24;

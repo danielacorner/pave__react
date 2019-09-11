@@ -204,17 +204,19 @@ const AppLayout = () => {
               }
         }
       >
-        <FiltersPanel {...{ filterVariables, isExpanded, setIsExpanded }} />
+        <FiltersPanel
+          filterVariables={filterVariables}
+          isExpanded={isExpanded}
+          setIsExpanded={setIsExpanded}
+        />
         <SortPanel
-          {...{
-            setIsExpanded,
-            isExpanded,
-            isGraphView,
-            setIsGraphView,
-            axisValues,
-            setAxisValues,
-            prevPositions,
-          }}
+          setIsExpanded={setIsExpanded}
+          isExpanded={isExpanded}
+          isGraphView={isGraphView}
+          setIsGraphView={setIsGraphView}
+          axisValues={axisValues}
+          setAxisValues={setAxisValues}
+          prevPositions={prevPositions}
         />
         <ContainerDimensions>
           {({ width, height }) => (
@@ -254,36 +256,32 @@ const AppLayout = () => {
                     }
                   : () => {}
               }
-              {...{
-                onMouseOut: isTabletOrLarger ? stopTooltipActive : () => {},
-                isGraphView,
-                isTabletOrLarger,
-                axisValues,
-                width,
-                height,
-                prevPositions,
-              }}
+              onMouseOut={isTabletOrLarger ? stopTooltipActive : () => null}
+              isGraphView={isGraphView}
+              isTabletOrLarger={isTabletOrLarger}
+              axisValues={axisValues}
+              width={width}
+              height={height}
+              prevPositions={prevPositions}
             />
           )}
         </ContainerDimensions>
         <Legend
-          {...{
-            colours: legendColours,
-            sizes: [
-              { size: 1000, text: '1000 workers' },
-              { size: 10000, text: '10000 workers' },
-              { size: 50000, text: '50000 workers' },
-            ],
-            radiusScale: getRadiusScale(),
-            isGraphView,
-          }}
+          colours={legendColours}
+          sizes={[
+            { size: 1000, text: '1000 workers' },
+            { size: 10000, text: '10000 workers' },
+            { size: 50000, text: '50000 workers' },
+          ]}
+          radiusScale={getRadiusScale()}
+          isGraphView={isGraphView}
         />
       </AppLayoutStyles>
 
       {isTooltipActive && isTabletOrLarger ? (
-        <Tooltip {...tooltipProps || emptyTooltipProps} />
+        <Tooltip {...(tooltipProps || emptyTooltipProps)} />
       ) : (
-        <MobileTooltip {...mobileTooltipProps || emptyMobileTooltipProps} />
+        <MobileTooltip {...(mobileTooltipProps || emptyMobileTooltipProps)} />
       )}
     </>
   );

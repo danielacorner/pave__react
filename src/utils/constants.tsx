@@ -1,5 +1,17 @@
 import React from 'react';
 import styled from 'styled-components/macro';
+import {
+  STUDY_LABEL,
+  AUTOMATION_RISK_LABEL,
+  SALARY_LABEL,
+  WORKERS_LABEL,
+  INDUSTRY,
+  WORKERS,
+  AUTOMATION_RISK,
+  SALARY,
+  STUDY,
+  INDUSTRY_LABEL,
+} from '../components/Controls/SortPanel';
 
 export const APP_OUTER_PADDING = 20;
 
@@ -26,6 +38,20 @@ export const SKILLS_COMP = 'skillsComp';
 export const WORKERS_MAX = 116000;
 export const WORKERS_MIN = 100;
 export const WORKERS_MED = (WORKERS_MAX - WORKERS_MIN) / 2;
+
+export const getAxisTitleMap = () => ({
+  [STUDY_LABEL]: 'Years of study',
+  [AUTOMATION_RISK_LABEL]: 'Risk of machines replacing tasks (%)',
+  [SALARY_LABEL]: 'Salary, median ($K per year)',
+  [WORKERS_LABEL]: 'Workers in this job',
+});
+export const getDatalabelMap = () => ({
+  [INDUSTRY]: INDUSTRY_LABEL,
+  [WORKERS]: WORKERS_LABEL,
+  [AUTOMATION_RISK]: AUTOMATION_RISK_LABEL,
+  [SALARY]: SALARY_LABEL,
+  [STUDY]: STUDY_LABEL,
+});
 
 export const useMount = cb => React.useEffect(cb, []); // eslint-disable-line
 

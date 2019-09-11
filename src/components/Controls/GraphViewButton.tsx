@@ -4,35 +4,8 @@ import styled from 'styled-components/macro';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Tooltip from '@material-ui/core/Tooltip';
 import { MenuItem, Select } from '@material-ui/core';
-import {
-  AUTOMATION_RISK,
-  WORKERS,
-  SALARY,
-  STUDY,
-  INDUSTRY,
-  AUTOMATION_RISK_LABEL,
-  WORKERS_LABEL,
-  INDUSTRY_LABEL,
-  SALARY_LABEL,
-  STUDY_LABEL,
-} from './SortPanel';
-
-const MAP_VALUE_TO_DATALABEL = value => {
-  switch (value) {
-    case INDUSTRY:
-      return INDUSTRY_LABEL;
-    case WORKERS:
-      return WORKERS_LABEL;
-    case AUTOMATION_RISK:
-      return AUTOMATION_RISK_LABEL;
-    case SALARY:
-      return SALARY_LABEL;
-    case STUDY:
-      return STUDY_LABEL;
-    default:
-      return null;
-  }
-};
+import { AUTOMATION_RISK, WORKERS, SALARY, STUDY, INDUSTRY } from './SortPanel';
+import { getDatalabelMap } from '../../utils/constants';
 
 export const VariablePickerMenu = ({ value, onChange, isIndustry = false }) => (
   <Select
@@ -107,51 +80,55 @@ const GraphViewButtonStyles = styled.div`
     transform: scale(0.85);
   }
 `;
-export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => (
-  <GraphViewButtonStyles>
-    <FormControlLabel
-      className="formControl graphView"
-      control={
-        <Switch
-          onChange={() => {
-            setIsGraphView(!isGraphView);
-          }}
-          checked={isGraphView}
-        />
-      }
-      label={
-        <div className="labelAndSelect">
-          <div>
-            Compar
-            {isGraphView ? 'ing' : 'e'}
+
+export default ({ isGraphView, setIsGraphView, axisValues, setAxisValues }) => {
+  const DATALABEL_MAP = getDatalabelMap();
+  return (
+    <GraphViewButtonStyles>
+      <FormControlLabel
+        className="formControl graphView"
+        control={
+          <Switch
+            onChange={() => {
+              setIsGraphView(!isGraphView);
+            }}
+            checked={isGraphView}
+          />
+        }
+        label={
+          <div className="labelAndSelect">
+            <div>
+              Compar
+              {isGraphView ? 'ing' : 'e'}
+            </div>
+            <VariablePickerMenu
+              value={axisValues.x.displayName}
+              onChange={event => {
+                setAxisValues({
+                  ...axisValues,
+                  x: {
+                    displayName: event.target.value,
+                    dataLabel: DATALABEL_MAP[event.target.value],
+                  },
+                });
+              }}
+            />
+            <div>to</div>
+            <VariablePickerMenu
+              value={axisValues.y.displayName}
+              onChange={event => {
+                setAxisValues({
+                  ...axisValues,
+                  y: {
+                    displayName: event.target.value,
+                    dataLabel: DATALABEL_MAP[event.target.value],
+                  },
+                });
+              }}
+            />
           </div>
-          <VariablePickerMenu
-            value={axisValues.x.displayName}
-            onChange={event => {
-              setAxisValues({
-                ...axisValues,
-                x: {
-                  displayName: event.target.value,
-                  dataLabel: MAP_VALUE_TO_DATALABEL(event.target.value),
-                },
-              });
-            }}
-          />
-          <div>to</div>
-          <VariablePickerMenu
-            value={axisValues.y.displayName}
-            onChange={event => {
-              setAxisValues({
-                ...axisValues,
-                y: {
-                  displayName: event.target.value,
-                  dataLabel: MAP_VALUE_TO_DATALABEL(event.target.value),
-                },
-              });
-            }}
-          />
-        </div>
-      }
-    />
-  </GraphViewButtonStyles>
-);
+        }
+      />
+    </GraphViewButtonStyles>
+  );
+};

@@ -297,7 +297,7 @@ const SortPanel = ({
           />
         </Tooltip>
         <GraphViewButton
-          {...{ isGraphView, setIsGraphView, axisValues, setAxisValues }}
+          isGraphView={isGraphView} setIsGraphView={setIsGraphView} axisValues={axisValues} setAxisValues={setAxisValues}
         />
       </div>
       <Button
