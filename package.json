@@ -41,7 +41,7 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://dcorn068.github.io/pave__react",
+  "homepage": "https://danielacorner.github.io/pave__react",
   "devDependencies": {
     "@types/jest": "^24.0.13",
     "@types/node": "^12.0.7",
