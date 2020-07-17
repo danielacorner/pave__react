@@ -1,11 +1,11 @@
-import * as d3 from 'd3';
-import React, { useRef, useEffect, useContext } from 'react';
-import { findDOMNode } from 'react-dom';
-import styled from 'styled-components/macro';
-import FORCE from '../FORCE';
-import { Selection } from 'd3';
-import { ControlsContext } from '../Context/ContextProvider';
-import { useMount } from '../../utils/constants';
+import * as d3 from "d3";
+import React, { useRef, useEffect, useContext, useState } from "react";
+import { findDOMNode } from "react-dom";
+import styled from "styled-components/macro";
+import FORCE from "../FORCE";
+import { Selection } from "d3";
+import { ControlsContext } from "../Context/ContextProvider";
+import { useMount } from "../../utils/constants";
 
 const MAX_LINE_LENGTH = 10;
 const MAX_TEXT_LENGTH = 30;
@@ -33,10 +33,10 @@ const NodeGroupStyles = styled.g`
 const getTextContent = (name: string, isAboveMax: boolean) => {
   let remainingName = name;
   let tspans = [];
-  const ellipse = isAboveMax ? '...' : '';
+  const ellipse = isAboveMax ? "..." : "";
   while (remainingName.length > MAX_LINE_LENGTH) {
     tspans.push(
-      remainingName.slice(0, 9) + (remainingName[8] === ' ' ? '' : '-'),
+      remainingName.slice(0, 9) + (remainingName[8] === " " ? "" : "-")
     );
     remainingName = remainingName.slice(9);
   }
@@ -68,6 +68,8 @@ const Node = React.memo(
     const { state } = useContext(ControlsContext);
     const { colouredByValue, radiusSelector } = state;
 
+    const [isBackgroundVisible, setIsBackgroundVisible] = useState(false);
+
     useMount(() => {
       d3Node.current = d3
         .select(findDOMNode(node.current) as any)
@@ -78,7 +80,7 @@ const Node = React.memo(
             radiusScale,
             radiusSelector,
             colouredByValue,
-          }),
+          })
         );
     });
 
@@ -114,21 +116,49 @@ const Node = React.memo(
     // }
 
     // console.count('node rendering!');
+    const onMouseEnter = (e) => {
+      setIsBackgroundVisible(true);
+    };
+    const onMouseLeave = (e) => {
+      setIsBackgroundVisible(false);
+    };
     return (
-      <NodeGroupStyles ref={node} className="node" id={`node_${data.id}`} aria-labelledby={data.job}>
+      <NodeGroupStyles
+        ref={node}
+        className="node"
+        id={`node_${data.id}`}
+        aria-labelledby={data.job}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
         <title id={data.job}>{data.job}</title>
+        <clipPath id={`clipPath${data.noc}`}>
+          <circle className="node-circle-path" />
+        </clipPath>
         <circle
-          onMouseMove={event => onMouseMove(event, data)}
+          className="node-circle"
+          onMouseMove={(event) => onMouseMove(event, data)}
           onMouseOut={onMouseOut}
           onClick={onClick}
           /* onClick={addLink} */
-          filter={isActive ? 'url(#virtual_light)' : ''}
+          filter={isActive ? "url(#virtual_light)" : ""}
+          style={isBackgroundVisible ? { visibility: "hidden" } : {}}
+        />
+        <image
+          style={isBackgroundVisible ? {} : { visibility: "hidden" }}
+          className="circle-img"
+          href={isBackgroundVisible ? `/img/NOC_images/${data.noc}.jpg` : null}
+          width="100"
+          x="-50"
+          height="100"
+          y="-50"
+          clipPath={`url(#clipPath${data.noc})`}
         />
         {isNodeTextVisible && (
           <g className="text-label">
             {getTextContent(
               data.name.slice(0, MAX_TEXT_LENGTH),
-              data.name.length > MAX_TEXT_LENGTH,
+              data.name.length > MAX_TEXT_LENGTH
             ).map((text, idx) => (
               <text
                 dy={
@@ -146,6 +176,6 @@ const Node = React.memo(
         )}
       </NodeGroupStyles>
     );
-  },
+  }
 );
 export default Node;

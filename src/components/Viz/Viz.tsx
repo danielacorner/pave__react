@@ -1,15 +1,15 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
-import styled from 'styled-components/macro';
-import FORCE from '../FORCE';
-import Node from './Node';
-import SVG3dEffect from './SVG3dEffect';
-import { ControlsContext } from '../Context/ContextProvider';
-import YAxis from './YAxis';
-import { useMount } from '../../utils/constants';
+import React, { useState, useRef, useContext, useEffect } from "react";
+import styled from "styled-components/macro";
+import FORCE from "../FORCE";
+import Node from "./Node";
+import SVG3dEffect from "./SVG3dEffect";
+import { ControlsContext } from "../Context/ContextProvider";
+import YAxis from "./YAxis";
+import { useMount } from "../../utils/constants";
 import GraphViewAxes, {
   GraphViewAxisTitles,
-} from './GraphViewAxes/GraphViewAxes';
-import { activateGraphView, deactivateGraphView } from './graphViewUtils';
+} from "./GraphViewAxes/GraphViewAxes";
+import { activateGraphView, deactivateGraphView } from "./graphViewUtils";
 
 export const AXIS_HEIGHT = 24;
 
@@ -92,7 +92,7 @@ const Viz = ({
     // initialize the force simulation
     (FORCE as any).startSimulation(
       { nodes, radiusScale, clusterCenters, radiusSelector },
-      vizRef.current,
+      vizRef.current
     );
   });
 
@@ -129,7 +129,7 @@ const Viz = ({
       <div className={`graphViewWrapper${isGraphView ? ` graphView` : ``}`}>
         <svg id="svg">
           <g id="nodesG">
-            {nodes.map(node => {
+            {nodes.slice(0, 10).map((node) => {
               return (
                 <Node
                   radiusScale={radiusScale}
