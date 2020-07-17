@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 const SVG3dEffect = () => (
   <defs>
@@ -25,7 +25,7 @@ const SVG3dEffect = () => (
       <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="alpha_blur" />
 
       {/* <!-- virtual shadow effect --> */}
-      <feOffset in="alpha_blur" dx="4" dy="4" result="offset_alpha_blur" />
+      <feOffset in="alpha_blur" dx="2" dy="2" result="offset_alpha_blur" />
 
       {/* <!-- vitual lighting effect --> */}
       <feSpecularLighting

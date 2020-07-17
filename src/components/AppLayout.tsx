@@ -5,9 +5,9 @@ import React, {
   useEffect,
   useRef,
   useCallback,
-} from 'react';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import styled from 'styled-components/macro';
+} from "react";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import styled from "styled-components/macro";
 import {
   TABLET_MIN_WIDTH,
   RESIZE_INTERVAL_MS,
@@ -15,24 +15,24 @@ import {
   SKILLS_LOGI,
   SKILLS_COMP,
   SKILLS_MATH,
-} from '../utils/constants';
-import { ControlsContext } from './Context/ContextProvider';
-import FiltersPanel from './Controls/FiltersPanel';
+} from "../utils/constants";
+import { ControlsContext } from "./Context/ContextProvider";
+import FiltersPanel from "./Controls/FiltersPanel";
 import SortPanel, {
   STUDY,
   SALARY,
   STUDY_LABEL,
   SALARY_LABEL,
-} from './Controls/SortPanel';
-import MobileTooltip from './Viz/MobileTooltip';
-import Tooltip from './Viz/Tooltip';
-import Viz from './Viz/Viz';
-import Legend from './Viz/Legend';
+} from "./Controls/SortPanel";
+import MobileTooltip from "./Viz/MobileTooltip";
+import Tooltip from "./Viz/Tooltip";
+import Viz from "./Viz/Viz";
+import Legend from "./Viz/Legend";
 
-import FORCE from './FORCE';
-import { useWindowSize } from './useWindowSize';
-import { NAV_HEIGHT } from './Nav/Navbar';
-import ContainerDimensions from 'react-container-dimensions';
+import FORCE from "./FORCE";
+import { useWindowSize } from "./useWindowSize";
+import { NAV_HEIGHT } from "./Nav/Navbar";
+import ContainerDimensions from "react-container-dimensions";
 
 const AppLayoutStyles = styled.div`
   position: relative;
@@ -94,24 +94,25 @@ const emptyMobileTooltipProps = {
 const AppLayout = () => {
   const { innerHeight } = useWindowSize();
   const [tooltipProps, setTooltipProps] = useState(
-    emptyTooltipProps as TooltipProps | null,
+    emptyTooltipProps as TooltipProps | null
   );
+  const [isTooltipExpanded, setIsTooltipExpanded] = useState(false);
   const [mobileTooltipProps, setMobileTooltipProps] = useState(
-    emptyMobileTooltipProps as MobileTooltipProps | null,
+    emptyMobileTooltipProps as MobileTooltipProps | null
   );
-  const [isTooltipActive, setIsTooltipActive] = useState(null as
-    | boolean
-    | null);
+  const [isTooltipActive, setIsTooltipActive] = useState(
+    null as boolean | null
+  );
   const [axisValues, setAxisValues] = useState({
     x: { displayName: STUDY, dataLabel: STUDY_LABEL },
     y: { displayName: SALARY, dataLabel: SALARY_LABEL },
   });
   const { state, handleResize, restartSimulation } = useContext(
-    ControlsContext,
+    ControlsContext
   );
 
   const [isExpanded, setIsExpanded] = useState(
-    INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE,
+    INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE
   );
   const { getRadiusScale, zScale, uniqueClusterValues, sortedByValue } = state;
 
@@ -127,15 +128,15 @@ const AppLayout = () => {
 
   useEffect(() => {
     if (!isGraphView) {
-      window.addEventListener('mouseup', onMouseUp);
+      window.addEventListener("mouseup", onMouseUp);
     }
     const resizeTimer = setInterval(
       handleResize,
-      isGraphView ? RESIZE_INTERVAL_MS : 1000,
+      isGraphView ? RESIZE_INTERVAL_MS : 1000
     );
     return () => {
       clearInterval(resizeTimer);
-      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener("mouseup", onMouseUp);
     };
   }, [handleResize, restartSimulation, isGraphView, onMouseUp]);
 
@@ -158,10 +159,11 @@ const AppLayout = () => {
   };
   const stopTooltipActive = () => {
     tooltipTimer.current = window.setTimeout(() => {
-      const tooltip = document.querySelector('.mouseoverTooltip');
-      tooltip && tooltip.classList.add('fadeOut');
+      const tooltip = document.querySelector(".mouseoverTooltip");
+      tooltip && tooltip.classList.add("fadeOut");
       window.setTimeout(() => {
         setIsTooltipActive(false);
+        setIsTooltipExpanded(false);
         setTooltipProps(null);
       }, TOOLTIP_FADEOUT);
     }, TOOLTIP_DURATION);
@@ -172,33 +174,33 @@ const AppLayout = () => {
   return (
     <>
       <AppLayoutStyles
-        className={sortedByValue ? 'sorted' : ''}
+        className={sortedByValue ? "sorted" : ""}
         onClick={
           isTabletOrLarger
-            ? event => {
+            ? (event) => {
                 if (
                   ((event.target as HTMLElement).classList &&
                     Array.from(
-                      (event.target as HTMLElement).classList,
-                    ).includes('slidersDiv')) ||
-                  (event.target as HTMLElement).id === 'svg' ||
-                  (event.target as HTMLElement).nodeName === 'circle'
+                      (event.target as HTMLElement).classList
+                    ).includes("slidersDiv")) ||
+                  (event.target as HTMLElement).id === "svg" ||
+                  (event.target as HTMLElement).nodeName === "circle"
                 ) {
                   setIsExpanded(INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE);
                 }
               }
-            : event => {
+            : (event) => {
                 if (
                   ((event.target as HTMLElement).classList &&
                     Array.from(
-                      (event.target as HTMLElement).classList,
-                    ).includes('slidersDiv')) ||
-                  (event.target as HTMLElement).id === 'svg' ||
-                  (event.target as HTMLElement).nodeName === 'circle'
+                      (event.target as HTMLElement).classList
+                    ).includes("slidersDiv")) ||
+                  (event.target as HTMLElement).id === "svg" ||
+                  (event.target as HTMLElement).nodeName === "circle"
                 ) {
                   setIsExpanded(INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE);
                 }
-                if ((event.target as HTMLElement).nodeName !== 'circle') {
+                if ((event.target as HTMLElement).nodeName !== "circle") {
                   setMobileTooltipProps(null);
                 }
               }
@@ -221,7 +223,7 @@ const AppLayout = () => {
         <ContainerDimensions>
           {({ width, height }) => (
             <Viz
-              onMouseMove={
+              onMouseMoveNode={
                 isTabletOrLarger
                   ? (event: Event, datum: any) => {
                       const {
@@ -231,20 +233,23 @@ const AppLayout = () => {
                         width,
                       } = (event.target as HTMLElement).getBoundingClientRect();
 
-                      const tooltipProps = {
+                      setTooltipProps({
                         data: datum,
                         bottom: (innerHeight || 0) - bottom + height / 2,
                         left: left + width / 2 + 20,
                         width,
-                      };
-                      setTooltipProps(tooltipProps);
+                      });
                       startTooltipActive();
                     }
                   : () => {}
               }
-              onClick={
-                !isTabletOrLarger
-                  ? (event: Event, datum: any) => {
+              onClickNode={
+                isTabletOrLarger
+                  ? () => {
+                      setIsTooltipExpanded(true);
+                      console.log("🌟🚨: AppLayout -> setIsTooltipExpanded");
+                    }
+                  : (event: Event, datum: any) => {
                       const {
                         width,
                       } = (event.target as HTMLElement).getBoundingClientRect();
@@ -254,9 +259,8 @@ const AppLayout = () => {
                       };
                       setMobileTooltipProps(mobileTooltipProps);
                     }
-                  : () => {}
               }
-              onMouseOut={isTabletOrLarger ? stopTooltipActive : () => null}
+              onMouseOutNode={isTabletOrLarger ? stopTooltipActive : () => null}
               isGraphView={isGraphView}
               isTabletOrLarger={isTabletOrLarger}
               axisValues={axisValues}
@@ -269,9 +273,9 @@ const AppLayout = () => {
         <Legend
           colours={legendColours}
           sizes={[
-            { size: 1000, text: '1000 workers' },
-            { size: 10000, text: '10000 workers' },
-            { size: 50000, text: '50000 workers' },
+            { size: 1000, text: "1000 workers" },
+            { size: 10000, text: "10000 workers" },
+            { size: 50000, text: "50000 workers" },
           ]}
           radiusScale={getRadiusScale()}
           isGraphView={isGraphView}
@@ -279,7 +283,10 @@ const AppLayout = () => {
       </AppLayoutStyles>
 
       {isTooltipActive && isTabletOrLarger ? (
-        <Tooltip {...(tooltipProps || emptyTooltipProps)} />
+        <Tooltip
+          isTooltipExpanded={isTooltipExpanded}
+          {...(tooltipProps || emptyTooltipProps)}
+        />
       ) : (
         <MobileTooltip {...(mobileTooltipProps || emptyMobileTooltipProps)} />
       )}

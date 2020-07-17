@@ -56,9 +56,9 @@ const VizStyles = styled.div`
 
 // TODO: switch to hooks
 interface VizProps {
-  onMouseMove(event: Event, datum: any): void;
-  onMouseOut(event: any): void;
-  onClick(event: Event, node: any): void;
+  onMouseMoveNode(event: Event, datum: any): void;
+  onMouseOutNode(event: any): void;
+  onClickNode(event: Event, node: any): void;
   isTabletOrLarger: boolean;
   isGraphView: boolean;
   axisValues: {
@@ -70,9 +70,9 @@ interface VizProps {
   prevPositions: { current: any };
 }
 const Viz = ({
-  onMouseMove,
-  onMouseOut,
-  onClick,
+  onMouseMoveNode,
+  onMouseOutNode,
+  onClickNode,
   isTabletOrLarger,
   isGraphView,
   axisValues,
@@ -134,13 +134,11 @@ const Viz = ({
                 <Node
                   radiusScale={radiusScale}
                   key={`vizNode_${node.noc}`}
-                  onMouseMove={onMouseMove}
-                  onMouseOut={onMouseOut}
+                  onMouseMove={onMouseMoveNode}
+                  onMouseOut={onMouseOutNode}
                   onClick={(event: Event, datum: any) => {
                     handleClick(node.id);
-                    if (!isTabletOrLarger) {
-                      onClick(event, node);
-                    }
+                    onClickNode(event, node);
                   }}
                   data={node}
                   isActive={activeNodeId === node.id}

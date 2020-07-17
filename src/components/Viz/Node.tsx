@@ -13,12 +13,15 @@ const TEXT_LINE_HEIGHT = 6;
 
 const NodeGroupStyles = styled.g`
   overflow: hidden;
-  circle {
+  .circle-img {
     &:hover {
       cursor: pointer;
-      stroke: rgba(0, 0, 0, 0.9);
-      stroke-width: 2;
     }
+  }
+  .node-circle.showBackground {
+    stroke: rgba(0, 0, 0, 0.9);
+    stroke-width: 2;
+    fill: transparent !important;
   }
   .text-label {
     pointer-events: none;
@@ -122,6 +125,7 @@ const Node = React.memo(
     const onMouseLeave = (e) => {
       setIsBackgroundVisible(false);
     };
+    const showBackground = isActive || isBackgroundVisible;
     return (
       <NodeGroupStyles
         ref={node}
@@ -135,24 +139,22 @@ const Node = React.memo(
         <clipPath id={`clipPath${data.noc}`}>
           <circle className="node-circle-path" />
         </clipPath>
-        <circle
-          className="node-circle"
-          onMouseMove={(event) => onMouseMove(event, data)}
-          onMouseOut={onMouseOut}
-          onClick={onClick}
-          /* onClick={addLink} */
-          filter={isActive ? "url(#virtual_light)" : ""}
-          style={isBackgroundVisible ? { visibility: "hidden" } : {}}
-        />
         <image
-          style={isBackgroundVisible ? {} : { visibility: "hidden" }}
-          className="circle-img"
-          href={isBackgroundVisible ? `/img/NOC_images/${data.noc}.jpg` : null}
+          style={showBackground ? {} : { display: "none" }}
+          className={`circle-img${isActive ? " active" : ""}`}
+          href={`/img/NOC_thumbnails/tn_${data.noc}.jpg`}
           width="100"
           x="-50"
           height="100"
           y="-50"
           clipPath={`url(#clipPath${data.noc})`}
+        />
+        <circle
+          className={`node-circle${showBackground ? " showBackground" : ""}`}
+          onMouseMove={(event) => onMouseMove(event, data)}
+          onMouseOut={onMouseOut}
+          onClick={onClick}
+          filter={isActive ? "url(#virtual_light)" : ""}
         />
         {isNodeTextVisible && (
           <g className="text-label">

@@ -1,12 +1,13 @@
-import React from 'react';
-import styled from 'styled-components/macro';
-import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from '../../utils/constants';
-import { getCircleColour, lightGrey } from '../FORCE';
-import { INDUSTRY } from '../Controls/SortPanel';
-import { MAX_TOOLTIP_LINES } from './MobileTooltip';
+import React from "react";
+import styled from "styled-components/macro";
+import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from "../../utils/constants";
+import { getCircleColour, lightGrey } from "../FORCE";
+import { INDUSTRY } from "../Controls/SortPanel";
+import { MAX_TOOLTIP_LINES } from "./MobileTooltip";
 export const TOOLTIP_TRANSITION = `cubic-bezier(0.165, 0.84, 0.44, 1)`;
 
 const TooltipStyles = styled.div`
+  position: relative;
   .giveMeEllipsis {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -24,11 +25,11 @@ const TooltipStyles = styled.div`
   width: ${TOOLTIP_WIDTH}px;
   position: fixed;
   z-index: 999;
-  font-family: 'Roboto light';
+  font-family: "Roboto light";
   border: 1px solid black;
   background: white;
   margin: 0;
-  padding: 6pt 12pt 24pt 12pt;
+  padding: 6pt 12pt 12pt 12pt;
   font-size: 12pt;
   border-radius: 4px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
@@ -52,6 +53,7 @@ const TooltipStyles = styled.div`
     align-items: start;
     grid-template-columns: 1fr ${5 * 32}px;
     grid-gap: 15px 12px;
+    padding-bottom: 12pt;
   }
   .subtitle {
     font-style: italic;
@@ -111,11 +113,27 @@ const TooltipStyles = styled.div`
       clip-path: url(#studyClip);
     }
   }
-  .extraText {
-    position: absolute;
-    left: calc(5px + 5ch);
-    &.extraText1 {
+  .extraTextContainer {
+    position: relative;
+    .extraText {
+      position: absolute;
+      left: calc(5px + 5ch);
       bottom: -14px;
+      white-space: nowrap;
+    }
+  }
+  .img-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      opacity: 0.1;
     }
   }
 `;
@@ -123,7 +141,7 @@ const TooltipStyles = styled.div`
 export const FloatingCircleStyles = styled.div`
   position: absolute;
   .floatingCircle {
-    opacity: 0.4;
+    opacity: 0.7;
     transition: all 0.2s ${TOOLTIP_TRANSITION};
     position: relative;
     border-radius: 100%;
@@ -163,11 +181,12 @@ export const FloatingCircle = ({ width, background, right, bottom }) => {
   );
 };
 
-export const numberWithCommas = x => {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+export const numberWithCommas = (x) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-const Tooltip = ({ data, left, bottom, width }) => {
+const Tooltip = ({ data, left, bottom, width, isTooltipExpanded }) => {
+  console.log("🌟🚨: Tooltip -> isTooltipExpanded", isTooltipExpanded);
   const {
     salaryMed,
     automationRisk,
@@ -176,7 +195,6 @@ const Tooltip = ({ data, left, bottom, width }) => {
     yearsStudy,
     workers,
   } = data;
-  // TODO: add arrow touching circle
   // TODO: swap out circle for job image on hover
   // TODO: find reasonable salarymed?
   const salaryMedPercent = salaryMed / 75;
@@ -195,11 +213,11 @@ const Tooltip = ({ data, left, bottom, width }) => {
   const maxHeight =
     (job.length > AVG_CHAR_PER_ROW - 4
       ? LINE_HEIGHT_EMS * Math.ceil(job.length / (AVG_CHAR_PER_ROW - 4))
-      : LINE_HEIGHT_EMS) + 'em';
+      : LINE_HEIGHT_EMS) + "em";
   const minHeight =
     (job.length > AVG_CHAR_PER_ROW + 4
       ? LINE_HEIGHT_EMS * Math.ceil(job.length / (AVG_CHAR_PER_ROW + 4))
-      : LINE_HEIGHT_EMS) + 'em';
+      : LINE_HEIGHT_EMS) + "em";
 
   const floatingCircleProps = {
     width,
@@ -208,9 +226,9 @@ const Tooltip = ({ data, left, bottom, width }) => {
     bottom: 210 - width / 2,
   };
 
-  const roundToHundreds = x => 100 * Math.round(x / 100);
+  const roundToHundreds = (x) => 100 * Math.round(x / 100);
   const workersDisplay = `${numberWithCommas(
-    roundToHundreds(workers.toFixed(0)),
+    roundToHundreds(workers.toFixed(0))
   )} workers`;
 
   return (
@@ -264,7 +282,7 @@ const Tooltip = ({ data, left, bottom, width }) => {
         <div
           className="bar salaryBar"
           style={{
-            width: salaryMedPercent * 100 + '%',
+            width: salaryMedPercent * 100 + "%",
           }}
         />
 
@@ -278,26 +296,34 @@ const Tooltip = ({ data, left, bottom, width }) => {
         <div
           className="bar educationBar"
           style={{
-            width: educationPercent * 100 + '%',
+            width: educationPercent * 100 + "%",
           }}
         />
 
         <div className="heading">
           <div className="iconTitle">Risk:</div>
-          <div className="data textAlignRight automation">
+          <div className="data textAlignRight automation extraTextContainer">
             <strong>{(automationRisk * 100).toFixed(0)}%</strong> chance
+            <div className="data textAlignLeft extraText ">
+              of tasks being replaced by machines
+            </div>
           </div>
         </div>
 
         <div
           className="bar riskBar"
           style={{
-            width: automationRisk * 100 + '%',
+            width: automationRisk * 100 + "%",
           }}
         />
-        <div className="data textAlignLeft extraText extraText1">
-          of tasks being replaced by machines
-        </div>
+      </div>
+      <div className="img-wrapper">
+        <img
+          className="noc-image"
+          alt=""
+          loading="lazy"
+          src={`/img/NOC_images/${data.noc}.jpg`}
+        />
       </div>
     </TooltipStyles>
   );
