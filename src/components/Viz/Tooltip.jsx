@@ -322,7 +322,7 @@ const Tooltip = ({ data, left, bottom, width, isTooltipExpanded }) => {
           className="noc-image"
           alt=""
           loading="lazy"
-          src={`/img/NOC_images/${data.noc}.jpg`}
+          src={`${process.env.PUBLIC_URL}/img/NOC_images/${data.noc}.jpg`}
         />
       </div>
     </TooltipStyles>

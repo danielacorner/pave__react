@@ -129,7 +129,7 @@ const Viz = ({
       <div className={`graphViewWrapper${isGraphView ? ` graphView` : ``}`}>
         <svg id="svg">
           <g id="nodesG">
-            {nodes.slice(0, 10).map((node) => {
+            {nodes.map((node) => {
               return (
                 <Node
                   radiusScale={radiusScale}

@@ -142,7 +142,7 @@ const Node = React.memo(
         <image
           style={showBackground ? {} : { display: "none" }}
           className={`circle-img${isActive ? " active" : ""}`}
-          href={`/img/NOC_thumbnails/tn_${data.noc}.jpg`}
+          href={`${process.env.PUBLIC_URL}/img/NOC_thumbnails/tn_${data.noc}.jpg`}
           width="100"
           x="-50"
           height="100"
