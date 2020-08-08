@@ -1,6 +1,6 @@
-import React from 'react';
-import MobileTooltip from '../MobileTooltip';
+import React from "react";
+import MobileTooltip from "../InfoDrawer";
 
-test('renders', () => {
+test("renders", () => {
   expect(<MobileTooltip />).toMatchSnapshot();
 });

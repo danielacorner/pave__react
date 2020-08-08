@@ -3,7 +3,7 @@ import styled from "styled-components/macro";
 import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from "../../utils/constants";
 import { getCircleColour, lightGrey } from "../FORCE";
 import { INDUSTRY } from "../Controls/SortPanel";
-import { MAX_TOOLTIP_LINES } from "./MobileTooltip";
+import { MAX_TOOLTIP_LINES } from "./InfoDrawer";
 export const TOOLTIP_TRANSITION = `cubic-bezier(0.165, 0.84, 0.44, 1)`;
 
 const TooltipStyles = styled.div`
@@ -187,6 +187,9 @@ export const numberWithCommas = (x) => {
 
 const Tooltip = ({ data, left, bottom, width, isTooltipExpanded }) => {
   console.log("🌟🚨: Tooltip -> isTooltipExpanded", isTooltipExpanded);
+  if (!data) {
+    return null;
+  }
   const {
     salaryMed,
     automationRisk,

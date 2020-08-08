@@ -37,7 +37,7 @@ body {
     min-height: 100vh;
   }
 }
-[data-test-id='button-primary'][aria-label='Next'] {
+[data-test-id="button-primary"][aria-label="Next"] {
   transition: all 1s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 .btnNextDisabled {
@@ -45,10 +45,10 @@ body {
   opacity: 0.3;
   background-color: tomato !important;
 }
-[role='presentation'] {
+/* [role='presentation'] {
   pointer-events: none !important;
-}
-[role='document'] {
+} */
+[role="document"] {
   pointer-events: auto;
 }
 

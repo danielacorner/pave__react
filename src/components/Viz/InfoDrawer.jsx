@@ -1,21 +1,31 @@
-import Drawer from '@material-ui/core/Drawer';
-import React, { useState } from 'react';
-import styled from 'styled-components/macro';
-import { TABLET_MIN_WIDTH } from '../../utils/constants';
+import Drawer from "@material-ui/core/Drawer";
+import React, { useState } from "react";
+import styled from "styled-components/macro";
+import { TABLET_MIN_WIDTH } from "../../utils/constants";
 import {
   numberWithCommas,
   FloatingCircle,
   TOOLTIP_TRANSITION,
-} from './Tooltip';
-import { getCircleColour, lightGrey } from '../FORCE';
-import { INDUSTRY } from '../Controls/SortPanel';
+} from "./Tooltip";
+import { getCircleColour, lightGrey } from "../FORCE";
+import { INDUSTRY } from "../Controls/SortPanel";
 
 export const ICON_WIDTH = 32;
 export const ICON_SCALE = 1.5;
 export const ICON_DY = -2;
 
 export const MAX_TOOLTIP_LINES = 3;
-const MobileTooltipStyles = styled.div`
+const InfoDrawerStyles = styled.div`
+position:relative;
+&::after{
+  background-image: url("${(props) =>
+    `${process.env.PUBLIC_URL}/img/NOC_thumbnails/tn_${props.noc}.jpg`}");
+  background-size: cover;
+  content:"";
+  position:absolute;
+  top:0;right:0;left:0;bottom:0;
+  opacity:0.1;
+}
   .giveMeEllipsis {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -49,9 +59,9 @@ const MobileTooltipStyles = styled.div`
       right: 24px;
     }
   }
-  font-family: 'Roboto light';
+  font-family: "Roboto light";
   margin: 0;
-  padding: 10pt 18pt 18pt 18pt;
+  padding: 28pt 28pt 42pt;
   font-size: 12pt;
   border-radius: 4px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
@@ -153,7 +163,8 @@ const MobileTooltipStyles = styled.div`
   }
 `;
 
-const MobileTooltipContents = ({ data, width = 0 }) => {
+const InfoDrawerContents = ({ data, width = 0 }) => {
+  console.log("🌟🚨: InfoDrawerContents -> data", data);
   const {
     job,
     industry,
@@ -161,6 +172,7 @@ const MobileTooltipContents = ({ data, width = 0 }) => {
     automationRisk,
     yearsStudy,
     workers,
+    noc,
   } = data;
   const circleColour = getCircleColour({ d: data, colouredByValue: INDUSTRY });
 
@@ -174,11 +186,11 @@ const MobileTooltipContents = ({ data, width = 0 }) => {
   const maxHeight =
     (job.length > AVG_CHAR_PER_ROW - 4
       ? LINE_HEIGHT_EMS * Math.ceil(job.length / (AVG_CHAR_PER_ROW - 4))
-      : LINE_HEIGHT_EMS) + 'em';
+      : LINE_HEIGHT_EMS) + "em";
   const minHeight =
     (job.length > AVG_CHAR_PER_ROW + 4
       ? LINE_HEIGHT_EMS * Math.ceil(job.length / (AVG_CHAR_PER_ROW + 4))
-      : LINE_HEIGHT_EMS) + 'em';
+      : LINE_HEIGHT_EMS) + "em";
 
   const floatingCircleProps = {
     width,
@@ -187,13 +199,13 @@ const MobileTooltipContents = ({ data, width = 0 }) => {
     bottom: 221 - width / 2,
   };
 
-  const roundToHundreds = x => 100 * Math.round(x / 100);
+  const roundToHundreds = (x) => 100 * Math.round(x / 100);
   const workersDisplay = `${numberWithCommas(
-    roundToHundreds(workers.toFixed(0)),
+    roundToHundreds(workers.toFixed(0))
   )} workers`;
 
   return (
-    <MobileTooltipStyles>
+    <InfoDrawerStyles noc={noc}>
       <FloatingCircle {...floatingCircleProps} />
 
       <h3
@@ -237,7 +249,7 @@ const MobileTooltipContents = ({ data, width = 0 }) => {
         <div
           className="bar salaryBar"
           style={{
-            width: salaryMedPercent * 100 + '%',
+            width: salaryMedPercent * 100 + "%",
           }}
         />
 
@@ -251,7 +263,7 @@ const MobileTooltipContents = ({ data, width = 0 }) => {
         <div
           className="bar educationBar"
           style={{
-            width: educationPercent * 100 + '%',
+            width: educationPercent * 100 + "%",
           }}
         />
 
@@ -265,7 +277,7 @@ const MobileTooltipContents = ({ data, width = 0 }) => {
         <div
           className="bar riskBar"
           style={{
-            width: automationRisk * 100 + '%',
+            width: automationRisk * 100 + "%",
           }}
         />
         <div className="data textAlignLeft extraText extraText1">
@@ -275,29 +287,40 @@ const MobileTooltipContents = ({ data, width = 0 }) => {
           replaced by machines
         </div>
       </div>
-    </MobileTooltipStyles>
+    </InfoDrawerStyles>
   );
 };
 
-const MobileTooltip = ({ data, width }) => {
+const InfoDrawer = ({ data, width, setInfoDrawerProps }) => {
   // preserve data so mobile tooltip can close smoothly
   const [prevData, setPrevData] = useState(null);
   const [open, setOpen] = useState(false);
   if (data && data !== prevData) {
     setPrevData(data);
   }
+
   if (data && !open) {
     setOpen(true);
   } else if (!data && open) {
     setTimeout(() => setOpen(false));
   }
 
+  const handleClose = () => {
+    console.log("🌟🚨: handleClose -> handleClose", handleClose);
+    setInfoDrawerProps(null);
+  };
+
   return (
-    <Drawer anchor={'top'} open={open} transitionDuration={200}>
+    <Drawer
+      anchor={"top"}
+      open={open}
+      onBackdropClick={handleClose}
+      transitionDuration={200}
+    >
       <div tabIndex={0} role="button">
-        <MobileTooltipContents data={data ? data : prevData} width={width} />
+        <InfoDrawerContents data={data ? data : prevData} width={width} />
       </div>
     </Drawer>
   );
 };
-export default MobileTooltip;
+export default InfoDrawer;

@@ -24,7 +24,7 @@ import SortPanel, {
   STUDY_LABEL,
   SALARY_LABEL,
 } from "./Controls/SortPanel";
-import MobileTooltip from "./Viz/MobileTooltip";
+import InfoDrawer from "./Viz/InfoDrawer";
 import Tooltip from "./Viz/Tooltip";
 import Viz from "./Viz/Viz";
 import Legend from "./Viz/Legend";
@@ -76,8 +76,9 @@ interface TooltipProps {
   left: number;
   width: number;
 }
-interface MobileTooltipProps {
+interface InfoDrawerProps {
   data: any;
+  setInfoDrawerProps: Function;
   width: number;
 }
 const emptyTooltipProps = {
@@ -86,8 +87,9 @@ const emptyTooltipProps = {
   left: 0,
   width: 0,
 };
-const emptyMobileTooltipProps = {
+const emptyInfoDrawerProps = {
   data: null,
+  setInfoDrawerProps: () => null,
   width: 0,
 };
 
@@ -97,8 +99,8 @@ const AppLayout = () => {
     emptyTooltipProps as TooltipProps | null
   );
   const [isTooltipExpanded, setIsTooltipExpanded] = useState(false);
-  const [mobileTooltipProps, setMobileTooltipProps] = useState(
-    emptyMobileTooltipProps as MobileTooltipProps | null
+  const [infoDrawerProps, setInfoDrawerProps] = useState(
+    emptyInfoDrawerProps as InfoDrawerProps | null
   );
   const [isTooltipActive, setIsTooltipActive] = useState(
     null as boolean | null
@@ -149,15 +151,15 @@ const AppLayout = () => {
   const TOOLTIP_DURATION = 500;
   const TOOLTIP_FADEOUT = 500;
 
-  const startTooltipActive = () => {
+  const startTooltipActive = useCallback(() => {
     if (tooltipTimer.current) {
       clearTimeout(tooltipTimer.current);
     }
     if (!isTooltipActive) {
       setIsTooltipActive(true);
     }
-  };
-  const stopTooltipActive = () => {
+  }, [isTooltipActive]);
+  const stopTooltipActive = useCallback(() => {
     tooltipTimer.current = window.setTimeout(() => {
       const tooltip = document.querySelector(".mouseoverTooltip");
       tooltip && tooltip.classList.add("fadeOut");
@@ -167,44 +169,78 @@ const AppLayout = () => {
         setTooltipProps(null);
       }, TOOLTIP_FADEOUT);
     }, TOOLTIP_DURATION);
-  };
+  }, []);
 
   const isTabletOrLarger = useMediaQuery(`(min-width: ${TABLET_MIN_WIDTH}px)`);
 
+  const onAppClick = useCallback(
+    isTabletOrLarger
+      ? (event) => {
+          if (
+            ((event.target as HTMLElement).classList &&
+              Array.from((event.target as HTMLElement).classList).includes(
+                "slidersDiv"
+              )) ||
+            (event.target as HTMLElement).id === "svg" ||
+            (event.target as HTMLElement).nodeName === "circle"
+          ) {
+            setIsExpanded(INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE);
+          }
+        }
+      : (event) => {
+          if (
+            ((event.target as HTMLElement).classList &&
+              Array.from((event.target as HTMLElement).classList).includes(
+                "slidersDiv"
+              )) ||
+            (event.target as HTMLElement).id === "svg" ||
+            (event.target as HTMLElement).nodeName === "circle"
+          ) {
+            setIsExpanded(INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE);
+          }
+          if ((event.target as HTMLElement).nodeName !== "circle") {
+            setInfoDrawerProps(null);
+          }
+        },
+    [isTabletOrLarger]
+  );
+
+  const onMouseMoveNode = useCallback(
+    (event: Event, datum: any) => {
+      const {
+        bottom,
+        height,
+        left,
+        width,
+      } = (event.target as HTMLElement).getBoundingClientRect();
+
+      setTooltipProps({
+        data: datum,
+        bottom: (innerHeight || 0) - bottom + height / 2,
+        left: left + width / 2 + 20,
+        width,
+      });
+      startTooltipActive();
+    },
+    [innerHeight, startTooltipActive]
+  );
+
+  const onClickNode = useCallback((event: Event, datum: any) => {
+    const { width } = (event.target as HTMLElement).getBoundingClientRect();
+    const infoDrawerProps = {
+      data: datum,
+      width,
+      setInfoDrawerProps,
+    };
+    setInfoDrawerProps(infoDrawerProps);
+  }, []);
+
+  const radiusScale = getRadiusScale();
   return (
     <>
       <AppLayoutStyles
         className={sortedByValue ? "sorted" : ""}
-        onClick={
-          isTabletOrLarger
-            ? (event) => {
-                if (
-                  ((event.target as HTMLElement).classList &&
-                    Array.from(
-                      (event.target as HTMLElement).classList
-                    ).includes("slidersDiv")) ||
-                  (event.target as HTMLElement).id === "svg" ||
-                  (event.target as HTMLElement).nodeName === "circle"
-                ) {
-                  setIsExpanded(INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE);
-                }
-              }
-            : (event) => {
-                if (
-                  ((event.target as HTMLElement).classList &&
-                    Array.from(
-                      (event.target as HTMLElement).classList
-                    ).includes("slidersDiv")) ||
-                  (event.target as HTMLElement).id === "svg" ||
-                  (event.target as HTMLElement).nodeName === "circle"
-                ) {
-                  setIsExpanded(INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE);
-                }
-                if ((event.target as HTMLElement).nodeName !== "circle") {
-                  setMobileTooltipProps(null);
-                }
-              }
-        }
+        onClick={onAppClick}
       >
         <FiltersPanel
           filterVariables={filterVariables}
@@ -223,44 +259,9 @@ const AppLayout = () => {
         <ContainerDimensions>
           {({ width, height }) => (
             <Viz
-              onMouseMoveNode={
-                isTabletOrLarger
-                  ? (event: Event, datum: any) => {
-                      const {
-                        bottom,
-                        height,
-                        left,
-                        width,
-                      } = (event.target as HTMLElement).getBoundingClientRect();
-
-                      setTooltipProps({
-                        data: datum,
-                        bottom: (innerHeight || 0) - bottom + height / 2,
-                        left: left + width / 2 + 20,
-                        width,
-                      });
-                      startTooltipActive();
-                    }
-                  : () => {}
-              }
-              onClickNode={
-                isTabletOrLarger
-                  ? () => {
-                      setIsTooltipExpanded(true);
-                      console.log("🌟🚨: AppLayout -> setIsTooltipExpanded");
-                    }
-                  : (event: Event, datum: any) => {
-                      const {
-                        width,
-                      } = (event.target as HTMLElement).getBoundingClientRect();
-                      const mobileTooltipProps = {
-                        data: datum,
-                        width,
-                      };
-                      setMobileTooltipProps(mobileTooltipProps);
-                    }
-              }
-              onMouseOutNode={isTabletOrLarger ? stopTooltipActive : () => null}
+              onMouseMoveNode={onMouseMoveNode}
+              onClickNode={onClickNode}
+              onMouseOutNode={stopTooltipActive}
               isGraphView={isGraphView}
               isTabletOrLarger={isTabletOrLarger}
               axisValues={axisValues}
@@ -277,19 +278,18 @@ const AppLayout = () => {
             { size: 10000, text: "10000 workers" },
             { size: 50000, text: "50000 workers" },
           ]}
-          radiusScale={getRadiusScale()}
+          radiusScale={radiusScale}
           isGraphView={isGraphView}
         />
       </AppLayoutStyles>
 
-      {isTooltipActive && isTabletOrLarger ? (
+      {isTabletOrLarger && (
         <Tooltip
           isTooltipExpanded={isTooltipExpanded}
           {...(tooltipProps || emptyTooltipProps)}
         />
-      ) : (
-        <MobileTooltip {...(mobileTooltipProps || emptyMobileTooltipProps)} />
       )}
+      <InfoDrawer {...(infoDrawerProps || emptyInfoDrawerProps)} />
     </>
   );
 };
