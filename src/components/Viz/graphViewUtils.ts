@@ -111,10 +111,12 @@ export const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
 
   // get the node, distance, and labels for the most extreme nodes
   document.querySelectorAll(".node").forEach((node) => {
-    const nodeIdx = +node.id.slice(5) - 1;
+    const nodeId = +node.id.slice(5);
+
+    const nodeData = nodes.find(({ id }) => nodeId === id);
     const axisLabels = {
-      x: nodes[nodeIdx][axisValues.x.dataLabel],
-      y: nodes[nodeIdx][axisValues.y.dataLabel],
+      x: nodeData[axisValues.x.dataLabel],
+      y: nodeData[axisValues.y.dataLabel],
     };
 
     // multiply by 100 for any percent labels (automation risk)

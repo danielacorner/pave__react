@@ -373,6 +373,7 @@ const FORCE = function (nsp) {
       { nodes, radiusScale, clusterCenters, radiusSelector },
       that
     ) => {
+      console.log("🌟🚨: STARTING");
       nsp.initForce({
         nodes,
         radiusScale,

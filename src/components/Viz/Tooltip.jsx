@@ -189,7 +189,6 @@ export const numberWithCommas = (x) => {
 };
 
 const Tooltip = ({ data, left, bottom, width, isTooltipExpanded }) => {
-  console.log("🌟🚨: Tooltip -> isTooltipExpanded", isTooltipExpanded);
   if (!data) {
     return null;
   }
