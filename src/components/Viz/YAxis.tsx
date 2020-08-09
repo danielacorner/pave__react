@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { ControlsContext } from '../Context/ContextProvider';
-import styled from 'styled-components/macro';
-import { WORKERS, SALARY, AUTOMATION_RISK, STUDY } from '../Controls/SortPanel';
-import { numberWithCommas } from './Legend';
-import { useWindowSize } from '../useWindowSize';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components/macro";
+import { WORKERS, SALARY, AUTOMATION_RISK, STUDY } from "../../utils/constants";
+import { numberWithCommas } from "./Legend";
+import { useWindowSize } from "../useWindowSize";
+import useStore from "../store";
 
 const YAxisStyles = styled.div`
   position: absolute;
@@ -77,8 +77,8 @@ const getLabel = (sortedByValue, idx) => {
       return (
         <>
           <div className="label-data">{num} </div>
-          <div className="label-subtitle" style={{ margin: '-1.4em 0 0 1em' }}>
-            year{num !== 1 ? 's' : ''} study
+          <div className="label-subtitle" style={{ margin: "-1.4em 0 0 1em" }}>
+            year{num !== 1 ? "s" : ""} study
           </div>
         </>
       );
@@ -90,8 +90,7 @@ const getLabel = (sortedByValue, idx) => {
 
 export default () => {
   // TODO: set scaleY of .spacer on handleResize
-  const { state } = useContext(ControlsContext);
-  const { sortedByValue } = state;
+  const sortedByValue = useStore((state) => state.sortedByValue);
   const [marginPercent, setMarginPercent] = useState(0.5);
   const { innerHeight } = useWindowSize();
   useEffect(() => {
@@ -116,21 +115,21 @@ export default () => {
 
   return (
     <YAxisStyles style={{}} className="yAxis">
-      <div className={`tick ${sortedByValue || 'hidden'}`}>
+      <div className={`tick ${sortedByValue || "hidden"}`}>
         <div className="label">{getLabel(sortedByValue, 0)}</div>
       </div>
       <div
         className="spacer"
         style={{ margin: `${marginPercent * innerHeight}px 0` }}
       />
-      <div className={`tick ${sortedByValue || 'hidden'}`}>
+      <div className={`tick ${sortedByValue || "hidden"}`}>
         <div className="label">{getLabel(sortedByValue, 1)}</div>
       </div>
       <div
         className="spacer"
         style={{ margin: `${marginPercent * innerHeight}px 0` }}
       />
-      <div className={`tick ${sortedByValue || 'hidden'}`}>
+      <div className={`tick ${sortedByValue || "hidden"}`}>
         <div className="label">{getLabel(sortedByValue, 2)}</div>
       </div>
     </YAxisStyles>

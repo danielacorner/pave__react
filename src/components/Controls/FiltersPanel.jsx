@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-import styled from 'styled-components/macro';
-import { SLIDER_WIDTH_LG, SLIDER_WIDTH_MD } from '../../utils/constants';
-import { ControlsContext } from '../Context/ContextProvider';
-import FilterSlider from './FilterSlider';
+import React from "react";
+import styled from "styled-components/macro";
+import { SLIDER_WIDTH_LG, SLIDER_WIDTH_MD } from "../../utils/constants";
+import FilterSlider from "./FilterSlider";
+import useStore from "../store";
 
 const FiltersPanelStyles = styled.div`
   margin: 10px 0px 0px 6px;
@@ -35,21 +35,21 @@ const FiltersPanelStyles = styled.div`
 `;
 
 const FiltersPanel = ({ filterVariables, isExpanded, setIsExpanded }) => {
-  const { handleFilterMouseup, handleFilterChange, state } = useContext(
-    ControlsContext,
-  );
+  const handleFilterMouseup = useStore((state) => state.handleFilterMouseup);
+  const handleFilterChange = useStore((state) => state.handleFilterChange);
+  const filters = useStore((state) => state.filters);
 
   return (
     <FiltersPanelStyles>
       <div className="slidersDiv">
-        {filterVariables.map(filterVar => (
+        {filterVariables.map((filterVar) => (
           <FilterSlider
             isExpanded={isExpanded}
             setIsExpanded={setIsExpanded}
             key={filterVar}
             filterVar={filterVar}
-            value={state.filters[filterVar]}
-            onChange={value => {
+            value={filters[filterVar]}
+            onChange={(value) => {
               handleFilterChange(filterVar, value);
             }}
             onMouseUp={handleFilterMouseup}

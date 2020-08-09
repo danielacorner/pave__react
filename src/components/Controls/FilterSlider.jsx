@@ -1,10 +1,10 @@
-import { Collapse, IconButton } from '@material-ui/core';
-import Tooltip from '@material-ui/core/Tooltip';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Slider from '@material-ui/lab/Slider';
-import React, { useContext, useState } from 'react';
-import styled from 'styled-components/macro';
+import { Collapse, IconButton } from "@material-ui/core";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Slider from "@material-ui/lab/Slider";
+import React, { useState } from "react";
+import styled from "styled-components/macro";
 import {
   FILTER_RANGE,
   FILTER_TITLE,
@@ -12,8 +12,8 @@ import {
   SLIDER_WIDTH_MD,
   SUBSKILL_FILTER_TITLES,
   SLIDER_TOOLTIP_TEXT,
-} from '../../utils/constants';
-import { ControlsContext } from '../Context/ContextProvider';
+} from "../../utils/constants";
+import useStore from "../store";
 
 const LabelAndSliderStyles = styled.div`
   background: white;
@@ -67,7 +67,7 @@ const LabelAndSliderStyles = styled.div`
 `;
 
 const MinMax = ({ visible, title }) => (
-  <div className={`minmax${visible === title ? '' : ' hidden'}`}>
+  <div className={`minmax${visible === title ? "" : " hidden"}`}>
     <div>Min</div>
     <div>Max</div>
   </div>
@@ -77,25 +77,26 @@ const MAX_SUBSKILL_VALUE = 10;
 
 const SubskillFilters = ({ filterVar, onMouseUp }) => {
   const subskillFilters = SUBSKILL_FILTER_TITLES(filterVar);
-  const context = useContext(ControlsContext);
+  const filters = useStore((state) => state.filters);
+  const handleFilterChange = useStore((state) => state.handleFilterChange);
   const [minMaxVisible, setMinMaxVisible] = useState(false);
 
   return (
     <div className="subskillFilters">
-      {subskillFilters.map(subskill => (
+      {subskillFilters.map((subskill) => (
         <div key={subskill.dataLabel} className="subskillLabelAndSlider">
           <Typography id="label">{subskill.title}</Typography>
           <Slider
             className="slider subskillSlider"
-            value={context.state.filters[subskill.dataLabel]}
+            value={filters[subskill.dataLabel]}
             min={FILTER_RANGE(subskill.dataLabel)[0]}
             max={Math.min(
               FILTER_RANGE(subskill.dataLabel)[1],
-              MAX_SUBSKILL_VALUE,
+              MAX_SUBSKILL_VALUE
             )}
             step={1}
             onChange={(event, value) => {
-              context.handleFilterChange(subskill.dataLabel, value);
+              handleFilterChange(subskill.dataLabel, value);
             }}
             onMouseUp={onMouseUp}
             onTouchEnd={onMouseUp}
@@ -136,10 +137,10 @@ const FilterSlider = ({
         <Tooltip title={SLIDER_TOOLTIP_TEXT(filterVar)}>
           <Typography id="label">{FILTER_TITLE(filterVar)}</Typography>
         </Tooltip>
-        <Tooltip title={(filterIsExpanded ? 'Hide' : 'View') + ' Sub-Skills'}>
+        <Tooltip title={(filterIsExpanded ? "Hide" : "View") + " Sub-Skills"}>
           <IconButton
             className={`expand expand${filterVar}${
-              filterIsExpanded ? ' expandOpen' : ''
+              filterIsExpanded ? " expandOpen" : ""
             }`}
             onClick={() =>
               setIsExpanded({ ...isExpanded, [filterVar]: !filterIsExpanded })

@@ -1,8 +1,11 @@
 import React from "react";
 import styled from "styled-components/macro";
-import { TOOLTIP_HZ_OFFSET, TOOLTIP_WIDTH } from "../../utils/constants";
+import {
+  TOOLTIP_HZ_OFFSET,
+  TOOLTIP_WIDTH,
+  INDUSTRY,
+} from "../../utils/constants";
 import { getCircleColour, lightGrey } from "../FORCE";
-import { INDUSTRY } from "../Controls/SortPanel";
 import { MAX_TOOLTIP_LINES } from "./InfoDrawer";
 export const TOOLTIP_TRANSITION = `cubic-bezier(0.165, 0.84, 0.44, 1)`;
 

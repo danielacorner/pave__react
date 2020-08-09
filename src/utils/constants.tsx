@@ -1,23 +1,24 @@
-import React from 'react';
-import styled from 'styled-components/macro';
-import {
-  STUDY_LABEL,
-  AUTOMATION_RISK_LABEL,
-  SALARY_LABEL,
-  WORKERS_LABEL,
-  INDUSTRY,
-  WORKERS,
-  AUTOMATION_RISK,
-  SALARY,
-  STUDY,
-  INDUSTRY_LABEL,
-} from '../components/Controls/SortPanel';
+import React from "react";
+import styled from "styled-components/macro";
+
+export const AUTOMATION_RISK = "automationRisk";
+export const AUTOMATION_RISK_LABEL = "automationRisk";
+export const COLOUR_BY_VALUE = "colourByValue";
+export const SORT_BY_VALUE = "sortByValue";
+export const WORKERS = "workers";
+export const SALARY = "salary";
+export const STUDY = "study";
+export const INDUSTRY = "industry";
+export const WORKERS_LABEL = "workers";
+export const SALARY_LABEL = "salaryMed";
+export const STUDY_LABEL = "yearsStudy";
+export const INDUSTRY_LABEL = "industry";
 
 export const APP_OUTER_PADDING = 20;
 
-export const COLOUR_SALARY = 'lime';
-export const COLOUR_STUDY = 'cornflowerblue';
-export const COLOUR_RISK = 'tomato';
+export const COLOUR_SALARY = "lime";
+export const COLOUR_STUDY = "cornflowerblue";
+export const COLOUR_RISK = "tomato";
 
 export const RESIZE_INTERVAL_MS = 5000;
 export const MOBILE_MIN_WIDTH = 360;
@@ -29,10 +30,10 @@ export const TOOLTIP_HZ_OFFSET = 40;
 export const SLIDER_WIDTH_LG = 200;
 export const SLIDER_WIDTH_MD = 125;
 
-export const SKILLS_LANG = 'skillsLang';
-export const SKILLS_LOGI = 'skillsLogi';
-export const SKILLS_MATH = 'skillsMath';
-export const SKILLS_COMP = 'skillsComp';
+export const SKILLS_LANG = "skillsLang";
+export const SKILLS_LOGI = "skillsLogi";
+export const SKILLS_MATH = "skillsMath";
+export const SKILLS_COMP = "skillsComp";
 
 // TODO: avg should be sum over # nodes
 export const WORKERS_MAX = 116000;
@@ -40,13 +41,13 @@ export const WORKERS_MIN = 100;
 export const WORKERS_MED = (WORKERS_MAX - WORKERS_MIN) / 2;
 
 export const getAxisTitleMap = () => ({
-  [STUDY_LABEL]: 'Years of study',
+  [STUDY_LABEL]: "Years of study",
   [AUTOMATION_RISK_LABEL]:
     window.innerWidth > MOBLET_MIN_WIDTH
-      ? 'Risk of machines replacing tasks (%)'
-      : 'Risk of machine takeover (%)',
-  [SALARY_LABEL]: 'Salary (median, $K per year)',
-  [WORKERS_LABEL]: 'Workers in this job',
+      ? "Risk of machines replacing tasks (%)"
+      : "Risk of machine takeover (%)",
+  [SALARY_LABEL]: "Salary (median, $K per year)",
+  [WORKERS_LABEL]: "Workers in this job",
 });
 export const getDatalabelMap = () => ({
   [INDUSTRY]: INDUSTRY_LABEL,
@@ -56,18 +57,18 @@ export const getDatalabelMap = () => ({
   [STUDY]: STUDY_LABEL,
 });
 
-export const useMount = cb => React.useEffect(cb, []); // eslint-disable-line
+export const useMount = (cb) => React.useEffect(cb, []); // eslint-disable-line
 
 export const FILTER_TITLE = (filterVar: string) => {
   switch (filterVar) {
     case SKILLS_LANG:
-      return 'Language & Communication Skills';
+      return "Language & Communication Skills";
     case SKILLS_LOGI:
-      return 'Logic & Reasoning Skills';
+      return "Logic & Reasoning Skills";
     case SKILLS_MATH:
-      return 'Math & Spatial Skills';
+      return "Math & Spatial Skills";
     case SKILLS_COMP:
-      return 'Computer & Information Skills';
+      return "Computer & Information Skills";
     default:
       return;
   }
@@ -178,21 +179,21 @@ export const FILTER_RANGE = (filterVar: string) => {
     case SKILLS_COMP:
       return [0, 60];
 
-    case 's1DataAnalysis':
-    case 's2DecisionMaking':
-    case 's3FindingInformation':
-    case 's4JobTaskPlanningandOrganizing':
-    case 's5MeasurementandCalculation':
-    case 's6MoneyMath':
-    case 's7NumericalEstimation':
-    case 's8OralCommunication':
-    case 's9ProblemSolving':
-    case 's10Reading':
-    case 's11SchedulingorBudgetingandAccounting':
-    case 's12DigitalTechnology':
-    case 's13DocumentUse':
-    case 's14Writing':
-    case 's15CriticalThinking':
+    case "s1DataAnalysis":
+    case "s2DecisionMaking":
+    case "s3FindingInformation":
+    case "s4JobTaskPlanningandOrganizing":
+    case "s5MeasurementandCalculation":
+    case "s6MoneyMath":
+    case "s7NumericalEstimation":
+    case "s8OralCommunication":
+    case "s9ProblemSolving":
+    case "s10Reading":
+    case "s11SchedulingorBudgetingandAccounting":
+    case "s12DigitalTechnology":
+    case "s13DocumentUse":
+    case "s14Writing":
+    case "s15CriticalThinking":
       return [0, 25];
     default:
       return;
@@ -203,39 +204,39 @@ export const SUBSKILL_FILTER_TITLES = (filterVar: string) => {
   switch (filterVar) {
     case SKILLS_LANG:
       return [
-        { title: 'Oral Communication', dataLabel: 's8OralCommunication' },
-        { title: 'Reading', dataLabel: 's10Reading' },
-        { title: 'Writing', dataLabel: 's14Writing' },
+        { title: "Oral Communication", dataLabel: "s8OralCommunication" },
+        { title: "Reading", dataLabel: "s10Reading" },
+        { title: "Writing", dataLabel: "s14Writing" },
       ];
     case SKILLS_LOGI:
       return [
-        { title: 'Decision-Making', dataLabel: 's2DecisionMaking' },
+        { title: "Decision-Making", dataLabel: "s2DecisionMaking" },
         {
-          title: 'Task Planning & Organizing',
-          dataLabel: 's4JobTaskPlanningandOrganizing',
+          title: "Task Planning & Organizing",
+          dataLabel: "s4JobTaskPlanningandOrganizing",
         },
-        { title: 'Problem Solving', dataLabel: 's9ProblemSolving' },
-        { title: 'Critical Thinking', dataLabel: 's15CriticalThinking' },
+        { title: "Problem Solving", dataLabel: "s9ProblemSolving" },
+        { title: "Critical Thinking", dataLabel: "s15CriticalThinking" },
       ];
     case SKILLS_MATH:
       return [
         {
-          title: 'Measurement & Calculation',
-          dataLabel: 's5MeasurementandCalculation',
+          title: "Measurement & Calculation",
+          dataLabel: "s5MeasurementandCalculation",
         },
-        { title: 'Money Math', dataLabel: 's6MoneyMath' },
-        { title: 'Numerical Estimation', dataLabel: 's7NumericalEstimation' },
+        { title: "Money Math", dataLabel: "s6MoneyMath" },
+        { title: "Numerical Estimation", dataLabel: "s7NumericalEstimation" },
         {
-          title: 'Scheduling, Budgeting, Accounting',
-          dataLabel: 's11SchedulingorBudgetingandAccounting',
+          title: "Scheduling, Budgeting, Accounting",
+          dataLabel: "s11SchedulingorBudgetingandAccounting",
         },
       ];
     case SKILLS_COMP:
       return [
-        { title: 'Finding Information', dataLabel: 's3FindingInformation' },
-        { title: 'Document Use', dataLabel: 's13DocumentUse' },
-        { title: 'Digital Technology', dataLabel: 's12DigitalTechnology' },
-        { title: 'Data Analysis', dataLabel: 's1DataAnalysis' },
+        { title: "Finding Information", dataLabel: "s3FindingInformation" },
+        { title: "Document Use", dataLabel: "s13DocumentUse" },
+        { title: "Digital Technology", dataLabel: "s12DigitalTechnology" },
+        { title: "Data Analysis", dataLabel: "s1DataAnalysis" },
       ];
     default:
       return;

@@ -1,8 +1,9 @@
 import create from "zustand";
 import NOCData from "../assets/NOC-data";
-import { WORKERS, INDUSTRY } from "./Controls/SortPanel";
+import { WORKERS, INDUSTRY } from "../utils/constants";
 import * as d3 from "d3";
 import FORCE from "./FORCE";
+import { uniq } from "lodash";
 
 export const $ = (element) => document.querySelector(element); // jQuerify
 
@@ -52,9 +53,7 @@ const [useStore] = create((set, get) => ({
       .domain([d3.min(radii), d3.max(radii)])
       .range(radiusRange);
   },
-  uniqueClusterValues: NOCData.map((d) => d[INDUSTRY]).filter(
-    (value, index, self) => self.indexOf(value) === index
-  ),
+  uniqueClusterValues: uniq(NOCData.map((d) => d.industry)),
   clusterCenters: [],
   sortedByValue: false,
   colouredByValue: false,
@@ -65,6 +64,7 @@ const [useStore] = create((set, get) => ({
 
   initializeClusterCenters: () =>
     set((state) => {
+      console.log("🌟🚨: state", state);
       let clusterCenters = [];
 
       // create clusters arrays
@@ -80,6 +80,7 @@ const [useStore] = create((set, get) => ({
           clusterCenters[cluster] = d;
         }
       });
+      console.log("🌟🚨: clusterCenters", clusterCenters);
 
       window.addEventListener("resize", get().handleResize);
       setTimeout(get().handleResize, 1500);
@@ -260,7 +261,7 @@ const [useStore] = create((set, get) => ({
           // });
           // restart the simulation
           // this.setState({ filters: newMinima },
-          this.restartSimulation();
+          state.restartSimulation();
           // );
         }, 0);
       }
@@ -271,9 +272,9 @@ const [useStore] = create((set, get) => ({
     }),
 
   resetFilters: () => {
-    TODO: setTimeout(() => {
-      this.filterNodes();
-      this.restartSimulation();
+    setTimeout(() => {
+      get().filterNodes();
+      get().restartSimulation();
     }, 0);
     return set((state) => {
       const filtersReset = state.filters;
