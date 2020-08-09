@@ -1,16 +1,16 @@
-import { IconButton, Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import DeleteIcon from '@material-ui/icons/DeleteForever';
+import { IconButton, Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import DeleteIcon from "@material-ui/icons/DeleteForever";
 // import ShareIcon from '@material-ui/icons/Share';
 // import { Link } from '@reach/router';
-import CopyIcon from '@material-ui/icons/FileCopy';
-import PlayArrowIcon from '@material-ui/icons/PlayArrowRounded';
-import React, { useContext, useState } from 'react';
-import styled from 'styled-components/macro';
-import { ControlsContext } from '../Context/ContextProvider';
-import SnapshotsButton from './SnapshotsButton';
+import CopyIcon from "@material-ui/icons/FileCopy";
+import PlayArrowIcon from "@material-ui/icons/PlayArrowRounded";
+import React, { useState } from "react";
+import styled from "styled-components/macro";
+import SnapshotsButton from "./SnapshotsButton";
+import useStore from "../store";
 
 const SnapshotsPanelStyles = styled.div`
   margin: auto;
@@ -57,42 +57,45 @@ const SnapshotsPanelStyles = styled.div`
 const SnapshotsPanel = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [summaryBarsActive, setSummaryBarsActive] = useState(true);
-  const handleClick = event => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     this.setState({ anchorEl: null });
   };
-  const context = useContext(ControlsContext);
+  const toggleSummaryBars = useStore((state) => state.toggleSummaryBars);
+  const snapshots = useStore((state) => state.snapshots);
+  const handleSnapshot = useStore((state) => state.handleSnapshot);
+  const handleApplySnapshot = useStore((state) => state.handleApplySnapshot);
+  const handleDeleteSnapshot = useStore((state) => state.handleDeleteSnapshot);
 
   return (
     <SnapshotsPanelStyles>
       <div className="controlsBottom">
-        <SnapshotsButton onSnapshot={context.handleSnapshot} />
+        <SnapshotsButton onSnapshot={handleSnapshot} />
         <Button
-          style={{ textTransform: 'none' }}
+          style={{ textTransform: "none" }}
           className="toggleSummaryBarsButton"
           variant="outlined"
           size="large"
           onClick={() => {
-            context.toggleSummaryBars();
+            toggleSummaryBars();
             setSummaryBarsActive(!summaryBarsActive);
           }}
         >
-          {summaryBarsActive ? 'Hide' : 'Show'} Summary Statistics
+          {summaryBarsActive ? "Hide" : "Show"} Summary Statistics
         </Button>
       </div>
 
       <div
-        className={`snapshotsScrollContainer ${context.state.snapshots.length >
-          0 && `open`}`}
+        className={`snapshotsScrollContainer ${snapshots.length > 0 && `open`}`}
       >
-        {context.state.snapshots.map(ss => {
+        {snapshots.map((ss) => {
           return (
             // TODO: extract component here
             <React.Fragment key={JSON.stringify(ss)}>
               <Button
-                aria-owns={anchorEl ? 'simple-menu' : null}
+                aria-owns={anchorEl ? "simple-menu" : null}
                 aria-haspopup="true"
                 className={`snapshotButton snapshotButton_${ss.id}`}
                 onClick={handleClick}
@@ -110,20 +113,20 @@ const SnapshotsPanel = () => {
                 {/* View Snapshot */}
                 <MenuItem
                   onClick={() => {
-                    context.handleApplySnapshot(ss.id);
+                    handleApplySnapshot(ss.id);
                     handleClose();
                   }}
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr auto',
+                    display: "grid",
+                    gridTemplateColumns: "1fr auto",
                   }}
                 >
                   <span>View Snapshot </span>
                   <PlayArrowIcon
                     style={{
                       marginLeft: 10,
-                      justifySelf: 'right',
-                      color: 'steelblue',
+                      justifySelf: "right",
+                      color: "steelblue",
                     }}
                   />
                 </MenuItem>
@@ -131,40 +134,40 @@ const SnapshotsPanel = () => {
                 {/* Copy Link to Snapshot */}
                 <MenuItem
                   style={{
-                    height: 'auto',
-                    cursor: 'default',
-                    display: 'grid',
+                    height: "auto",
+                    cursor: "default",
+                    display: "grid",
                     gridTemplateAreas: `
                           "title button"
                           "link button"`,
                   }}
                   disableRipple={true}
                 >
-                  <span style={{ gridArea: 'title' }}>
-                    Copy Link to Snapshot{' '}
+                  <span style={{ gridArea: "title" }}>
+                    Copy Link to Snapshot{" "}
                   </span>
                   <input
                     type="text"
                     name="snapshotLink"
                     readOnly
-                    style={{ gridArea: 'link' }}
+                    style={{ gridArea: "link" }}
                     value={`${window.location.origin}/${JSON.stringify(
-                      ss.filters,
+                      ss.filters
                     )
-                      .replace('{', '%7B')
-                      .replace('}', '%7D')}`}
+                      .replace("{", "%7B")
+                      .replace("}", "%7D")}`}
                   />
                   <IconButton
                     style={{
-                      gridArea: 'button',
+                      gridArea: "button",
                       marginLeft: 10,
                       marginRight: -12,
-                      justifySelf: 'right',
-                      color: '#4caf50',
+                      justifySelf: "right",
+                      color: "#4caf50",
                     }}
                     onClick={() => {
                       document.querySelector('[name="snapshotLink"]').select();
-                      document.execCommand('copy');
+                      document.execCommand("copy");
                       handleClose();
                     }}
                   >
@@ -175,18 +178,18 @@ const SnapshotsPanel = () => {
                 {/* Delete Snapshot */}
                 <MenuItem
                   style={{
-                    height: 'auto',
-                    display: 'grid',
+                    height: "auto",
+                    display: "grid",
                     gridGap: 4,
-                    gridTemplateColumns: '1fr auto',
+                    gridTemplateColumns: "1fr auto",
                   }}
                   onClick={() => {
-                    context.handleDeleteSnapshot(ss.id);
+                    handleDeleteSnapshot(ss.id);
                     handleClose();
                   }}
                 >
                   <span>Delete Snapshot </span>
-                  <DeleteIcon style={{ color: 'tomato' }} />
+                  <DeleteIcon style={{ color: "tomato" }} />
                 </MenuItem>
               </Menu>
             </React.Fragment>

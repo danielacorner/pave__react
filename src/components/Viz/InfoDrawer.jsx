@@ -1,14 +1,13 @@
 import Drawer from "@material-ui/core/Drawer";
 import React, { useState } from "react";
 import styled from "styled-components/macro";
-import { TABLET_MIN_WIDTH } from "../../utils/constants";
+import { TABLET_MIN_WIDTH, INDUSTRY } from "../../utils/constants";
 import {
   numberWithCommas,
   FloatingCircle,
   TOOLTIP_TRANSITION,
 } from "./Tooltip";
 import { getCircleColour, lightGrey } from "../FORCE";
-import { INDUSTRY } from "../Controls/SortPanel";
 
 export const ICON_WIDTH = 32;
 export const ICON_SCALE = 1.5;

@@ -1,8 +1,9 @@
 import create from "zustand";
 import NOCData from "../assets/NOC-data";
-import { WORKERS, INDUSTRY } from "./Controls/SortPanel";
+import { WORKERS, INDUSTRY } from "../utils/constants";
 import * as d3 from "d3";
 import FORCE from "./FORCE";
+import { uniq } from "lodash";
 
 export const $ = (element) => document.querySelector(element); // jQuerify
 
@@ -52,9 +53,7 @@ const [useStore] = create((set, get) => ({
       .domain([d3.min(radii), d3.max(radii)])
       .range(radiusRange);
   },
-  uniqueClusterValues: NOCData.map((d) => d[INDUSTRY]).filter(
-    (value, index, self) => self.indexOf(value) === index
-  ),
+  uniqueClusterValues: uniq(NOCData.map((d) => d.industry)),
   clusterCenters: [],
   sortedByValue: false,
   colouredByValue: false,
@@ -96,6 +95,12 @@ const [useStore] = create((set, get) => ({
       return { clusterCenters, zScale: d3.scaleOrdinal(d3.schemeCategory10) };
     }),
 
+  getTranslate: () => {
+    const { width, height } = getGraphContainerDims();
+    get().getOffsetTop();
+    return `${+width / 2}px,${+height / 2 + get().offsetTop}px`;
+  },
+
   handleResize: () =>
     set((state) => {
       if ((FORCE as any).isGraphView) {
@@ -123,10 +128,12 @@ const [useStore] = create((set, get) => ({
         `scaleY(${1 / newScale})`
       );
 
+      const newTransform = `translate(${state.getTranslate()}) scale(${newScale})`;
+
       // translate the nodes group into the middle and scale to fit
       const nodesG = $("#nodesG");
       if (nodesG) {
-        nodesG.style.transform = `translate(${get().getTranslate()}) scale(${newScale})`;
+        nodesG.style.transform = newTransform;
       }
       return {
         svgBBox,
@@ -149,43 +156,36 @@ const [useStore] = create((set, get) => ({
         isOffsetTop: state.isOffsetTop || newOffsetTop !== 0,
       };
     }),
-  getTranslate: () =>
-    set((state) => {
-      const { width, height } = getGraphContainerDims();
-      get().getOffsetTop();
-      return `${+width / 2}px,${+height / 2 + state.offsetTop}px`;
-    }),
 
-  getScale: () =>
-    set((state) => {
-      if ((FORCE as any).isGraphView) {
-        return 0.36;
-      }
-      // resize the graph container to fit the screen
-      const { width, height } = getGraphContainerDims();
+  getScale: () => {
+    if ((FORCE as any).isGraphView) {
+      return 0.36;
+    }
+    // resize the graph container to fit the screen
+    const { width, height } = getGraphContainerDims();
 
-      // zoom in until you hit the edge of...
-      const windowConstrainingLength = Math.min(width, height); // constrain by the smaller length
+    // zoom in until you hit the edge of...
+    const windowConstrainingLength = Math.min(width, height); // constrain by the smaller length
 
-      const nodesG = $("#nodesG");
-      const nodesBB = nodesG
-        ? nodesG.getBBox()
-        : { width: window.innerWidth - 10, height: window.innerHeight * 0.8 };
-      // constrain the maximum nodes length
-      const nodesConstrainedLength = Math.max(nodesBB.width, nodesBB.height);
+    const nodesG = $("#nodesG");
+    const nodesBB = nodesG
+      ? nodesG.getBBox()
+      : { width: window.innerWidth - 10, height: window.innerHeight * 0.8 };
+    // constrain the maximum nodes length
+    const nodesConstrainedLength = Math.max(nodesBB.width, nodesBB.height);
 
-      // bugfix: zooming in because initial nodesConstrainedLength = 100, and doesn't resize correctly when browser focus isn't on this tab
-      if (
-        nodesConstrainedLength === 100 &&
-        state.nodes.length === state.originalData.length
-      ) {
-        return 0.95;
-      }
+    // bugfix: zooming in because initial nodesConstrainedLength = 100, and doesn't resize correctly when browser focus isn't on this tab
+    if (
+      nodesConstrainedLength === 100 &&
+      get().nodes.length === get().originalData.length
+    ) {
+      return 0.95;
+    }
 
-      const scaleRatio = windowConstrainingLength / nodesConstrainedLength;
+    const scaleRatio = windowConstrainingLength / nodesConstrainedLength;
 
-      return scaleRatio * 0.95; // zoom out a little extra
-    }),
+    return scaleRatio * 0.95; // zoom out a little extra
+  },
 
   filteredNodes: () => {
     // filter the dataset according to the slider state
@@ -260,7 +260,7 @@ const [useStore] = create((set, get) => ({
           // });
           // restart the simulation
           // this.setState({ filters: newMinima },
-          this.restartSimulation();
+          state.restartSimulation();
           // );
         }, 0);
       }
@@ -271,9 +271,9 @@ const [useStore] = create((set, get) => ({
     }),
 
   resetFilters: () => {
-    TODO: setTimeout(() => {
-      this.filterNodes();
-      this.restartSimulation();
+    setTimeout(() => {
+      get().filterNodes();
+      get().restartSimulation();
     }, 0);
     return set((state) => {
       const filtersReset = state.filters;
@@ -318,7 +318,7 @@ const [useStore] = create((set, get) => ({
 
   setClusterSelector: (x) => set((state) => ({ clusterSelector: x })),
 
-  setNodes: (nodes) => set((state) => ({ nodes: nodes })),
+  setNodes: (nodes) => set((state) => ({ nodes })),
 }));
 
 export default useStore;

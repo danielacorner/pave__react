@@ -1,28 +1,24 @@
-import Switch from '@material-ui/core/Switch';
-import Button from '@material-ui/core/Button';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Tooltip from '@material-ui/core/Tooltip';
-import RestoreIcon from '@material-ui/icons/RestoreRounded';
-import React, { useContext, useState } from 'react';
-import { ControlsContext } from '../Context/ContextProvider';
-import FORCE from '../FORCE';
-import GraphViewButton, { VariablePickerMenu } from './GraphViewButton';
-import { SortPanelStyles } from './SortPanelStyles';
-import { deactivateGraphView } from '../Viz/graphViewUtils';
-import { INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE } from '../AppLayout';
-
-export const AUTOMATION_RISK = 'automationRisk';
-export const AUTOMATION_RISK_LABEL = 'automationRisk';
-export const COLOUR_BY_VALUE = 'colourByValue';
-export const SORT_BY_VALUE = 'sortByValue';
-export const WORKERS = 'workers';
-export const SALARY = 'salary';
-export const STUDY = 'study';
-export const INDUSTRY = 'industry';
-export const WORKERS_LABEL = 'workers';
-export const SALARY_LABEL = 'salaryMed';
-export const STUDY_LABEL = 'yearsStudy';
-export const INDUSTRY_LABEL = 'industry';
+import Switch from "@material-ui/core/Switch";
+import Button from "@material-ui/core/Button";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Tooltip from "@material-ui/core/Tooltip";
+import RestoreIcon from "@material-ui/icons/RestoreRounded";
+import React, { useState } from "react";
+import FORCE from "../FORCE";
+import GraphViewButton, { VariablePickerMenu } from "./GraphViewButton";
+import { SortPanelStyles } from "./SortPanelStyles";
+import { deactivateGraphView } from "../Viz/graphViewUtils";
+import { INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE } from "../AppLayout";
+import useStore from "../store";
+import {
+  AUTOMATION_RISK,
+  COLOUR_BY_VALUE,
+  SORT_BY_VALUE,
+  WORKERS,
+  SALARY,
+  STUDY,
+  INDUSTRY,
+} from "../../utils/constants";
 
 const getTooltipText = (value, type) => {
   if (value === WORKERS) {
@@ -40,24 +36,24 @@ const getTooltipText = (value, type) => {
     return (
       <div>
         <div>
-          {type === COLOUR_BY_VALUE ? 'Colour' : 'Sort'} the circles by risk
+          {type === COLOUR_BY_VALUE ? "Colour" : "Sort"} the circles by risk
           that the job will be replaced by machine work.
         </div>
         {type === COLOUR_BY_VALUE ? (
           <div>
-            Once coloured, look for{' '}
-            <span style={{ color: 'hsl(84, 62%, 47%)' }}>green circles</span> to
+            Once coloured, look for{" "}
+            <span style={{ color: "hsl(84, 62%, 47%)" }}>green circles</span> to
             find jobs which won{"'"}t be taken over by machines for a long time.
             Darker green means lower risk.
             <div>
-              Avoid high-risk{' '}
-              <span style={{ color: 'hsl(34, 97%, 49%)' }}>red circles</span>.
+              Avoid high-risk{" "}
+              <span style={{ color: "hsl(34, 97%, 49%)" }}>red circles</span>.
             </div>
           </div>
         ) : (
           <div>
-            Once sorted, look{' '}
-            <span style={{ fontWeight: 'bold' }}>higher up</span> to find jobs
+            Once sorted, look{" "}
+            <span style={{ fontWeight: "bold" }}>higher up</span> to find jobs
             which won{"'"}t be taken over by machines for a long time. Avoid
             jobs lower down, which are at increased risk.
           </div>
@@ -68,21 +64,21 @@ const getTooltipText = (value, type) => {
     return (
       <div>
         <div>
-          {type === COLOUR_BY_VALUE ? 'Colour' : 'Sort'} by how much money is
+          {type === COLOUR_BY_VALUE ? "Colour" : "Sort"} by how much money is
           made by the average worker.
         </div>
         {type === COLOUR_BY_VALUE ? (
           <div>
-            Once coloured, look for{' '}
-            <span style={{ color: 'hsl(84, 76%, 43%)' }}>
+            Once coloured, look for{" "}
+            <span style={{ color: "hsl(84, 76%, 43%)" }}>
               dark green circles
-            </span>{' '}
+            </span>{" "}
             to find jobs which make more money.
           </div>
         ) : (
           <div>
-            Once sorted, look{' '}
-            <span style={{ fontWeight: 'bold' }}>higher up</span> to find jobs
+            Once sorted, look{" "}
+            <span style={{ fontWeight: "bold" }}>higher up</span> to find jobs
             with higher salaries.
           </div>
         )}
@@ -92,24 +88,24 @@ const getTooltipText = (value, type) => {
     return (
       <div>
         <div>
-          {type === COLOUR_BY_VALUE ? 'Colour' : 'Sort'} by years of study after
+          {type === COLOUR_BY_VALUE ? "Colour" : "Sort"} by years of study after
           high school for the average person working this job (not necessarily
           how many are required for the job).
         </div>
         {type === COLOUR_BY_VALUE ? (
           <div>
-            Once coloured, look for{' '}
-            <span style={{ color: 'hsl(203,70%,50%)' }}>dark blue circles</span>{' '}
-            to find jobs which require more study, or{' '}
-            <span style={{ color: 'hsl(203,85%,70%)' }}>
+            Once coloured, look for{" "}
+            <span style={{ color: "hsl(203,70%,50%)" }}>dark blue circles</span>{" "}
+            to find jobs which require more study, or{" "}
+            <span style={{ color: "hsl(203,85%,70%)" }}>
               light blue circles
-            </span>{' '}
+            </span>{" "}
             for jobs which require less study.
           </div>
         ) : (
           <div>
-            Once sorted, looking{' '}
-            <span style={{ fontWeight: 'bold' }}>higher up</span> you'll find
+            Once sorted, looking{" "}
+            <span style={{ fontWeight: "bold" }}>higher up</span> you'll find
             jobs that take a little longer to prepare for.
           </div>
         )}
@@ -120,7 +116,7 @@ const getTooltipText = (value, type) => {
     return (
       <div>
         <div>
-          {type === COLOUR_BY_VALUE ? 'Colour' : 'Sort'} by job industry, or
+          {type === COLOUR_BY_VALUE ? "Colour" : "Sort"} by job industry, or
           groups of related jobs.
         </div>
         <div>
@@ -144,14 +140,13 @@ const SortPanel = ({
   const [activeSwitches, setActiveSwitches] = useState([]);
   const [valueToColourBy, setValueToColourBy] = useState(INDUSTRY);
   const [valueToSortBy, setValueToSortBy] = useState(WORKERS);
-  const {
-    sortByValue,
-    colourByValue,
-    restartSimulation,
-    resetFilters,
-    setCurrentColor,
-    state,
-  } = useContext(ControlsContext);
+
+  const sortByValue = useStore((state) => state.sortByValue);
+  const colourByValue = useStore((state) => state.colourByValue);
+  const restartSimulation = useStore((state) => state.restartSimulation);
+  const resetFilters = useStore((state) => state.resetFilters);
+  const setCurrentColor = useStore((state) => state.setCurrentColor);
+  const filters = useStore((state) => state.filters);
 
   const handleSort = ({
     toggleActivated,
@@ -164,7 +159,7 @@ const SortPanel = ({
       if (!activeSwitches.includes(SORT_BY_VALUE)) {
         setActiveSwitches([...activeSwitches, SORT_BY_VALUE]);
       } else {
-        setActiveSwitches(activeSwitches.filter(d => d !== SORT_BY_VALUE));
+        setActiveSwitches(activeSwitches.filter((d) => d !== SORT_BY_VALUE));
       }
     }
     if (toggleActivated === COLOUR_BY_VALUE) {
@@ -173,7 +168,7 @@ const SortPanel = ({
       if (!activeSwitches.includes(COLOUR_BY_VALUE)) {
         setActiveSwitches([...activeSwitches, COLOUR_BY_VALUE]);
       } else {
-        setActiveSwitches(activeSwitches.filter(d => d !== COLOUR_BY_VALUE));
+        setActiveSwitches(activeSwitches.filter((d) => d !== COLOUR_BY_VALUE));
       }
     }
   };
@@ -187,9 +182,7 @@ const SortPanel = ({
       colourByValue(valueToColourBy);
     }
     // if any filter is active, reset them
-    if (
-      Object.values(state.filters).reduce((tally, cur) => tally + cur, 0) > 0
-    ) {
+    if (Object.values(filters).reduce((tally, cur) => tally + cur, 0) > 0) {
       resetFilters();
     }
     // if any subskill slider panel is open, close them
@@ -233,13 +226,13 @@ const SortPanel = ({
                 <div>
                   Sort
                   {activeSwitches && activeSwitches.includes(SORT_BY_VALUE)
-                    ? 'ed'
-                    : ''}{' '}
-                  by{' '}
+                    ? "ed"
+                    : ""}{" "}
+                  by{" "}
                 </div>
                 <VariablePickerMenu
                   value={valueToSortBy}
-                  onChange={event => {
+                  onChange={(event) => {
                     setValueToSortBy(event.target.value);
                     if (activeSwitches.includes(SORT_BY_VALUE)) {
                       sortByValue(event.target.value, true);
@@ -255,7 +248,7 @@ const SortPanel = ({
           title={getTooltipText(valueToColourBy, COLOUR_BY_VALUE)}
         >
           <FormControlLabel
-            classes={{ root: 'formControlRoot' }}
+            classes={{ root: "formControlRoot" }}
             className="formControl colourByValue"
             control={
               <Switch
@@ -274,14 +267,14 @@ const SortPanel = ({
                 <div>
                   Colour
                   {activeSwitches && activeSwitches.includes(COLOUR_BY_VALUE)
-                    ? 'ed'
-                    : ''}{' '}
-                  by{' '}
+                    ? "ed"
+                    : ""}{" "}
+                  by{" "}
                 </div>
                 <VariablePickerMenu
                   isIndustry={true}
                   value={valueToColourBy}
-                  onChange={event => {
+                  onChange={(event) => {
                     setValueToColourBy(event.target.value);
                     if (activeSwitches.includes(COLOUR_BY_VALUE)) {
                       FORCE.colourByValue({
@@ -297,7 +290,10 @@ const SortPanel = ({
           />
         </Tooltip>
         <GraphViewButton
-          isGraphView={isGraphView} setIsGraphView={setIsGraphView} axisValues={axisValues} setAxisValues={setAxisValues}
+          isGraphView={isGraphView}
+          setIsGraphView={setIsGraphView}
+          axisValues={axisValues}
+          setAxisValues={setAxisValues}
         />
       </div>
       <Button
@@ -305,8 +301,7 @@ const SortPanel = ({
         onClick={handleReset}
         disabled={
           // Disable Reset button if all filters are at 0
-          !Object.values(state.filters).reduce((tot, curr) => tot + curr, 0) >
-            0 &&
+          !Object.values(filters).reduce((tot, curr) => tot + curr, 0) > 0 &&
           // and no switches are active
           activeSwitches.length === 0 &&
           // (including graph view)

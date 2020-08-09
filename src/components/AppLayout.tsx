@@ -1,11 +1,5 @@
 // import queryString from 'query-string'
-import React, {
-  useContext,
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import styled from "styled-components/macro";
 import {
@@ -15,15 +9,13 @@ import {
   SKILLS_LOGI,
   SKILLS_COMP,
   SKILLS_MATH,
-} from "../utils/constants";
-import { ControlsContext } from "./Context/ContextProvider";
-import FiltersPanel from "./Controls/FiltersPanel";
-import SortPanel, {
   STUDY,
   SALARY,
   STUDY_LABEL,
   SALARY_LABEL,
-} from "./Controls/SortPanel";
+} from "../utils/constants";
+import FiltersPanel from "./Controls/FiltersPanel";
+import SortPanel from "./Controls/SortPanel";
 import InfoDrawer from "./Viz/InfoDrawer";
 import Tooltip from "./Viz/Tooltip";
 import Viz from "./Viz/Viz";
@@ -33,6 +25,7 @@ import FORCE from "./FORCE";
 import { useWindowSize } from "./useWindowSize";
 import { NAV_HEIGHT } from "./Nav/Navbar";
 import ContainerDimensions from "react-container-dimensions";
+import useStore from "./store";
 
 const AppLayoutStyles = styled.div`
   position: relative;
@@ -109,14 +102,16 @@ const AppLayout = () => {
     x: { displayName: STUDY, dataLabel: STUDY_LABEL },
     y: { displayName: SALARY, dataLabel: SALARY_LABEL },
   });
-  const { state, handleResize, restartSimulation } = useContext(
-    ControlsContext
-  );
+  const getRadiusScale = useStore((state) => state.getRadiusScale);
+  const zScale = useStore((state) => state.zScale);
+  const uniqueClusterValues = useStore((state) => state.uniqueClusterValues);
+  const sortedByValue = useStore((state) => state.sortedByValue);
+  const handleResize = useStore((state) => state.handleResize);
+  const restartSimulation = useStore((state) => state.restartSimulation);
 
   const [isExpanded, setIsExpanded] = useState(
     INITIAL_SUBSKILL_FILTERS_EXPANDED_STATE
   );
-  const { getRadiusScale, zScale, uniqueClusterValues, sortedByValue } = state;
 
   const [isGraphView, setIsGraphView] = useState(false);
 
@@ -222,7 +217,7 @@ const AppLayout = () => {
       });
       startTooltipActive();
     },
-    [innerHeight, startTooltipActive]
+    [innerHeight]
   );
 
   const onClickNode = useCallback((event: Event, datum: any) => {

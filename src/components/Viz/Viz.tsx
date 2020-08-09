@@ -1,15 +1,16 @@
-import React, { useState, useRef, useContext, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components/macro";
 import FORCE from "../FORCE";
 import Node from "./Node";
 import SVG3dEffect from "./SVG3dEffect";
-import { ControlsContext } from "../Context/ContextProvider";
 import YAxis from "./YAxis";
 import { useMount } from "../../utils/constants";
 import GraphViewAxes, {
   GraphViewAxisTitles,
 } from "./GraphViewAxes/GraphViewAxes";
 import { activateGraphView, deactivateGraphView } from "./graphViewUtils";
+import useStore from "../store";
+import shallow from "zustand/shallow";
 
 export const AXIS_HEIGHT = 24;
 
@@ -42,7 +43,7 @@ const VizStyles = styled.div`
     height: 100%;
     #nodesG {
       transition: transform 0.5s ease-in-out;
-      transform: translate(50%, 50%);
+      transform: translate(50%, calc(50vh - 200px));
       max-width: 100%;
     }
     #summaryBar {
@@ -83,13 +84,23 @@ const Viz = ({
   const [activeNodeId, setActiveNodeId] = useState(null as string | null);
   const vizRef = useRef(null);
 
-  const { state, restartSimulation, getScale } = useContext(ControlsContext);
-  const { getRadiusScale, radiusSelector, clusterCenters, nodes } = state;
+  const getRadiusScale = useStore((state) => state.getRadiusScale, shallow);
+  const radiusSelector = useStore((state) => state.radiusSelector);
+  const clusterCenters = useStore((state) => state.clusterCenters, shallow);
+  const nodes = useStore((state) => state.nodes, shallow);
+  const restartSimulation = useStore(
+    (state) => state.restartSimulation,
+    shallow
+  );
+  const getScale = useStore((state) => state.getScale, shallow);
+
   const radiusScale = getRadiusScale();
 
   // CDM, CDU, CWU
   useMount(() => {
     // initialize the force simulation
+    console.log("🌟🚨: clusterCenters", clusterCenters);
+
     (FORCE as any).startSimulation(
       { nodes, radiusScale, clusterCenters, radiusSelector },
       vizRef.current

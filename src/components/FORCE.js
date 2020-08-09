@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { findDOMNode } from "react-dom";
-import { $ } from "./Context/ContextProvider";
+import { $ } from "./store";
 import {
   WORKERS,
   INDUSTRY,
@@ -8,7 +8,7 @@ import {
   SALARY,
   STUDY,
   SALARY_LABEL,
-} from "./Controls/SortPanel";
+} from "../utils/constants";
 
 export const lightGrey = "hsl(0,0%,80%)";
 export const color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -67,7 +67,9 @@ const FORCE = function (nsp) {
 
         nodes.forEach((d) => {
           let cluster = clusterCenters[d.cluster];
-          if (cluster === d) return;
+          if (!d || !cluster || cluster === d) {
+            return;
+          }
 
           let x = d.x - cluster.x,
             y = d.y - cluster.y,
@@ -371,6 +373,7 @@ const FORCE = function (nsp) {
       { nodes, radiusScale, clusterCenters, radiusSelector },
       that
     ) => {
+      console.log("🌟🚨: STARTING");
       nsp.initForce({
         nodes,
         radiusScale,

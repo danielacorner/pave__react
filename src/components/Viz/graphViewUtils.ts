@@ -1,7 +1,6 @@
-import FORCE from '../FORCE';
-import * as d3 from 'd3';
-import { getDatalabelMap } from '../../utils/constants';
-import { AUTOMATION_RISK_LABEL } from '../Controls/SortPanel';
+import FORCE from "../FORCE";
+import * as d3 from "d3";
+import { getDatalabelMap, AUTOMATION_RISK_LABEL } from "../../utils/constants";
 type ActivateGraphViewProps = {
   prevPositions: React.MutableRefObject<{}>;
   width: number;
@@ -14,9 +13,9 @@ type ActivateGraphViewProps = {
 };
 
 export const getMaxNodes = (nodes, dataLabel) =>
-  Math.max(...nodes.map(d => d[dataLabel]));
+  Math.max(...nodes.map((d) => d[dataLabel]));
 export const getMinNodes = (nodes, dataLabel) =>
-  Math.min(...nodes.map(d => d[dataLabel]));
+  Math.min(...nodes.map((d) => d[dataLabel]));
 
 export const getMedianNodes = (nodes, dataLabel) =>
   (getMaxNodes(nodes, dataLabel) - getMinNodes(nodes, dataLabel)) / 2;
@@ -59,16 +58,16 @@ export function activateGraphView({
 }: ActivateGraphViewProps) {
   (FORCE as any).stopSimulation(true);
   setTimeout(() => {
-    const DOMNodes = d3.selectAll('.node');
+    const DOMNodes = d3.selectAll(".node");
     const nodes = DOMNodes.data();
 
     DOMNodes.transition()
       .ease(d3.easeCubicInOut)
       .delay((d, i) => i * 0.3)
       .duration(700)
-      .attr('transform', function(d: any) {
+      .attr("transform", function (d: any) {
         // preserve previous positions to return to
-        prevPositions.current[d.job] = d3.select(this).attr('transform');
+        prevPositions.current[d.job] = d3.select(this).attr("transform");
         const { x, y } = getGraphViewPositions({
           nodes,
           d,
@@ -89,12 +88,12 @@ export function deactivateGraphView({
   prevPositions,
   restartSimulation,
 }: DeactivateGraphViewProps) {
-  d3.selectAll('.node')
+  d3.selectAll(".node")
     .transition()
     .ease(d3.easeBackInOut)
     .delay((d, i) => i * 0.3)
     .duration(500)
-    .attr('transform', (d: any) => {
+    .attr("transform", (d: any) => {
       return prevPositions.current[d.job];
     });
   setTimeout(() => {
@@ -111,11 +110,13 @@ export const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
   const boundingNodes = { top: null, right: null, bottom: null, left: null };
 
   // get the node, distance, and labels for the most extreme nodes
-  document.querySelectorAll('.node').forEach(node => {
-    const nodeIdx = +node.id.slice(5) - 1;
+  document.querySelectorAll(".node").forEach((node) => {
+    const nodeId = +node.id.slice(5);
+
+    const nodeData = nodes.find(({ id }) => nodeId === id);
     const axisLabels = {
-      x: nodes[nodeIdx][axisValues.x.dataLabel],
-      y: nodes[nodeIdx][axisValues.y.dataLabel],
+      x: nodeData[axisValues.x.dataLabel],
+      y: nodeData[axisValues.y.dataLabel],
     };
 
     // multiply by 100 for any percent labels (automation risk)
@@ -132,7 +133,7 @@ export const reScaleAxes = ({ axisValues, nodes, setMargins, setLabels }) => {
     Object.entries(boundingNodes).forEach(([side, boundingNode]) => {
       if (
         !boundingNode ||
-        (['top', 'left'].includes(side)
+        (["top", "left"].includes(side)
           ? boundingNode.distance > nodeRect[side]
           : boundingNode.distance < nodeRect[side])
       ) {
