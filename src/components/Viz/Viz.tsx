@@ -10,6 +10,7 @@ import GraphViewAxes, {
 } from "./GraphViewAxes/GraphViewAxes";
 import { activateGraphView, deactivateGraphView } from "./graphViewUtils";
 import useStore from "../store";
+import shallow from "zustand/shallow";
 
 export const AXIS_HEIGHT = 24;
 
@@ -83,12 +84,15 @@ const Viz = ({
   const [activeNodeId, setActiveNodeId] = useState(null as string | null);
   const vizRef = useRef(null);
 
-  const getRadiusScale = useStore((state) => state.getRadiusScale);
+  const getRadiusScale = useStore((state) => state.getRadiusScale, shallow);
   const radiusSelector = useStore((state) => state.radiusSelector);
-  const clusterCenters = useStore((state) => state.clusterCenters);
-  const nodes = useStore((state) => state.nodes);
-  const restartSimulation = useStore((state) => state.restartSimulation);
-  const getScale = useStore((state) => state.getScale);
+  const clusterCenters = useStore((state) => state.clusterCenters, shallow);
+  const nodes = useStore((state) => state.nodes, shallow);
+  const restartSimulation = useStore(
+    (state) => state.restartSimulation,
+    shallow
+  );
+  const getScale = useStore((state) => state.getScale, shallow);
 
   const radiusScale = getRadiusScale();
 

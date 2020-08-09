@@ -217,7 +217,7 @@ const AppLayout = () => {
       });
       startTooltipActive();
     },
-    [innerHeight, startTooltipActive]
+    [innerHeight]
   );
 
   const onClickNode = useCallback((event: Event, datum: any) => {

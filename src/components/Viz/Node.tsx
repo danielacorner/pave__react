@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { findDOMNode } from "react-dom";
 import styled from "styled-components/macro";
 import FORCE from "../FORCE";
@@ -119,12 +119,12 @@ const Node = React.memo(
     // }
 
     // console.count('node rendering!');
-    const onMouseEnter = (e) => {
+    const onMouseEnter = useCallback((e) => {
       setIsBackgroundVisible(true);
-    };
-    const onMouseLeave = (e) => {
+    }, []);
+    const onMouseLeave = useCallback((e) => {
       setIsBackgroundVisible(false);
-    };
+    }, []);
     const showBackground = isActive || isBackgroundVisible;
     return (
       <NodeGroupStyles
