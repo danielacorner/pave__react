@@ -31,7 +31,7 @@
     "react-scripts": "^3.0.1",
     "react-spring": "^8.0.22",
     "styled-components": "^4.3.1",
-    "terser": "^3.17.0",
+    "terser": "^4.8.1",
     "zustand": "^2.2.3"
   },
   "scripts": {
